@@ -1,0 +1,207 @@
+2023-02-16T18:39:11Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
+{Check for missing argument or incorrect argument data type in call to function
+'exists'.
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('save_database', 'C:\Users\james\Documents\GitHub\strewn-private\save_database.m', 21)" style="font-weight:bold">save_database</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\save_database.m',21,0)">line 21</a>)
+if exists('database_loaded_safe','var') && database_loaded_safe} 
+opentoline('C:\Users\james\Documents\GitHub\strewn-private\save_database.m',21,0)
+exists('database_loaded_safe','var') 
+{Check for missing argument or incorrect argument data type in call to function
+'exists'.} 
+exist('database_loaded_safe','var')
+ans =
+     0
+save_database
+{Unrecognized function or variable 'DatabaseFilename'.
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('save_database', 'C:\Users\james\Documents\GitHub\strewn-private\save_database.m', 25)" style="font-weight:bold">save_database</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\save_database.m',25,0)">line 25</a>)
+save(DatabaseFilename,Database_prefix)} 
+opentoline('C:\Users\james\Documents\GitHub\strewn-private\save_database.m',25,0)
+save_database
+{Unrecognized function or variable 'DatabaseFilename'.
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('save_database', 'C:\Users\james\Documents\GitHub\strewn-private\save_database.m', 25)" style="font-weight:bold">save_database</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\save_database.m',25,0)">line 25</a>)
+save(DatabaseFilename,Database_prefix)} 
+opentoline('C:\Users\james\Documents\GitHub\strewn-private\save_database.m',25,0)
+help clos
+
+clos not found.
+
+Use the Help browser search field to <a href="matlab:docsearch clos">search the documentation</a>, or
+type "<a href="matlab:help help">help help</a>" for help command options, such as help for methods.
+
+help close
+ <strong>close</strong>  Close figure.
+    <strong>close</strong>(H) closes the window with handle H.
+    <strong>close</strong>, by itself, closes the current figure window.
+ 
+    <strong>close</strong>('name') closes the named window.
+ 
+    <strong>close</strong> ALL  closes all the open figure windows.
+    <strong>close</strong> ALL HIDDEN  closes hidden windows as well.
+    <strong>close</strong> ALL FORCE  unconditionally closes all windows by deleting them
+    without executing the close request function.
+ 
+    STATUS = <strong>close</strong>(...) returns 1 if the specified windows were closed
+    and 0 otherwise.
+ 
+    See also <a href="matlab:help delete">delete</a>.
+
+    <a href="matlab:doc close">Documentation for close</a>
+    <a href="matlab:matlab.internal.language.introspective.overloads.displayOverloads('close')">Other functions named close</a>
+
+save_database
+{Unrecognized function or variable 'DatabaseFilename'.
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('save_database', 'C:\Users\james\Documents\GitHub\strewn-private\save_database.m', 24)" style="font-weight:bold">save_database</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\save_database.m',24,0)">line 24</a>)
+    save(DatabaseFilename,Database_prefix)} 
+opentoline('C:\Users\james\Documents\GitHub\strewn-private\save_database.m',24,0)
+exist('database_loaded_safe','var') && database_loaded_safe
+ans =
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+   0
+save_database
+2023-02-16T18:44:11Z | ERROR | SAVE_DATABASE | Database save failed, database file not loaded safely. Backup database before saving!
+2023-02-16T19:32:38Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
+2023-02-16T19:32:38Z | ERROR | SAVE_DATABASE | Database save failed, database file not loaded safely. Backup database before saving!
+2023-02-16T19:33:27Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
+2023-02-16T19:33:27Z | ERROR | SAVE_DATABASE | Database save failed, database file not loaded safely. Backup database before saving!
+2023-02-16T19:39:51Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
+2023-02-16T19:39:51Z | ERROR | SAVE_DATABASE | Database save failed, database file not loaded safely. Backup database before saving!
+2023-02-16T19:52:03Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
+2023-02-16T19:52:04Z | ERROR | SAVE_DATABASE | Database file not loaded safely, save failed. Backup database before saving!
+2023-02-16T20:12:13Z | DEBUG | LOAD_DATABASE | Unexpected call, logging forced on
+{Unrecognized function or variable 'Database_check'.
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_database', 'C:\Users\james\Documents\GitHub\strewn-private\load_database.m', 29)" style="font-weight:bold">load_database</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\load_database.m',29,0)">line 29</a>)
+if exist(Database_check,'var')} 
+opentoline('C:\Users\james\Documents\GitHub\strewn-private\load_database.m',29,0)
+opentoline('C:\Users\james\Documents\GitHub\strewn-private\load_database.m',29,0)
+load_database
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_database', 'C:\Users\james\Documents\GitHub\strewn-private\load_database.m', 9)" style="font-weight:bold">load_database</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\load_database.m',9,0)">line 9</a>)
+Config file not loaded} 
+clear
+load_database
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_database', 'C:\Users\james\Documents\GitHub\strewn-private\load_database.m', 9)" style="font-weight:bold">load_database</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\load_database.m',9,0)">line 9</a>)
+Config file not loaded} 
+strewnconfig
+load_database
+2023-02-16T20:20:51Z | DATABASE | LOAD_DATABASE | Data loaded from StrewnifyDatabase.mat file.
+2023-02-16T20:20:51Z | DATABASE | LOAD_DATABASE | Database backed up to StrewnifyDatabase_BACKUP_202302162020.mat file.
+save_database
+2023-02-16T20:21:17Z | DATABASE | SAVE_DATABASE | Database saved to StrewnifyDatabase.mat file.
+visdiff('encrypt,dragcoef')
+{Not enough input arguments.
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('visdiff', 'C:\Program Files\MATLAB\R2020b\toolbox\shared\comparisons\visdiff.m', 31)" style="font-weight:bold">visdiff</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2020b\toolbox\shared\comparisons\visdiff.m',31,0)">line 31</a>)
+    if nargout == 0 && supportsComparisons4TextDiff(filename1, filename2,
+    varargin{:})} 
+visdiff('encrypt','dragcoef')
+open getnew_test
+open importcontacts.m
+open logformat.m
+open logformat.m
+open load_database.m
+open strewnnotify.m
+open getnew.m
+dbstack
+help dbstack
+ <strong>dbstack</strong> Function call stack
+    The <strong>dbstack</strong> command displays the function name, line number where the
+    breakpoint occurred in the program file, name and line number of the
+    caller, caller's caller, etc., until the top-most function is reached.
+ 
+    <strong>dbstack</strong>(N) omits from the display the first N frames.  This is useful
+    when issuing a dbstack from within, say, an error handler.
+ 
+    <strong>dbstack</strong>('-completenames') outputs the "complete name" of each
+    function in the stack, which means the absolute file name and the
+    entire sequence of functions that nest the function in the stack frame.
+ 
+    Either none, one, or both of the N and '-completenames' may appear.
+    If both appear, the order is irrelevant.
+ 
+    [ST,I] = <strong>dbstack</strong>(...) returns the stack trace information in an M-by-1
+    structure ST with the fields:
+        file -- the file in which the function appears;
+                this field will be the empty string if there is no file.
+        name -- function name within the file
+        line -- function line number
+    The current workspace index is returned in I.
+ 
+    If you step past the end of the program file, then <strong>dbstack</strong> returns a
+    negative line number value to identify that special case.  For example,
+    if the last line to be executed is line 15, then the <strong>dbstack</strong> line
+    number is 15 before you execute that line and -15 afterwards.
+ 
+    See also <a href="matlab:help dbstep">dbstep</a>, <a href="matlab:help dbstop">dbstop</a>, <a href="matlab:help dbcont">dbcont</a>, <a href="matlab:help dbclear">dbclear</a>, <a href="matlab:help dbtype">dbtype</a>, <a href="matlab:help dbup">dbup</a>, <a href="matlab:help dbdown">dbdown</a>,
+             <a href="matlab:help dbstatus">dbstatus</a>, <a href="matlab:help dbquit">dbquit</a>.
+
+    <a href="matlab:doc dbstack">Documentation for dbstack</a>
+
+open strewnconfig
+clear
+strewnconfig
+> In C:\Users\james\Documents\GitHub\strewn-private\strewnconfig.m>strewnconfig (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\strewnconfig.m',3,0)">line 3</a>)
+strewnnotify
+> In C:\Users\james\Documents\GitHub\strewn-private\strewnconfig.m>strewnconfig (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\strewnconfig.m',3,0)">line 3</a>)
+In C:\Users\james\Documents\GitHub\strewn-private\strewnnotify.m>strewnnotify (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\strewnnotify.m',4,0)">line 4</a>)
+2023-02-17T04:14:02Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
+2023-02-17T04:14:02Z | ERROR | SAVE_DATABASE | Database file not loaded safely, save failed. Backup database before saving!
+2023-02-17T04:14:46Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
+{Unrecognized function or variable 'DatabaseFilename'.
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('save_database', 'C:\Users\james\Documents\GitHub\strewn-private\save_database.m', 22)" style="font-weight:bold">save_database</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\save_database.m',22,0)">line 22</a>)
+    save(DatabaseFilename,Database_prefix)} 
+strewnconfig
+save_database
+2023-02-17T04:14:58Z | DATABASE | SAVE_DATABASE | Database saved to StrewnifyDatabase.mat file.
+clear
+load_database
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_database', 'C:\Users\james\Documents\GitHub\strewn-private\load_database.m', 9)" style="font-weight:bold">load_database</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\load_database.m',9,0)">line 9</a>)
+Config file not loaded} 
+strewnconfig
+load_database
+2023-02-17T04:15:14Z | DATABASE | LOAD_DATABASE | Data loaded from StrewnifyDatabase.mat file.
+2023-02-17T04:15:14Z | DATABASE | LOAD_DATABASE | Database backed up to StrewnifyDatabase_BACKUP_202302170415.mat file.
+NearbySensors = nearbysensors(26.69554, -98.850763, 40000, sdb_Sensors)
+[Warning: input height not used] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('nearbysensors', 'C:\Users\james\Documents\GitHub\strewn-private\nearbysensors.m', 4)" style="font-weight:bold">nearbysensors</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\nearbysensors.m',4,0)">line 4</a>)] 
+NearbySensors =
+  20×28 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+    <strong>StationID</strong>         <strong>Type</strong>                   <strong>StationName</strong>               <strong>LAT</strong>       <strong>LONG</strong>      <strong>GroundAlt_m</strong>        <strong>Owner</strong>                 <strong>City</strong>               <strong>State</strong>       <strong>Country</strong>     <strong>HeightAboveGround_m</strong>    <strong>Altitude_m</strong>    <strong>StartYear</strong>    <strong>EndYear</strong>    <strong>range_km</strong>    <strong>error_Lat</strong>    <strong>error_Long</strong>    <strong>error_Alt_m</strong>    <strong>cam_Model</strong>    <strong>cam_AZ</strong>    <strong>cam_ELEV</strong>    <strong>cam_hor_FOV</strong>    <strong>cam_vert_FOV</strong>                        <strong>Hyperlink1</strong>                         <strong>Hyperlink2</strong>      <strong>Email</strong>      <strong>curveDistance_km</strong>    <strong>PctSensorRange</strong>
+    <strong>_________</strong>    <strong>_______________</strong>    <strong>______________________________</strong>    <strong>______</strong>    <strong>_______</strong>    <strong>___________</strong>    <strong>______________</strong>    <strong>_____________________</strong>    <strong>_________</strong>    <strong>_________</strong>    <strong>___________________</strong>    <strong>__________</strong>    <strong>_________</strong>    <strong>_______</strong>    <strong>________</strong>    <strong>_________</strong>    <strong>__________</strong>    <strong>___________</strong>    <strong>_________</strong>    <strong>______</strong>    <strong>________</strong>    <strong>___________</strong>    <strong>____________</strong>    <strong>___________________________________________________</strong>    <strong>__________</strong>    <strong>_________</strong>    <strong>________________</strong>    <strong>______________</strong>
+    "AMSP267"    "AllSky"           "AusTexWX North"                  30.183    -97.857      270.21       "Scott Robuck"    "Austin"                 "Texas"      "USA"                   NaN             237.78         0        9999         500          0            0              0         <missing>      0          90           NaN            NaN         "https://www.amsmeteors.org/cameras/?camera_id=267"    <missing>     <missing>         398.57             79.714    
+    "GOES16"     "Geostationary"    "GOES-16 Satellite"                    0      -75.2      224.91       "NOAA"            "Geostationary Orbit"    <missing>    "Earth"               35789              35789      2018        9999        9031          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         3891.7             43.093    
+    "GOES17"     "Geostationary"    "GOES-17 Satellite"                    0     -137.2           0       "NOAA"            "Geostationary Orbit"    <missing>    "Earth"          3.5786e+07         3.5786e+07      2019        9999        9031          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         5057.7             56.004    
+    "KBRO"       "NEXRAD"           "Brownsville "                    25.916    -97.419           7       "NWS"             <missing>                "TX"         "USA"                    10             26.822         0        9999         230          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         167.04             72.624    
+    "KCRP"       "NEXRAD"           "Corpus Christi"                  27.784    -97.511        13.7       "NWS"             <missing>                "TX"         "USA"                    20             43.282         0        9999         230          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>          179.3             77.956    
+    "HBVL"       "Seismic"          "Hebbronville"                    27.065     -98.67         155       <missing>         <missing>                <missing>    <missing>                 0                155         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         44.717             11.179    
+    "KVTX"       "Seismic"          "Kingsville"                      27.546    -97.893        14.6       <missing>         <missing>                <missing>    <missing>                 0               14.6         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         133.78             33.445    
+    "TMM"        "Seismic"          "Tecnologico de Monterrey"         25.75     -100.2         585       <missing>         <missing>                <missing>    <missing>                 0                585         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         170.93             42.732    
+    "TMM2"       "Seismic"          "Tecnologico de Monterrey 2"      25.699    -100.27      505.46       <missing>         <missing>                <missing>    <missing>                 0             505.46         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         179.45             44.863    
+    "MNIG"       "Seismic"          "Monterrey"                        25.61    -100.29         674       <missing>         <missing>                <missing>    <missing>                 0                674         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         187.54             46.885    
+    "833A"       "Seismic"          "Chaparral WMA, Artesia Wells"    28.324    -99.394         171       <missing>         <missing>                <missing>    <missing>                 0                171         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         188.22             47.055    
+    "VNM"        "Seismic"          "Villa de Garcia"                 25.843    -100.59      841.12       <missing>         <missing>                <missing>    <missing>                 0             841.12         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         198.09             49.523    
+    "SAT1"       "Seismic"          "San Antonio Texas"               28.555    -98.645         -26       <missing>         <missing>                <missing>    <missing>                 0                -26         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         207.05             51.763    
+    "LNIG"       "Seismic"          "Linares"                         24.898    -99.466         295       <missing>         <missing>                <missing>    <missing>                 0                295         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         208.45             52.112    
+    "EF01"       "Seismic"          "Eagle Ford 01"                   29.128     -98.38         173       <missing>         <missing>                <missing>    <missing>                 0                173         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         273.52             68.379    
+    "MCIG"       "Seismic"          "Muzquiz"                         27.877    -101.48         483       <missing>         <missing>                <missing>    <missing>                 0                483         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         291.68              72.92    
+    "EF04"       "Seismic"          "Eagle Ford 04"                    29.21     -97.79         116       <missing>         <missing>                <missing>    <missing>                 0                116         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         297.56              74.39    
+    "HNDO"       "Seismic"          "Hondo"                           29.529    -99.281         381       <missing>         <missing>                <missing>    <missing>                 0                381         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         316.82             79.204    
+    "DRIO"       "Seismic"          "Del Rio"                         29.423    -100.62         354       <missing>         <missing>                <missing>    <missing>                 0                354         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         348.67             87.167    
+    "MLDN"       "Seismic"          "Muldoon"                         29.783    -97.069         106       <missing>         <missing>                <missing>    <missing>                 0                106         0        9999         400          0            0              0         <missing>      0           0             0              0         <missing>                                              <missing>     <missing>         384.23             96.058    
+clear
+load_database
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_database', 'C:\Users\james\Documents\GitHub\strewn-private\load_database.m', 9)" style="font-weight:bold">load_database</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\load_database.m',9,0)">line 9</a>)
+Config file not loaded} 
+strewnconfig
+load_database
+2023-02-17T04:17:02Z | DATABASE | LOAD_DATABASE | Data loaded from StrewnifyDatabase.mat file.
+2023-02-17T04:17:02Z | DATABASE | LOAD_DATABASE | Database backed up to StrewnifyDatabase_BACKUP_202302170417.mat file.
+clear
+unzipdownloads
+skipdownload =
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+   1
+{Unrecognized function or variable 'IGRA_Nearby'.
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('unzipdownloads', 'C:\Users\james\Documents\GitHub\strewn-private\unzipdownloads.m', 9)" style="font-weight:bold">unzipdownloads</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewn-private\unzipdownloads.m',9,0)">line 9</a>)
+for station = 1:size(IGRA_Nearby,1)} 
+skipdownload = true
+skipdownload =
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+   1
+strewnify
