@@ -5,7 +5,6 @@
 *logs/*
 *radiosonde/*
 *zoneplots/*
-*DatabaseMerge/*
 *backup/*
 *mseed/*
 *.png*
