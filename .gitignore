@@ -1,9 +1,11 @@
 *.kmz*
 *.kml*
+*private/*
 *scheduled/*
 *logs/*
 *radiosonde/*
 *zoneplots/*
+*DatabaseMerge/*
 *backup/*
 *mseed/*
 *.png*
@@ -11,9 +13,6 @@
 ~$AllEventData.xlsx
 *.asv
 *_backup*
-loadprivate.m
-encrypt.m
-password.m
 traj_summary_all.txt
 traj_summary_monthly_202207.txt
 traj_summary_yesterday.txt
