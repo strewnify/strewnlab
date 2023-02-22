@@ -4,14 +4,14 @@
 % to the database, and add new events.
 
 % Data source config
-getsources = {'CNEOS' 'Goodall'}
+getsources = {'GMN'}
 
 % Load settings
 strewnconfig
 [~,codefilename,~] = fileparts(mfilename('fullpath'));
 diary([logfolder codefilename '_log.txt'])  
 diary on
-diaryformat('Getting new events.')
+logformat('Getting new events.')
 
 % Disable table row assignment warning
 warning('off','MATLAB:table:RowsAddedExistingVars');
@@ -20,18 +20,18 @@ dayhistory = 3041;
 %dayhistory = 30;
 
 % Config
-GetCNEOS = true;
-GetNEOB = true;
-GetGoodall = true;
-GetAMS = true;
+GetCNEOS = false;
+GetNEOB = false;
+GetGoodall = false;
+GetAMS = false;
 GetMetBull = false;
 GetASGARD = false;
-GetGMN = false;
+GetGMN = true;
 
 % Temporary
 DatabaseFilename = 'MeteorDatabase'; %.mat filename OVERWRITES DATABASE FILENAME FROM STREWNCONFIG
 Database_check = 'sdb_MeteorData';
-diaryformat('Database in development, temporary name ''MeteorDatabase'' used to overwrite strewnconfig.','DEBUG')
+logformat('Database in development, temporary name ''MeteorDatabase'' used to overwrite strewnconfig.','DEBUG')
 
 %Load the database
 load_database
@@ -172,9 +172,9 @@ warning ('on','MATLAB:table:RowsAddedExistingVars')
 
 % close program
 close(handleNewEvents)
-diaryformat([newline num2str(num_reviewed) ' Meteor Events Reviewed.  ' newline num2str(num_new) ' Events Added.' newline num2str(num_updated), ' Events Updated.'])
+logformat([newline num2str(num_reviewed) ' Meteor Events Reviewed.  ' newline num2str(num_new) ' Events Added.' newline num2str(num_updated), ' Events Updated.'])
 [~,codefilename,~] = fileparts(mfilename('fullpath'));
-diaryformat([upper(codefilename) ' completed.'])
+logformat([upper(codefilename) ' completed.'])
 diary off
 warning('Diary disabled after GETNEW_TEST');
 
