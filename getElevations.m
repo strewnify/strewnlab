@@ -59,7 +59,9 @@ for iBatch=2:length(batch)
   %% create query string and run a query
   website = 'https://maps.googleapis.com/maps/api/elevation/xml?locations=';
   url = [website, coord(1:end-1), keyStr];
+  warning('off','MATLAB:urlread:ReplacingSpaces')
   str = urlread(url);
+  warning('on','MATLAB:urlread:ReplacingSpaces')
   
   %% Parse results
   status = regexp(str, '<status>([^<]*)<\/status>', 'tokens');

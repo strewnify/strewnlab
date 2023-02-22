@@ -18,8 +18,12 @@ end
 
 switch response_raw.status
     case 'OK'
-        LAT = response_raw.results.geometry.location.lat;
-        LONG = response_raw.results.geometry.location.lng;
+        if numel(response_raw.results) == 1
+            LAT = response_raw.results.geometry.location.lat;
+            LONG = response_raw.results.geometry.location.lng;
+        else
+            logformat(['Google Maps geocoding search for ''' locality ''' returned multiple results.'],'DEBUG')
+        end
     otherwise
-        logformat(['Google Maps geocoding search for ''' locality ''' returned status: ' response_raw.status]'DEBUG')
+        logformat(['Google Maps geocoding search for ''' locality ''' returned status: ' response_raw.status],'DEBUG')
 end

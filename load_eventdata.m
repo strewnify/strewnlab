@@ -105,7 +105,11 @@ cd(mainfolder);
 try
     ground = getElevations(nom_lat, nom_long, 'key', GoogleMapsAPIkey );
     if ground < 0
-        error('Ground level is below sea level.')
+        if iswater(nom_lat, nom_long, ground)
+            ground = 0;
+        else
+            error('Ground level is below sea level.')
+        end
     end
 catch
     warning('Google Maps API failure.  User queried for ground elevation.')
