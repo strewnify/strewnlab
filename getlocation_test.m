@@ -7,7 +7,7 @@ function [ location_string, locality, state, country ] = getlocation_test(lat,lo
 % load Google Maps API
 loadprivate
 
-disp([newline 'lat/lon = ' num2str(lat) ', ' num2str(lon)])
+%disp([newline 'lat/lon = ' num2str(lat) ', ' num2str(lon)])
 
 try
     location_raw = webread(['https://maps.googleapis.com/maps/api/geocode/json?latlng=' num2str(lat) ',' num2str(lon) '&key=' GoogleMapsAPIkey]);
@@ -21,6 +21,7 @@ search_params = {'country' 'locality' 'administrative_area_level_1' 'administrat
 output = struct;
 for param_i = 1:numel(search_params)
     output.(search_params{param_i}) = char;
+    output.([search_params{param_i} '_short']) = char;
 end
 output.water = char;
 output.formatted = char;
@@ -55,18 +56,31 @@ for res_i = 1:size(location_raw.results,1)
             % check for search parameter matches
             found_i = matches(search_params,location_raw.results{res_i}.address_components(comp_i).types{1});
 
-            % if search parameter found and the characters are ASCII (not Arabic or other unicode text), store to found data
+            % if search parameter found and the characters are supported (not Arabic or other unicode text), store to found data
+            % set to 128, to support ASCII only
+            % set to 564, to support most characters
+            % set to inf, to support all characters, including Arabic, Chinese, etc
+            % (to support all characters, remove the removediacritics function from code below)
+            unicode_max = 564;
+            
             if any(found_i) && isempty(output.(search_params{found_i}))
                 
-                % remove diacritics
+                % remove diacritics from long name
                 test_longname = removediacritics(location_raw.results{res_i}.address_components(comp_i).long_name); 
+                
+                % if all ascii characters after removing diacritics
+                if all(test_longname < unicode_max) 
+                    output.(search_params{found_i}) = test_longname;                     
+                end
+                
+                % remove diacritics from short name
                 test_shortname = removediacritics(location_raw.results{res_i}.address_components(comp_i).short_name);
                 
                 % if all ascii characters after removing diacritics
-                if all(test_longname < 128) && all(test_shortname < 128) 
-                    output.(search_params{found_i}) = test_longname; 
+                if all(test_shortname < unicode_max) 
                     output.([search_params{found_i} '_short']) = test_shortname;
                 end
+                
             end
         end
     end 
@@ -76,7 +90,7 @@ end
 if ~isempty(output.country)
     switch output.country
         case 'United States'
-            output.country = 'USA'
+            output.country = 'USA';
             output.country_short = 'US';
     end
 end
@@ -104,6 +118,13 @@ if ~isempty(output.water)
     max_length = max_length - length(water_string) - 3;
 else
     water_string = '';
+end
+
+% Populate short names, if missing
+for param_i = 1:numel(search_params)
+    if isempty(output.([search_params{param_i} '_short']))
+        output.([search_params{param_i} '_short']) = output.(search_params{param_i});
+    end
 end
 
 % Land location name
@@ -153,7 +174,7 @@ while ~acceptable
 
     % Join strings with comma delimiter
     formatjoined = join(formatstrings,',');
-    land_string = shorten_name(formatjoined{1});
+    land_string = shorten_name(formatjoined{1})
 
     if length(land_string) <= max_length || attempt >= max_attempts
         acceptable = true;        
@@ -188,7 +209,7 @@ elseif isempty(water_string) && ~isempty(land_string)
 elseif ~isempty(water_string) && ~isempty(land_string)
     location_string = [water_string ' (' land_string ')'];
 else
-    if elevation_out <= 0;
+    if elevation_out <= 0
         location_string = 'water';
     else
         location_string = 'unknown';
@@ -205,20 +226,26 @@ function [new_name] = shorten_name(old_name)
 % Shorten long names by removing common district names
 % preserve order and apply more specific replacements first
 
-    old_name = regexprep(old_name, 'Bosnia and Herzegovina', 'Bosnia'); % preserve order
+    old_name = regexprep(old_name, 'Turkiye', 'Turkey');
+    old_name = regexprep(old_name, 'Bosnia and Herzegovina', 'Bosnia');
+    old_name = regexprep(old_name, 'Falkland Islands \(Islas Malvinas\)', 'Falkland Islands');
+    old_name = regexprep(old_name, 'French Southern and Antarctic Lands', 'French Southern Lands');    
     old_name = regexprep(old_name, ' Xin Jiang Wei Wu Er Zi Zhi Qu', 'Xinjiang'); % preserve order
     old_name = regexprep(old_name, ' Zi Zhi Qu', ''); % preserve order
     old_name = regexprep(old_name, ' Zi Zhi Zhou', ''); % preserve order
     old_name = regexprep(old_name, 'Haixi Mongol and Tibetan Autonomous Prefecture', 'Qaidam'); % preserve order
-    old_name = regexprep(old_name, ' Autonomous Prefecture', ''); % preserve order
+    old_name = regexprep(old_name, ' Autonomous Prefecture', ''); % preserve orde
+    old_name = regexprep(old_name, 'Districts of Republican Subordination', 'Karotegin'); % preserve order
     old_name = regexprep(old_name, ' Autonomous Region', '');
     old_name = regexprep(old_name, ' Autonomous Province', '');
+    old_name = regexprep(old_name, ' Autonomous Okrug', '');
     old_name = regexprep(old_name, 'Air Force Base', 'AFB');
     old_name = regexprep(old_name, 'State of ', '');
     old_name = regexprep(old_name, 'Republic of ', '');
     old_name = regexprep(old_name, 'Republika ', '');
     old_name = regexprep(old_name, 'Region de ', '');
     old_name = regexprep(old_name, ' District', '');
+    old_name = regexprep(old_name, ' Division', '');
     old_name = regexprep(old_name, ' Prefecture', '');
     old_name = regexprep(old_name, ' Region', '');
     old_name = regexprep(old_name, ' Republic', '');

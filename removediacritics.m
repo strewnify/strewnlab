@@ -42,6 +42,28 @@ s = regexprep(s,'(?:ú|ù|ü|û)','u');
 s = regexprep(s,'(?:ý|ÿ)','y');
 s = regexprep(s,'(?:ž)','z');
 
+% Cyrillic letters that look like Latin letters
+% (not all Cyrillic letters supported!)
+s = regexprep(s,char(1040),'A');
+s = regexprep(s,char(1042),'B');
+s = regexprep(s,char(1057),'C');
+s = regexprep(s,char(1053),'H');
+s = regexprep(s,char(1032),'J');
+s = regexprep(s,char(1050),'K');
+s = regexprep(s,char(1052),'M');
+s = regexprep(s,char(1054),'O');
+s = regexprep(s,char(1056),'P');
+s = regexprep(s,char(1029),'S');
+s = regexprep(s,char(1058),'T');
+s = regexprep(s,char(1061),'X');
+s = regexprep(s,char(1072),'a');
+s = regexprep(s,char(1089),'c');
+s = regexprep(s,char(1077),'e');
+s = regexprep(s,char(1086),'o');
+s = regexprep(s,char(1088),'p');
+s = regexprep(s,char(1093),'x');
+s = regexprep(s,char(1091),'y');
+
 % return cleaned string
 clean_s = s;
 end
