@@ -19,7 +19,20 @@ if nargin == 2
         try
             elevation_in_m(idx) = getElevations(lat(idx),lon(idx),'key', GoogleMapsAPIkey);
         catch
-            error('Google Maps API failed to return elevation')
+            logformat('Google Maps API failure.  User queried for ground elevation.','WARN')
+            usersuccess = false;
+            while ~usersuccess
+                user_ground = inputdlg('Elevation data not accessible. Please enter ground elevation in meters:','Google API Failure',1,{'0'});        
+                ground = str2double(cell2mat(user_ground)); 
+                if isnan(ground)
+                    logformat('User entered invalid ground elevation.','ERROR')
+                    usersuccess = false;
+                else
+                    logformat(sprintf('User entered %f for ground elevation.',ground),'USER')
+                    usersuccess = true;
+                end
+            end
+            clear usersuccess
         end
     end
 end
@@ -31,6 +44,8 @@ elevation_out_m = elevation_in_m;
 % initial corrections
 body_of_water(elevation_in_m < min_elevation_m) = {'ocean'};
 elevation_out_m(elevation_in_m < min_elevation_m) = 0;
+
+warning('off','MATLAB:table:RowsAddedExistingVars')
 
 % Check known bodies of water
 load coastlines
@@ -66,6 +81,8 @@ db_features.surface_m(6) = -27;
 db_features.body_lat(6) = {coastlat(6886:6992)};
 db_features.body_lon(6) = {coastlon(6886:6992)};
 
+warning('on','MATLAB:table:RowsAddedExistingVars')
+
 % Check for each body of water
 for idx = 1:size(db_features,1)
     body_match = inpolygon(lat,lon,db_features.body_lat{idx},db_features.body_lon{idx}) & (elevation_in_m < db_features.surface_m(idx) | elevation_in_m == 0);
@@ -93,7 +110,7 @@ SaltonSink = lat > 32 & lat < 34 & lon > -116.5 & lon < -114;                   
 
 
 known_dryland = DeadSea | Turfan | Qattara | Danakil | Badwater | LagunaCarbon | BajoDelGualicho | SaltonSink;
-body_of_water(known_dryland) = {'depression'};
+%body_of_water(known_dryland) = {'depression'};
 elevation_out_m(known_dryland) = elevation_in_m(known_dryland);
 
 % if known body of water or elevation is less than min elevation and not known dry land 

@@ -1,4 +1,4 @@
-function [ location ] = getlocation_test(lat,lon)
+function [ location_string, locality, state, country ] = getlocation_test(lat,lon)
 % LOCATION = GETLOCATION( LATITUDE, LONGITUDE )     Query Google Maps
 % reverse geocoding service to determine the locality of a set of
 % coordinates.  Google charges $5 per 1000 requests, so please do not abuse
@@ -15,166 +15,134 @@ catch
     error('Google Maps reverse geocoding failed, check internet connection and try again.')
 end
 
-water = char;
-locality = char;
-state = char;
-admin1 = char;
-admin2 = char;
-admin3 = char;
-admin4 = char;
-country = char;
-oldmethod = char;
-location = char;
+search_params = {'country' 'locality' 'administrative_area_level_1' 'administrative_area_level_2' 'administrative_area_level_3' 'administrative_area_level_4'};
 
+% prefill output struct
+output = struct;
+for param_i = 1:numel(search_params)
+    output.(search_params{param_i}) = char;
+end
+output.water = char;
+output.formatted = char;
+
+% Identify large bodies of water
 [body_of_water,elevation_out] = identifywater(lat,lon);   
-if ~strcmp(body_of_water,'unknown') && ~strcmp(body_of_water,'depression')
-    location = body_of_water{1};
-    disp(['water - ' location])
+if ~strcmp(body_of_water,'unknown')
+    output.water = body_of_water{1};
 end
 
-try
-
-    switch class(location_raw.results)
-        case 'struct'
-            
-            location = location{1};
-            if strcmp(location,'unknown')
-                location = 'ocean';
-            end
-            disp(['struct - ' location])
-
-        case 'cell'
-            numresults = size(location_raw.results,1);
-            
-            % Look for country
-            for res_idx = 1:numresults
-                if any(matches(location_raw.results{res_idx}.types,'country'))
-                    country = location_raw.results{res_idx}.formatted_address;                   
-                end
-            end   
-            
-            % Look for locality
-            for res_idx = 1:numresults
-                if any(matches(location_raw.results{res_idx}.types,'locality'))
-                    locality = location_raw.results{res_idx}.formatted_address;                    
-                end
-            end
-            
-            % Look for administrative area level 1
-            for res_idx = 1:numresults
-                if any(matches(location_raw.results{res_idx}.types,'administrative_area_level_1'))
-                    admin1 = location_raw.results{res_idx}.formatted_address;                    
-%                     if strcmp(country,'United States')
-                        state = location_raw.results{res_idx}.address_components(1).long_name;
-%                     end
-                end
-            end
-            
-            % Look for administrative area level 2
-            for res_idx = 1:numresults
-                if any(matches(location_raw.results{res_idx}.types,'administrative_area_level_2'))
-                    admin2 = location_raw.results{res_idx}.formatted_address;                    
-                end
-            end
-            
-            % Look for administrative area level 3
-            for res_idx = 1:numresults
-                if any(matches(location_raw.results{res_idx}.types,'administrative_area_level_3'))
-                    admin3 = location_raw.results{res_idx}.formatted_address;                    
-                end
-            end
-            
-            % Look for administrative area level 4
-            for res_idx = 1:numresults
-                if any(matches(location_raw.results{res_idx}.types,'administrative_area_level_4'))
-                    admin4 = location_raw.results{res_idx}.formatted_address;                    
-                end
-            end
-            
-             
-            
-            switch numresults
-                case 1
-                    oldmethod = location_raw.results{1}.formatted_address;
-                    disp('case 1')
-                case 2
-                    oldmethod = location_raw.results{1}.formatted_address;
-                    disp('case 2')
-                case 3
-                    oldmethod = location_raw.results{2}.formatted_address;
-                    disp('case 3')
-                case 4
-                    oldmethod = location_raw.results{3}.formatted_address;
-                    disp('case 4')
-                case 5
-                    oldmethod = location_raw.results{3}.formatted_address;
-                    disp('case 5')
-                case 6
-                    oldmethod = location_raw.results{3}.formatted_address;
-                    disp('case 6')
-                case 7
-                    oldmethod = location_raw.results{3}.formatted_address;
-                    disp('case 7')
-                case 8
-                    oldmethod = location_raw.results{4}.formatted_address;
-                    disp('case 8')
-                otherwise
-                    oldmethod = location_raw.results{5}.formatted_address;
-                    disp('case otherwise')
-            end            
-        otherwise
-            oldmethod = 'otherwise';
-    end
-catch
-    oldmethod = 'catch';
+% fix cell structure for single results
+if strcmp(class(location_raw.results),'struct')
+    location_raw.results = {location_raw.results};
 end
 
 
-if isempty(location)
-    location = 'test';
-end
+% check each result
+for res_i = 1:size(location_raw.results,1)
 
+    % check type of each address component
+    for comp_i = 1:size(location_raw.results{res_i}.address_components,1)
+
+        % if political data exists
+        if size(location_raw.results{res_i}.address_components(comp_i).types,1) == 2 &&...
+                strcmp(location_raw.results{res_i}.address_components(comp_i).types{2},'political')
+
+            % store formatted address
+            if isempty(output.formatted)
+                output.formatted = location_raw.results{res_i}.formatted_address;
+            end
+
+            % check for search parameter matches
+            found_i = matches(search_params,location_raw.results{res_i}.address_components(comp_i).types{1});
+
+            % if search parameter found, store to found data
+            if any(found_i) && isempty(output.(search_params{found_i}))
+                output.(search_params{found_i}) = location_raw.results{res_i}.address_components(comp_i).long_name; 
+            end
+        end
+    end 
+end
+            
 % Country specific formatting
-if ~isempty(country)
-    switch country
+if ~isempty(output.country)
+    switch output.country
         case 'United States'
-            if ~isempty(locality)
-               locality = regexprep(locality, '\d[0-9_]+\d', char(8));
+            if ~isempty(output.formatted)
+               output.formatted = regexprep(output.formatted, '\d[0-9_]+\d', char(8));
             end
             
     end
-else
-    disp('NO COUNTRY FOUND!')
 end
 
 % Find shortest administrative region name
 shortadmin = char;
-adminlengths = [strlength(admin2) strlength(admin3) strlength(admin4)];
+
+adminlengths = [strlength(output.administrative_area_level_2) strlength(output.administrative_area_level_3) strlength(output.administrative_area_level_4)];
 shortadmin_length = min(adminlengths(adminlengths>0));
 if ~isempty(shortadmin_length)
     adminshortest = find(adminlengths == shortadmin_length,1);
     switch adminshortest
         case 1
-            shortadmin = admin2;
+            output.shortadmin = output.administrative_area_level_2;
         case 2
-            shortadmin = admin3;
+            output.shortadmin = output.administrative_area_level_3;
         case 3
-            shortadmin = admin4;
+            output.shortadmin = output.administrative_area_level_4;
     end
 end
 
-% Remove leading numbers
-if isstrprop(location(1),'digit')
-    locality = extractAfter(locality,find(isstrprop(locality,'alpha'),1,'first')-1);
+% Arbitrate parameters for formatted location
+formatstrings = cell(0); % empty cell array
+
+% Water location
+if ~isempty(output.water)
+    formatstrings = {output.water};
+
+% Land location
+else    
+    if ~isempty(output.locality)
+        formatstrings = [formatstrings {output.locality}];
+    end
+    if ~isempty(output.administrative_area_level_1)
+        formatstrings = [formatstrings {output.administrative_area_level_1}];
+    end
+    if ~isempty(output.country)
+        formatstrings = [formatstrings {output.country}];
+    end    
+
+    % if the array is still empty, put something in it
+    if isempty(formatstrings)
+        formatstrings = [formatstrings {output.formatted}];
+    end
 end
 
-locality
-admin1
-admin2
-admin3
-admin4
-shortadmin
-state
-country
-water
-oldmethod
+% Join strings with comma delimiter
+formatjoined = join(formatstrings,', ');
+
+% Output parameters
+location_string = shorten_name(formatjoined{1});
+locality = output.locality;
+state = output.administrative_area_level_1;
+country = output.country;
+
+% Test output display
+% output
+
+end
+
+function [new_name] = shorten_name(old_name)
+% Shorten long names by removing common district names
+
+    old_name = regexprep(old_name, 'State of ', '');
+    old_name = regexprep(old_name, ' District', '');
+    old_name = regexprep(old_name, ' Region', '');
+    old_name = regexprep(old_name, ' Oblast', '');
+    old_name = regexprep(old_name, ' Province', '');
+    old_name = regexprep(old_name, ' Governorate', '');
+    old_name = regexprep(old_name, ' Voivodeship', '');
+    old_name = regexprep(old_name, ' Municipality', '');
+    old_name = regexprep(old_name, 'Haixi Mongol and Tibetan Autonomous Prefecture', 'Qaidam'); % preserve order
+    old_name = regexprep(old_name, '  Autonomous Prefecture', ''); % preserve order
+    old_name = regexprep(old_name, ' Municipality', '');
+    new_name = old_name;
+end

@@ -102,30 +102,7 @@ end
 cd(mainfolder);
 
 % Get event ground elevation data
-try
-    ground = getElevations(nom_lat, nom_long, 'key', GoogleMapsAPIkey );
-    if ground < 0
-        if iswater(nom_lat, nom_long, ground)
-            ground = 0;
-        else
-            error('Ground level is below sea level.')
-        end
-    end
-catch
-    warning('Google Maps API failure.  User queried for ground elevation.')
-    usersuccess = false;
-    while ~usersuccess
-        user_ground = inputdlg('Elevation data not accessible. Please enter ground elevation in meters:','Google API Failure',1,{'0'});        
-        ground = str2double(cell2mat(user_ground)); 
-        if isnan(ground)
-            usersuccess = false;
-        else
-            usersuccess = true;
-        end
-    end
-    clear usersuccess
-    
-end
+[body_of_water, ground] = identifywater(nom_lat, nom_long);
 
 % Calculate aspect ratio at event latitude, for graphing
 lat_metersperdeg = 2*earthradius*pi/360;
