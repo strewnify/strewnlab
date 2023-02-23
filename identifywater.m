@@ -42,7 +42,7 @@ body_of_water(1:length(lat)) = {'unknown'};
 elevation_out_m = elevation_in_m;
 
 % initial corrections
-body_of_water(elevation_in_m < min_elevation_m) = {'ocean'};
+body_of_water(elevation_in_m < min_elevation_m) = {'water'};
 elevation_out_m(elevation_in_m < min_elevation_m) = 0;
 
 warning('off','MATLAB:table:RowsAddedExistingVars')
