@@ -442,7 +442,7 @@ for event_i = 1:size_import
         
     % unknown error handling
     else
-        error('Unknown error!')
+        logformat('Unknown error.','ERROR')
     end
    
     % Log event id for problem events
