@@ -1,4 +1,4 @@
-function database_out = importevents(database_in,datasource,import_data,waitbarhandle)
+function database_out = importevents(database_in, import_data, datasource, waitbarhandle)
 
 database_out = database_in;
 
@@ -6,8 +6,8 @@ database_out = database_in;
 strewnconfig
 
 % Duplicate event identification thresholds
-location_err_km = database_out.Metadata.(datasource).location_err_km; 
-time_err_s = database_out.Metadata.(datasource).time_err_s;
+location_err_km = import_data.(datasource).location_err_km; 
+time_err_s = import_data.(datasource).time_err_s;
 time_err_min = ceil(time_err_s/60);
 
 num_new = 0;
@@ -30,8 +30,8 @@ database_out.ChangeLog.ChangeSummary(ChangeLog_idx) = {['Started importing ' dat
 waitbar(0,waitbarhandle,['Getting ' datasource ' Data...']);
 
 % Initialize import data review
-size_import = size(import_data,1);
-numvar = numel(import_data.Properties.VariableNames);
+size_import = size(import_data.(datasource).LatestData,1);
+numvar = numel(import_data.(datasource).LatestData.Properties.VariableNames);
 
 % Turn off table warning
 warning('off','MATLAB:table:RowsAddedExistingVars');
@@ -47,7 +47,7 @@ for event_i = 1:size_import
     waitbar(event_i/size_import,waitbarhandle,['Reviewing ' datasource ' Events...  ' num2str(event_i) ' of ' num2str(size_import) newline num2str(num_new) ' Events Added,  ' num2str(num_updated+num_newsources), ' Events Updated']);
     
     % Determine data type for import
-    if ismember('EventName',fieldnames(import_data)) && contains(import_data.EventName(event_i),'Doppler')
+    if ismember('EventName',fieldnames(import_data.(datasource).LatestData)) && contains(import_data.(datasource).LatestData.EventName(event_i),'Doppler')
          datatype = 'Doppler';
     else
          datatype = 'Trajectory';
@@ -59,10 +59,10 @@ for event_i = 1:size_import
             % Assign reference point for EventID calculation
             % if no reference point is defined, define it as end point
             if ~strcmp(datasource,'NEOB') && ~strcmp(datasource,'ASGARD')&&...
-                ~(ismember('ref_Lat',fieldnames(import_data)) && ismember('ref_Long',fieldnames(import_data)) && ismember('ref_Height_km',fieldnames(import_data)) && ismember('ref_Description',fieldnames(import_data)))
+                ~(ismember('ref_Lat',fieldnames(import_data.(datasource).LatestData)) && ismember('ref_Long',fieldnames(import_data.(datasource).LatestData)) && ismember('ref_Height_km',fieldnames(import_data.(datasource).LatestData)) && ismember('ref_Description',fieldnames(import_data.(datasource).LatestData)))
                 
                 % if any critical inputs are missing
-                if ismember('ref_Lat',fieldnames(import_data)), ismember('ref_Long',fieldnames(import_data)),ismember('ref_Height_km',fieldnames(import_data)),ismember('ref_Description',fieldnames(import_data))
+                if ismember('ref_Lat',fieldnames(import_data.(datasource).LatestData)), ismember('ref_Long',fieldnames(import_data.(datasource).LatestData)),ismember('ref_Height_km',fieldnames(import_data.(datasource).LatestData)),ismember('ref_Description',fieldnames(import_data.(datasource).LatestData))
                     error('Invalid input data.  Resolve reference point values for ref_Lat, ref_Long, and ref_Height_km')
                 end
                 
@@ -73,28 +73,28 @@ for event_i = 1:size_import
                     importdata.ref_Height_km = importdata.end_Height_km;
                     importdata.ref_Description(:) = {'end'};
                 catch
-                    logformat(sprintf('Reference point not found for %s.%s.%s, updated record created.',import_data.EventID_nom{event_i}, datatype, datasource),'WARN')
+                    logformat(sprintf('Reference point not found for %s.%s.%s, updated record created.',import_data.(datasource).LatestData.EventID_nom{event_i}, datatype, datasource),'WARN')
                 end
             end
 
             if ~strcmp(datasource,'NEOB') && ~strcmp(datasource,'ASGARD')
                 nomcalc = true;
-                [import_data.LAT(event_i), import_data.LONG(event_i)] =...
-                    nomlatlong(import_data.Bearing_deg(event_i),import_data.ZenithAngle_deg(event_i),import_data.ref_Lat(event_i),import_data.ref_Long(event_i),import_data.ref_Height_km(event_i));
+                [import_data.(datasource).LatestData.LAT(event_i), import_data.(datasource).LatestData.LONG(event_i)] =...
+                    nomlatlong(import_data.(datasource).LatestData.Bearing_deg(event_i),import_data.(datasource).LatestData.ZenithAngle_deg(event_i),import_data.(datasource).LatestData.ref_Lat(event_i),import_data.(datasource).LatestData.ref_Long(event_i),import_data.(datasource).LatestData.ref_Height_km(event_i));
             else
                 nomcalc = false;
-                import_data.LAT(event_i) = import_data.ref_Lat(event_i);
-                import_data.LONG(event_i) = import_data.ref_Long(event_i);
+                import_data.(datasource).LatestData.LAT(event_i) = import_data.(datasource).LatestData.ref_Lat(event_i);
+                import_data.(datasource).LatestData.LONG(event_i) = import_data.(datasource).LatestData.ref_Long(event_i);
             end
 
             % Post processing - complex functions for each record
-            if ~ismember('Timezone',fieldnames(import_data)) && ~isnan(import_data.LONG(event_i))
-                import_data.Timezone(event_i) = {timezonecalc(import_data.LONG(event_i))};
-                import_data.Datetime_local(event_i) = datetime(import_data.DatetimeUTC(event_i),'TimeZone',import_data.Timezone{event_i});
-                %import_data.HyperMap(event_i) = {['https://maps.google.com/?q=' num2str(import_data.LAT(event_i),'%f') '%20' num2str(import_data.LONG(event_i),'%f')]};
+            if ~ismember('Timezone',fieldnames(import_data.(datasource).LatestData)) && ~isnan(import_data.(datasource).LatestData.LONG(event_i))
+                import_data.(datasource).LatestData.Timezone(event_i) = {timezonecalc(import_data.(datasource).LatestData.LONG(event_i))};
+                import_data.(datasource).LatestData.Datetime_local(event_i) = datetime(import_data.(datasource).LatestData.DatetimeUTC(event_i),'TimeZone',import_data.(datasource).LatestData.Timezone{event_i});
+                %import_data.(datasource).LatestData.HyperMap(event_i) = {['https://maps.google.com/?q=' num2str(import_data.(datasource).LatestData.LAT(event_i),'%f') '%20' num2str(import_data.(datasource).LatestData.LONG(event_i),'%f')]};
             else
-                import_data.Timezone(event_i) = {'+00:00'};
-                %import_data.HyperMap(event_i) = {''};
+                import_data.(datasource).LatestData.Timezone(event_i) = {'+00:00'};
+                %import_data.(datasource).LatestData.HyperMap(event_i) = {''};
             end
 
         otherwise
@@ -102,8 +102,8 @@ for event_i = 1:size_import
     end
 
     % Generate possible EventID matches
-    EventID_nom = eventid(import_data.LAT(event_i),import_data.LONG(event_i),import_data.DatetimeUTC(event_i));
-    PossibleEventIDs = alteventids(import_data.LAT(event_i),import_data.LONG(event_i),import_data.DatetimeUTC(event_i),time_err_min,location_err_km);
+    EventID_nom = eventid(import_data.(datasource).LatestData.LAT(event_i),import_data.(datasource).LatestData.LONG(event_i),import_data.(datasource).LatestData.DatetimeUTC(event_i));
+    PossibleEventIDs = alteventids(import_data.(datasource).LatestData.LAT(event_i),import_data.(datasource).LatestData.LONG(event_i),import_data.(datasource).LatestData.DatetimeUTC(event_i),time_err_min,location_err_km);
     PossibleEventIDs = PossibleEventIDs(isfield(database_out,PossibleEventIDs) | strcmp(PossibleEventIDs,EventID_nom)); % ID's in the database or the nominal ID
     
     % Issue: some unique ID's may not be listed, due to incorrect source data
@@ -156,19 +156,19 @@ for event_i = 1:size_import
             else
                 CompSource = EventSources{1};
                 for source_i = 2:numel(EventSources)
-                    if database_out.Metadata.(EventSources{source_i}).rank < database_out.Metadata.(CompSource).rank
+                    if import_data.(EventSources{source_i}).rank < import_data.(CompSource).rank
                         CompSource = EventSources{source_i};
                     end
                 end
             end
 
             % Calculate deltas
-            dup_timedelta_s = abs(seconds(import_data.DatetimeUTC(event_i) - database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).DatetimeUTC));
-            dup_dist_km = distance(import_data.LAT(event_i),import_data.LONG(event_i),database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).LAT,database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).LONG,planet) / 1000;
+            dup_timedelta_s = abs(seconds(import_data.(datasource).LatestData.DatetimeUTC(event_i) - database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).DatetimeUTC));
+            dup_dist_km = distance(import_data.(datasource).LatestData.LAT(event_i),import_data.(datasource).LatestData.LONG(event_i),database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).LAT,database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).LONG,planet) / 1000;
 
             % Calculate thresholds as the sum of expected error for both sources
-            max_timedelta_s = database_out.Metadata.(datasource).time_err_s + database_out.Metadata.(CompSource).time_err_s;
-            max_dist_km = database_out.Metadata.(datasource).location_err_km + database_out.Metadata.(CompSource).location_err_km;
+            max_timedelta_s = import_data.(datasource).time_err_s + import_data.(CompSource).time_err_s;
+            max_dist_km = import_data.(datasource).location_err_km + import_data.(CompSource).location_err_km;
 
             % Compare events and prepare to remove non-matching events from the duplicate list
             if (dup_timedelta_s > max_timedelta_s) || (dup_dist_km > max_dist_km)
@@ -190,11 +190,11 @@ for event_i = 1:size_import
                temp_sources = size({database_out.(PossibleEventIDs{dup_i}).(datatype).(datasource).SourceKey},2); 
                for source_i = 1:temp_sources
                     try
-                       if matches(database_out.(PossibleEventIDs{dup_i}).(datatype).(datasource)(source_i).SourceKey,import_data.SourceKey{event_i})  % try to access already imported data
+                       if matches(database_out.(PossibleEventIDs{dup_i}).(datatype).(datasource)(source_i).SourceKey,import_data.(datasource).LatestData.SourceKey{event_i})  % try to access already imported data
                            PossibleEventIDs = PossibleEventIDs(dup_i); % delete all other options
                            dup_i = num_possible + 1; % break loop
                            source_i = temp_sources + 1; % break loop
-                           %logformat(sprintf('Source Key %s from %s found in %s. Previously matched event.',import_data.SourceKey{event_i},datasource,PossibleEventIDs{dup_i}),'DATABASE')                   
+                           %logformat(sprintf('Source Key %s from %s found in %s. Previously matched event.',import_data.(datasource).LatestData.SourceKey{event_i},datasource,PossibleEventIDs{dup_i}),'DATABASE')                   
                        end
                     end
                end
@@ -205,7 +205,7 @@ for event_i = 1:size_import
     ChangeAddendum = char.empty;
     
     % import the data for compare
-    testimport =  table2struct(import_data(event_i,:));
+    testimport =  table2struct(import_data.(datasource).LatestData(event_i,:));
     
     % Update num possible
     num_possible = numel(PossibleEventIDs);
@@ -222,7 +222,7 @@ for event_i = 1:size_import
         testimport.Hyperlink1
 
         % Log activity
-        logformat([sprintf('Auto-merge failed, %s from %s matches ', import_data.SourceKey{event_i}, datasource) sprintf('%s, ', PossibleEventIDs{1:(end-1)}) sprintf('%s', PossibleEventIDs{end})])
+        logformat([sprintf('Auto-merge failed, %s from %s matches ', import_data.(datasource).LatestData.SourceKey{event_i}, datasource) sprintf('%s, ', PossibleEventIDs{1:(end-1)}) sprintf('%s', PossibleEventIDs{end})])
         logformat('Requesting user input for manual merge.','USER')
 
         % Prompt user
@@ -262,7 +262,7 @@ for event_i = 1:size_import
         
         % alternate EventID matched
         if ~strcmp(EventID_nom, PossibleEventIDs{1})
-            %logformat(sprintf('Source key %s from %s is a match for Event %s in database.', import_data.SourceKey{event_i}, datasource, PossibleEventIDs{1}),'DATABASE')
+            %logformat(sprintf('Source key %s from %s is a match for Event %s in database.', import_data.(datasource).LatestData.SourceKey{event_i}, datasource, PossibleEventIDs{1}),'DATABASE')
             ChangeAddendum = 'alternate EventID used';
             EventID_nom = PossibleEventIDs{1};
         end
@@ -277,8 +277,8 @@ for event_i = 1:size_import
             
             % Check for differences
             fields_database = fieldnames(database_out.(EventID_nom).(datatype).(datasource)); % get database field names for this event
-            fields_import = setdiff(import_data.Properties.VariableNames',fields_donotimport); % get imported fields
-            fields_compare = setdiff(import_data.Properties.VariableNames',fields_donotcompare); % get imported fields
+            fields_import = setdiff(import_data.(datasource).LatestData.Properties.VariableNames',fields_donotimport); % get imported fields
+            fields_compare = setdiff(import_data.(datasource).LatestData.Properties.VariableNames',fields_donotcompare); % get imported fields
             fields_new = setdiff(setdiff(fields_import, fields_database),fields_ignorenewfields); % get new fields
             num_fields = numel(fields_compare);
             fields_numnew = numel(fields_new);
@@ -301,7 +301,7 @@ for event_i = 1:size_import
                         data_2old = data_old;
                     end
                     
-                    %eval(['data_new = import_data.' fields_compare{v} '(' num2str(event_i) ');' ])
+                    %eval(['data_new = import_data.(datasource).LatestData.' fields_compare{v} '(' num2str(event_i) ');' ])
                     eval(['data_new = testimport.' fields_compare{v} ';'])
                     
                     % if data changed
@@ -346,7 +346,7 @@ for event_i = 1:size_import
 
                 % Add new record
                  for f = 1:numel(fields_import)
-                     database_out.(EventID_nom).(datatype).(datasource)(1).(fields_import{f}) = import_data.(fields_import{f})(event_i);
+                     database_out.(EventID_nom).(datatype).(datasource)(1).(fields_import{f}) = import_data.(datasource).LatestData.(fields_import{f})(event_i);
                  end
                  
                  % this method failed for dissimilar structures error
@@ -424,7 +424,7 @@ for event_i = 1:size_import
         EventID_nom(13:14) = EventIDidx{nom_increment};
         
         % Import the data into the new event
-        database_out.(EventID_nom).(datatype).(datasource) = table2struct(import_data(event_i,:));
+        database_out.(EventID_nom).(datatype).(datasource) = table2struct(import_data.(datasource).LatestData(event_i,:));
         
         new_event = true;
         num_new = num_new + 1;
@@ -447,7 +447,7 @@ for event_i = 1:size_import
    
     % Log event id for problem events
     if data_changed || new_event || new_source
-        if nomcalc && (import_data.LAT(event_i) == import_data.ref_Lat(event_i)) && (import_data.LONG(event_i) == import_data.ref_Long(event_i))
+        if nomcalc && (import_data.(datasource).LatestData.LAT(event_i) == import_data.(datasource).LatestData.ref_Lat(event_i)) && (import_data.(datasource).LatestData.LONG(event_i) == import_data.(datasource).LatestData.ref_Long(event_i))
             logformat(sprintf('Nominal coordinate extrapolation failed for %s from %s.', EventID_nom, datasource))
         elseif contains(EventID_nom,'X')
             logformat(sprintf('EventID defaulted for %s from %s.', EventID_nom, datasource))

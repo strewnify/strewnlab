@@ -31,7 +31,7 @@ nowtime_utc = datetime('now','TimeZone','UTC');
 now_datestring = datestr(nowtime_utc,'yyyymmddHHMM');
 
 usefile = true;
-if exist(Database_check,'var')
+if exist(Database_EventData_varname,'var')
     
     % Ask for user input
     if userpresent
@@ -80,7 +80,7 @@ if usefile
         logformat(sprintf('Data loaded from %s.mat file.',DatabaseFilename),'DATABASE');
         
         % Check for correct content
-        if ~exist(Database_check,'var')
+        if ~exist(Database_EventData_varname,'var')
             logformat('Database content unexpected.  Contact developer.','ERROR')    
         end
         

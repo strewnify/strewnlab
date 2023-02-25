@@ -11,8 +11,8 @@ plotmargin = [5 5 5 5];
 plot_material = 'all';
 
 % Wind bins
-wind_bins_lower_edges = [-1.5 -0.75 0 0.75];
-wind_bins_upper_edges = [-0.75 0 0.75 1.5];
+wind_bins_lower_edges = [-1.5 -1.25 -1 -0.75];
+wind_bins_upper_edges = [-1.25 -1 -0.75 -0.5];
 
 % Filter masses that continued ablation in darkflight
 % Feature untested, requires calibration and simulation using ablation_thresh
@@ -20,7 +20,7 @@ filter_darkflight = darkflight_elevation - error_elevation;
 %filter_darkflight = ground;
 
 % Bin data
-log_base = 10;
+log_base = 2;
 [bin_counts,bin_edges] = histcounts(logb(EventData_Finds.mass_kg(EventData_Finds.mass_kg > minmass),log_base),'BinMethod','sturges');
 bin_idx = 1:numel(bin_edges);
 plot_idx = find(bin_counts > 0);
@@ -33,6 +33,7 @@ upper_edges = log_base.^bin_edges(plot_idx + 1);
 figure
 hold on
 plot_idx = 0;
+numplots = numel(lower_edges);
 
 for wind_idx = 1:numel(wind_bins_lower_edges)
 

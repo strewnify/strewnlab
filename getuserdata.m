@@ -2,6 +2,9 @@ function [ File_data ] = getuserdata( filename )
 % [ FILE_DATA ]  = GETUSERDATA( FILENAME )  
 % Import meteoritic data from spreadsheet.
 
+% Get timestamp
+nowtime_utc = datetime('now','TimeZone','UTC');
+
 % Parse filename
 filetype = extractBefore(filename,'.');
 if isempty(filetype)
@@ -129,8 +132,8 @@ switch filetype
         error('Invalid input file type specified.')
 end
 
-% Filter events before dayhistory
-File_data = File_data(File_data.DatetimeUTC >= startdate & File_data.DatetimeUTC <= enddate,:);
+% % Filter events before dayhistory
+% File_data = File_data(File_data.DatetimeUTC >= startdate & File_data.DatetimeUTC <= enddate,:);
 
 % Standardize output data
 File_data.DateAccessed(:) = nowtime_utc; % Add timestamp

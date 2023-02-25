@@ -101,7 +101,7 @@ CNEOS_data = standardize_tbdata(CNEOS_data); % Convert units and set column orde
 warning('on','MATLAB:table:RowsAddedExistingVars');
 
 % Log
-diaryformat(sprintf('%0.0f records retrieved from CNEOS',size(CNEOS_data,1)),'DATA')
+logformat(sprintf('%0.0f records retrieved from CNEOS',size(CNEOS_data,1)),'DATA')
 
 % close waitbar
  close(handleCNEOS)

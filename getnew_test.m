@@ -3,9 +3,6 @@
 % online sources, from the last x days (specified by DAYHISTORY), compare 
 % to the database, and add new events.
 
-% Data source config
-getsources = {'GMN'}
-
 % Load settings
 strewnconfig
 [~,codefilename,~] = fileparts(mfilename('fullpath'));
@@ -16,27 +13,32 @@ logformat('Getting new events.')
 % Disable table row assignment warning
 warning('off','MATLAB:table:RowsAddedExistingVars');
 
-dayhistory = 3041;
+dayhistory = 15000;
 %dayhistory = 30;
-
-% Config
-GetCNEOS = false;
-GetNEOB = false;
-GetGoodall = false;
-GetAMS = false;
-GetMetBull = false;
-GetASGARD = false;
-GetGMN = true;
 
 % Temporary
 DatabaseFilename = 'MeteorDatabase'; %.mat filename OVERWRITES DATABASE FILENAME FROM STREWNCONFIG
-Database_check = 'sdb_MeteorData';
+Database_EventData_varname = 'sdb_MeteorData';
 logformat('Database in development, temporary name ''MeteorDatabase'' used to overwrite strewnconfig.','DEBUG')
+
+% Query user for databases
+usersuccess = false;
+SourceList = fieldnames(sdb_ImportData);
+[getsources,usersuccess] = listdlg('ListString',SourceList,'SelectionMode','multiple','Name','Select Sources', 'OKString','Load','PromptString','Select Sources for Import:','ListSize',[300,300]);
+if ~usersuccess
+    clear getsources
+    clear eventindex
+    logformat('No sources selected. Exit program.','ERROR')
+end
+GetSourceList = SourceList(getsources);
 
 %Load the database
 load_database
 
+% Define time period
 nowtime_utc = datetime('now','TimeZone','UTC'); 
+startdate_utc = nowtime_utc - days(dayhistory);
+enddate_utc = nowtime_utc;
 startyear = year(nowtime_utc-days(dayhistory));
 endyear = year(nowtime_utc);
 
@@ -50,62 +52,29 @@ num_updated = 0;
 handleNewEvents = waitbar(0,'Loading Data...');
 pause(0.2)
 
-% Get data from the CNEOS fireball database
-if GetCNEOS
-    if ~exist('CNEOS_data','var')
-        CNEOS_data = getcneos_test();
-    end
-    sdb_MeteorData = importevents(sdb_MeteorData,'CNEOS',CNEOS_data,handleNewEvents);
-end
+% Get data from each database requested
+SourceData = struct;
+for source_i = 1:numel(getsources)
 
-% Get NEO Bolide Data
-if GetNEOB
-    if ~exist('NEOB_data','var')
-        NEOB_data = getneob_test();
+    source_name = GetSourceList{source_i}; % name of the source database
+    dayhistory_max = sdb_ImportData.(source_name).dayhistory_max; % maximum day history available from source
+    startdate_min_utc = sdb_ImportData.(source_name).startdate_min_utc; % earliest date in source
+    startdate_eff = max([startdate_utc, (nowtime_utc - days(dayhistory_max)), startdate_min_utc]);
+        
+    % Clear existing data
+    sdb_ImportData.(source_name).LatestData = []; 
+    
+    % Arbitrate data source get function, and get data
+    if strcmp(sdb_ImportData.(source_name).source_filename,'none')
+        sdb_ImportData.(source_name).LatestData = sdb_ImportData.(source_name).getfunction(startdate_eff,enddate_utc);        
+    else
+        sdb_ImportData.(source_name).LatestData = sdb_ImportData.(source_name).getfunction(sdb_ImportData.(source_name).source_filename);
     end
-    sdb_MeteorData = importevents(sdb_MeteorData,'NEOB',NEOB_data,handleNewEvents);
-end
+    
+    % Import data into local database
+    sdb_MeteorData = importevents(sdb_MeteorData, sdb_ImportData, source_name, handleNewEvents);
 
-% Get data from the AllEventData spreadsheet
-if GetGoodall
-    if ~exist('User_data','var')
-        Goodall_data = getuserdata('AllEventData.xlsx');
-    end
-    sdb_MeteorData = importevents(sdb_MeteorData,'Goodall',Goodall_data,handleNewEvents);
-end
-
-% Get data from AMS
-if GetAMS
-    if ~exist('AMS_data','var')
-        AMS_data = getams_test(dayhistory);
-    end
-    sdb_MeteorData = importevents(sdb_MeteorData,'AMS',AMS_data,handleNewEvents);
-end
-
-% All Landings MetBull Database
-if GetMetBull
-    if ~exist('MetBull_data','var')
-        MetBull_data = getuserdata('AllLandings.xlsx');
-    end
-    sdb_MeteorData = importevents(sdb_MeteorData,'MetBull',MetBull_data,handleNewEvents);
-end
-
-% Get data from the ASGARD site
-if GetASGARD
-    if ~exist('ASGARD_data','var')
-        dayhistory = 428;
-        ASGARD_data = getasgard_test(dayhistory);
-    end
-    sdb_MeteorData = importevents(sdb_MeteorData,'ASGARD',ASGARD_data,handleNewEvents);
-end
-
-% Get data from the Global Meteor Network
-if GetGMN
-    if ~exist('GMN_data','var')
-        GMN_data = getgmn_test();
-    end
-    warning('off','MATLAB:table:RowsAddedExistingVars');
-    sdb_MeteorData = importevents(sdb_MeteorData,'GMN',GMN_data,handleNewEvents);
+    %logformat(sprintf('',),'DATA');
 end
 
 
@@ -163,9 +132,6 @@ end
 
 % Save the database
 save_database
-
-% Standardize output data
-NEOB_data = standardize_tbdata(NEOB_data);
 
 % Re-enable table warnings
 warning ('on','MATLAB:table:RowsAddedExistingVars')

@@ -58,7 +58,7 @@ addpath(genpath(mainfolder))
 % Database settings
 DatabaseFilename = 'StrewnifyDatabase'; %.mat filename
 Database_prefix = 'sdb_*'; % all variables in the database must have this prefix, to be saved properly
-Database_check = 'sdb_Events'; % database integrity check, if this variable is not found, error
+Database_EventData_varname = 'sdb_Events'; % database integrity check, if this variable is not found, error
 
 % Generate a cell array of EventID increments, in case of multiple events in one hour
 % Supports up to 1296 additional events

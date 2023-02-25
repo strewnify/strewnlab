@@ -5,7 +5,7 @@
 
 % max_length = 10
 
-for idx = 1:100
+for idx = 1:10
 
 % get one set of coordinates from the user map
 [lat,lon] = ginput(1);
