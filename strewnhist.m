@@ -19,7 +19,7 @@ filter_darkflight = darkflight_elevation - error_elevation;
 
 % Wind variation
 %error_windmin = weather_minsigma; error_windmax = weather_maxsigma;
-error_windmin = -1.4; error_windmax = -0.8;
+error_windmin = -1.5; error_windmax = -0.75;
 
 % Lookup the mass filtered indices
 filter = (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= error_windmin) & (strewndata.error_wind <= error_windmax);
@@ -28,12 +28,12 @@ if ~strcmp(plot_materials{1},'all')
 end
 
 % remove 80% of searched polygon
-insearched = inpolygon(strewndata.Latitude,strewndata.Longitude,searchedtxt.lat,searchedtxt.long);
-insearched_idx = find(insearched);
-randdel = rand(numel(insearched_idx),1) > 0.2; % generate random indices to delete
-insearched_idx(randdel) = [];  % delete 20% of the indices
-insearched(insearched_idx) = false; % set 20% of the indices to false
-filter = filter & ~insearched % filter out 80% of data the searched area
+% insearched = inpolygon(strewndata.Latitude,strewndata.Longitude,searchedtxt.lat,searchedtxt.long);
+% insearched_idx = find(insearched);
+% randdel = rand(numel(insearched_idx),1) > 0.2; % generate random indices to delete
+% insearched_idx(randdel) = [];  % delete 20% of the indices
+% insearched(insearched_idx) = false; % set 20% of the indices to false
+% filter = filter & ~insearched % filter out 80% of data the searched area
 
 % Convert meters to degrees of latitude and longitude
 lat_gridsize = gridsize / lat_metersperdeg;

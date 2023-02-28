@@ -34,7 +34,8 @@ GMN_folder = 'monthly';
 %GMN_filename = 'traj_summary_yesterday.txt';
 GMN_filename = 'traj_summary_monthly_202302.txt';
 %GMN_filename = 'traj_summary_all.txt';
-urlwrite(['https://globalmeteornetwork.org/data/traj_summary_data/' GMN_folder '/' GMN_filename],GMN_filename);
+logformat('GMN data not retrieved by date, disable/reenable','DEBUG')
+%urlwrite(['https://globalmeteornetwork.org/data/traj_summary_data/' GMN_folder '/' GMN_filename],GMN_filename);
 waitbar(0, handleGMN,'Reading Global Meteor Network data...'); 
 GMN_raw = readtable(GMN_filename);
 %delete(filename)
@@ -49,7 +50,7 @@ GMN_raw = readtable(GMN_filename);
 
 % Rename Variables
 source_varnames = GMN_raw.Properties.VariableNames;
-logformat('GMN variable names nbot robust to changes','DEBUG')
+logformat('GMN variable names not robust to changes','DEBUG')
 % Need to add source_varnames = ...
 db_varnames = [{'SourceKey'} {'Beginning'} {'Beginning_1'} {'IAU'} {'IAU_1'} {'SolLon'} {'AppLST'} {'RAgeo'} {'err_RAgeo'} {'DECgeo'} {'err_DECgeo'} {'LAMgeo'} {'err_LAMgeo'}];
 db_varnames = [db_varnames {'BETgeo'} {'err_BETgeo'} {'Vgeo'} {'err_Vgeo'} {'LAMhel'} {'err_LAMhel'} {'BEThel'} {'err_BEThel'} {'Vhel'} {'err_Vhel'} {'a'} {'err_a'} {'e'} {'err_e'} {'i'} {'err_i'}];

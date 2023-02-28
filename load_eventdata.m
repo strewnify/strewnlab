@@ -4,9 +4,7 @@
 %   Program written by Jim Goodall, August 2019
 
 % Load config file
-if ~exist('check_configloaded','var') || ~check_configloaded
-    strewnconfig
-end
+strewnconfig
 
 % Spreadsheet config
 eventfilename = 'AllEventData.xlsx';
@@ -26,7 +24,11 @@ end
 if ~exist('eventindex','var')
     usersuccess = false;
     SimulationList = AllEventData(firsteventrow:end,2);
-    [eventindex,usersuccess] = listdlg('ListString',SimulationList,'SelectionMode','single','Name','Select Simulation', 'OKString','Load','PromptString','Select a Meteor Event:','ListSize',[300,300]);
+    try
+        [eventindex,usersuccess] = listdlg('ListString',SimulationList,'SelectionMode','single','Name','Select Simulation', 'OKString','Load','PromptString','Select a Meteor Event:','ListSize',[300,300]);
+    catch
+        logformat('Error loading event list.  Check for extraneous data in input sheet.','ERROR')
+    end
     if ~usersuccess
         clear usersuccess
         clear eventindex

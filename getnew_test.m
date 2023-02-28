@@ -21,6 +21,9 @@ DatabaseFilename = 'MeteorDatabase'; %.mat filename OVERWRITES DATABASE FILENAME
 Database_EventData_varname = 'sdb_MeteorData';
 logformat('Database in development, temporary name ''MeteorDatabase'' used to overwrite strewnconfig.','DEBUG')
 
+%Load the database
+load_database
+
 % Query user for databases
 usersuccess = false;
 SourceList = fieldnames(sdb_ImportData);
@@ -31,9 +34,6 @@ if ~usersuccess
     logformat('No sources selected. Exit program.','ERROR')
 end
 GetSourceList = SourceList(getsources);
-
-%Load the database
-load_database
 
 % Define time period
 nowtime_utc = datetime('now','TimeZone','UTC'); 
@@ -53,7 +53,6 @@ handleNewEvents = waitbar(0,'Loading Data...');
 pause(0.2)
 
 % Get data from each database requested
-SourceData = struct;
 for source_i = 1:numel(getsources)
 
     source_name = GetSourceList{source_i}; % name of the source database
