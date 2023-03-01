@@ -16,13 +16,32 @@ warning('off','MATLAB:table:RowsAddedExistingVars');
 %Load the database
 load_database
 
-% Import the contact file
-[FILENAME, PATHNAME, FILTERINDEX] = uigetfile({'*.csv;*.xls;*.xlsx'});
-if FILTERINDEX ~= 0
-    [~,~,contactdata] = xlsread([PATHNAME FILENAME]);
-else
-    error('No file selected for import.')
+try
+    
+    % Attempt to download the file
+    cd([mainprefix '\Downloads\'])
+    FILTERINDEX = 1;
+    PATHNAME = [mainprefix '\Downloads\'];
+    FILENAME = ['strewn_contacts' datetimestring '.csv'];
+    options = weboptions('MediaType', 'application/json', 'ArrayFormat', 'csv');
+    websave(FILENAME,'https://docs.google.com/spreadsheet/ccc?key=1-l-29FPTCz5rEr1AOYbUYrFXR9NRKsZXxqs0QiVxanA&output=csv&pref=1',weboptions)
+    dateFormat = 'MM/dd/yyyy h:mm:SS aa';
+    cd(mainfolder)
+
+catch
+    cd(mainfolder)
+    logformat('Google Drive download failed, manually download file.','DEBUG')
+    
+    % Import the contact file
+    [FILENAME, PATHNAME, FILTERINDEX] = uigetfile({'*.csv;*.xls;*.xlsx'});
+    if FILTERINDEX == 0
+        error('No file selected for import.')
+    end
+    dateFormat = 'yyyy/MM/dd h:mm:SS aa z';
 end
+
+% import the data
+[~,~,contactdata] = xlsread([PATHNAME FILENAME]);
 
 % Start logging
 diary([logfolder 'strewnnotify_log.txt'])        
@@ -43,7 +62,7 @@ importsize = size(contactdata,1);
 db_start_idx = size(sdb_Contacts.TimeAdded,1) + 1;
 
 % Find the first import entry newer than the last database entry
-start_idx = find((datetime(contactdata(:,col_time),'InputFormat','yyyy/MM/dd h:mm:SS aa z','TimeZone','UTC') > sdb_Contacts.TimeAdded(end)) == true,1);
+start_idx = find((datetime(contactdata(:,col_time),'InputFormat',dateFormat,'TimeZone','UTC') > sdb_Contacts.TimeAdded(end)) == true,1);
 if isempty(start_idx)
     start_idx = size(contactdata,1) + 1;
 end
@@ -114,12 +133,12 @@ else
         logformat(['Please review record ' num2str(db_start_idx) '!'],'USER')
     else
         logformat([num2str(db_end_idx - db_start_idx + 1) ' new records imported.'])
-        logformat(['ACTION REQUIRED: Review records ' num2str(db_start_idx) ' to ' num2str(db_end_idx) '!'])
-        
-        % Remind user to manually tag Mailchimp records
-        logformat('ACTION REQUIRED: Manually tag new records as ''StrewnNotify'': <a href = "https://www.mailchimp.com">Go to Mailchimp</a>','USER')
+        logformat(['ACTION REQUIRED: Review records ' num2str(db_start_idx) ' to ' num2str(db_end_idx) '!'])        
+    end
+    
+    % Remind user to manually tag Mailchimp records
+    logformat('ACTION REQUIRED: Manually tag new records as ''StrewnNotify'': <a href = "https://www.mailchimp.com">Go to Mailchimp</a>','USER')
 
-    end    
 end
 
 

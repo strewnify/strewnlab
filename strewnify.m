@@ -332,7 +332,7 @@ projectile(n).cubicity = randnsigma(cubicity_mean,cubicity_stdev,sigma_thresh,cu
 if meas_density == 0
     density = randbetween(nom_density - error_density, nom_density + error_density);
 else
-    density = randbetween(meas_density * 0.95, meas_density * 1.05);
+    density = randbetween(meas_density * (1-meas_density_err), meas_density * (1+meas_density_err));
 end
 projectile(n).density = density;
 projectile(n).frontalareamult = randnsigma(frontalareamult_mean,frontalareamult_stdev,sigma_thresh,frontalareamult_min,frontalareamult_max);

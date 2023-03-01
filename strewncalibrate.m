@@ -11,8 +11,12 @@ plotmargin = [5 5 5 5];
 plot_material = 'all';
 
 % Wind bins
-wind_bins_lower_edges = [-0.8 -0.6 -0.4];
-wind_bins_upper_edges = [-0.6 -0.4 -0.2];
+wnd_min = -1.4;
+wnd_max = -0.2;
+wnd_step = (wnd_max - wnd_min)/3; 
+wnd_bins = wnd_min:wnd_step:wnd_max;
+wind_bins_lower_edges = wnd_bins(1:3);
+wind_bins_upper_edges = wnd_bins(2:4);
 
 % Filter masses that continued ablation in darkflight
 % Feature untested, requires calibration and simulation using ablation_thresh

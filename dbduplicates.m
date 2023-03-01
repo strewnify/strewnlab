@@ -1,34 +1,12 @@
 % RESOLVEDUPLICATES  Resolve meteor database duplicates
 
-DatabaseFilename = 'MeteorDatabase'; %.mat filename
+% Temporary
+DatabaseFilename = 'MeteorDatabase'; %.mat filename OVERWRITES DATABASE FILENAME FROM STREWNCONFIG
+Database_EventData_varname = 'sdb_MeteorData';
+logformat('Database in development, temporary name ''MeteorDatabase'' used to overwrite strewnconfig.','DEBUG')
 
-% % Load the database
-% usefile = true;
-% if exist('MeteorData','var')
-%     warning('Meteor data already loaded.')
-%     
-%     % Ask for user input
-%     answer = questdlg('There is a database already loaded in memory. Which would you like to use?  (Either way, a backup will be created and no data will be lost.)','Warning: Database Already Loaded','Use Database From File','Use Already Loaded Database','Cancel','Use Database From File');
-%     % Handle response
-%     switch answer
-%         case 'Use Database From File'
-%             
-%             % Backup the loaded database
-%             cd(backupfolder)
-%             save([DatabaseFilename '_BACKUP_' now_datestring],'MeteorData')
-%             cd(mainfolder)
-%             
-%             % clear the loaded database
-%             clear MeteorData
-%                         
-%         case 'Use Already Loaded Database'
-%             disp('Used already loaded database.')        
-%             usefile = false;
-%             
-%         case 'Cancel'
-%             error('User cancelled data import.')
-%     end
-% end
+% Load the database
+load_database
  
 % Open a waitbar
 handleDuplicates = waitbar(0,'Loading Data...');
@@ -91,7 +69,7 @@ reportevents_test(MeteorData, duplicates);
 
 % Sort events and save the database
 MeteorData = orderfields(MeteorData);
-% save(DatabaseFilename,'MeteorData')
+% save_database
 devwarning('resolveduplicates')
 
 % Re-enable table warnings

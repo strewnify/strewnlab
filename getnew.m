@@ -14,13 +14,8 @@ datetimestring = datestr(now,'yyyymmddHHMM');
 startyear = year(nowtime_utc-days(dayhistory));
 endyear = year(nowtime_utc);
 
-% Load the database
-load(DatabaseFilename)
-
-% Backup the event database
-cd(backupfolder)
-save([DatabaseFilename '_BACKUP_' datetimestring],Database_prefix)
-cd(mainfolder)
+% Load the database (includes backup)
+load_database
 
 % Get data from the CNEOS fireball database
 if ~exist('CNEOS_data','var')
@@ -106,8 +101,9 @@ if numnew > 0
     % winopen(output_filename)
     cd(mainfolder)
     
-    save(DatabaseFilename,Database_prefix)
+    % Save database
     logformat(sprintf('%0.0f new events imported into %s',numnew,DatabaseFilename),'DATA')
+    save_database
     
 % otherwise, report no events
 else

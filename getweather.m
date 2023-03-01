@@ -761,15 +761,8 @@ clear IGRA_xlsdata
 
 
 
-% Save data to file, if data is good
-if effective_entrytime == entrytime
-    % if the file does not exist, create it
-    if exist(SimFilename,'file') ~= 2
-        save(SimFilename,'EventData_*')
-    else
-        save(SimFilename,'EventData_*','-append')
-    end
-end
+% Backup data
+strewnbackup
 
 % return to main working directory
 cd(mainfolder); 

@@ -93,6 +93,7 @@ URL_IGRA_pordatadir = 'ftp://ftp.ncei.noaa.gov/pub/data/igra/data/data-por/';
 URL_IGRA_y2ddatadir = 'ftp://ftp.ncei.noaa.gov/pub/data/igra/data/data-y2d/';
 
 % Simulation options
+meas_density_err = 0.05; % error in density measurement, example 0.05 = 5%
 stealth = false; % stealth mode suppresses common windows, like the waitbar
 RealtimeMult = 100; % Simulation speed when useplot is true, 100 for max speed
 distancestep = 200; % meters (don't forget to allow for one split per step)
