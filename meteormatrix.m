@@ -14,18 +14,16 @@
 % ylabel('Altitude, meters')
 
 % Constants
+planet = getPlanet();
 distancestep = 20; % meters
 timestep = 0.001; % seconds
 scenario = 1;
-G = 6.674*10^-11; % gravitational constant in m^3 kg^-1 s^-2
-earthradius = 6371000; % radius of Earth in meters
 g = 9.80665; % surface gravitational acceleration in m/s^2
 L = 0.0065; % temperature lapse rate in K/m
 R = 8.31447; % universal gas constant in J/mol/K
 Rspec = 287.058; % specific gas constant dry air
 M = 0.0289644; % molar mass of dry air in kg/mol
 psurf = 101.325; % standard pressure at sea level
-earthmass = 5.972*10^24; % mass of Earth in kg
 ground = 275; % elevation at ground level, in meters
 y_max = 25000; % maximum elevation for drag forces
 repeat = 1;
@@ -46,7 +44,6 @@ for density_input = 2800:500:3800
     run = run + 1;
     i = 1; % data index
     t(i) = 0; % time in seconds
-    
     x(1) = -23686; % initial position
     y(1) = 40468;
     v(1) = 15249;
@@ -119,7 +116,7 @@ for density_input = 2800:500:3800
             WindDrag(i) = 0;
         end
         Fx(i) = -DragForce(i)*sin(anglerad(i))-WindDrag(i);
-        Fy(i) = DragForce(i)*cos(anglerad(i))-G*earthmass*mass/(earthradius+y(i-1))^2;
+        Fy(i) = DragForce(i)*cos(anglerad(i))-planet.G*planet.mass_kg*mass/(planet.radius_m+y(i-1))^2;
         ax(i) = Fx(i)/mass;
         ay(i)= Fy(i)/mass;
 

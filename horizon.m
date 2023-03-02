@@ -1,4 +1,4 @@
-function [dipangle,curvedist] = horizon(lat, long, altitude, AZ, planet)
+function [dipangle,curvedist] = horizon(lat, long, altitude, AZ,planet)
 %[DIPANGLE, DISTANCE] = HORIZON(LAT, LONG, ALTITUDE) Calculate distance to
 %the horizon and dip angle.  This function assumes the terrain is flat.
 

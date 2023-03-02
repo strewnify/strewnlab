@@ -170,7 +170,7 @@ while 1 == 1
     
     % Solve definite integral for viscosity function G(T) for given material
     fun = @(n) n*exp(-(i*(T-Tf)*n)/(T*(T-(T-Tf)*n)));
-    G = integral(fun,0,1)
+    G_var = integral(fun,0,1)
     
     pv = 10^(C1+C2/T)
     omega_FM = 0.1383 * M^0.5 * pv / T^0.5
@@ -189,7 +189,7 @@ while 1 == 1
     % Solve for omega_s
     %while abs((omega_s-omega_s_prev)/omega_s_prev) > 0.01
         %omega_s_prev = omega_s;
-        numerator = CF * rho * speed^2 * (1 + ((1-shapefactor^(2/3)*Cd)*2*k*(T-Tf))/(4*pi^0.5*rho_f*omega_s*CF*noseradius)) * ((k^2*(T-Tf)^2*G)/(meltingheat^2*noseradius*Cu*exp(something/T)))
+        numerator = CF * rho * speed^2 * (1 + ((1-shapefactor^(2/3)*Cd)*2*k*(T-Tf))/(4*pi^0.5*rho_f*omega_s*CF*noseradius)) * ((k^2*(T-Tf)^2*G_var)/(meltingheat^2*noseradius*Cu*exp(something/T)))
         denominator = (1-Cs)*omega_s - omega
         omega_s = sqrt(numerator/denominator)        
     %end

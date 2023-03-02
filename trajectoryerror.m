@@ -6,7 +6,7 @@ strewnconfig
 sigma = 4;
 samplesize = 100000;
 
-[AZ_raw,ELEV_nom,slantrange_nom] = geodetic2aer(startLAT, startLON, startH, endLAT, endLON, endH, planet);
+[AZ_raw,ELEV_nom,slantrange_nom] = geodetic2aer(startLAT, startLON, startH, endLAT, endLON, endH,planet.ellipsoid_m);
 
 % Adjust for direction
 AZ_nom = wrapTo360(AZ_raw + 180);
@@ -19,7 +19,7 @@ for idx = 1:samplesize
     lat_err0 = randbetween(-endLAT_ERR,endLAT_ERR);
     lon_err0 = randbetween(-endLON_ERR,endLON_ERR);
     h_err0 = randbetween(-endH_ERR,endH_ERR);
-    [AZ(idx),ELEV(idx),slantrange(idx)] = geodetic2aer(startLAT + lat_err, startLON + lon_err, startH + h_err, endLAT + lat_err0, endLON + lon_err0, endH + h_err0,planet);
+    [AZ(idx),ELEV(idx),slantrange(idx)] = geodetic2aer(startLAT + lat_err, startLON + lon_err, startH + h_err, endLAT + lat_err0, endLON + lon_err0, endH + h_err0,planet.ellipsoid_m);
 end
 
 AZ_ERR = sigma * std(AZ);

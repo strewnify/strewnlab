@@ -27,8 +27,8 @@ for event_i = 4600:numevents
         datasource = sources{1};
 
         % Generate EventID and resolve duplicates
-         PossibleEventIDs = alteventids(database.(EventID_nom).Trajectory.(datasource)(1).LAT,database.(EventID_nom).Trajectory.(datasource)(1).LONG,database.(EventID_nom).Trajectory.(datasource)(1).Datetime,time_error_minutes,location_error_km);
-         EventID_matches = PossibleEventIDs(isfield(database,PossibleEventIDs));
+         PossibleEventIDs = alteventids(database.(EventID_nom).Trajectory.(datasource)(1).LAT,database.(EventID_nom).Trajectory.(datasource)(1).LONG,database.(EventID_nom).Trajectory.(datasource)(1).Datetime,database.(datasource).time_err_s,database.(datasource).location_err_km);
+         EventID_matches = PossibleEventIDs(isfield(database,PossibleEventIDs));err
          nummatches = numel(EventID_matches);
 
         % if multiple possible matches

@@ -5,10 +5,6 @@ function [database] = resolveduplicates(database_in)
 % Copy database to output
 database = database_in;
 
-% Duplicate event identification thresholds
-time_error_minutes = 20; % maximum error in event time, in minutes
-location_error_km = 400; % maximum location error, in km 
-
 % list events
 events = fields(database);
 numevents = size(events,1);
@@ -36,7 +32,7 @@ for event_i = 5500:numevents
         datasource = sources{1};
 
         % Generate EventID and resolve duplicates
-         PossibleEventIDs = alteventids(database.(EventID_nom).Trajectory.(datasource)(1).LAT,database.(EventID_nom).Trajectory.(datasource)(1).LONG,database.(EventID_nom).Trajectory.(datasource)(1).Datetime,time_error_minutes,location_error_km);
+         PossibleEventIDs = alteventids(database.(EventID_nom).Trajectory.(datasource)(1).LAT,database.(EventID_nom).Trajectory.(datasource)(1).LONG,database.(EventID_nom).Trajectory.(datasource)(1).Datetime,database_in.(datasource).time_err_s,database_in.(datasource).location_err_km);
          EventID_matches = PossibleEventIDs(isfield(database,PossibleEventIDs));
          nummatches = numel(EventID_matches);
 

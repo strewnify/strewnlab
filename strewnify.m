@@ -195,10 +195,10 @@ end
 % Calculation start and end locations
 AZ = bearing + atan2d(-startposition(2),startposition(1)); % convert position to azimuth angle
 ARCLEN = norm([startposition(1),startposition(2)]); % distance in meters
-startlocation = reckon(ref_latitude, ref_longitude, ARCLEN, AZ, planet); 
+startlocation = reckon(ref_latitude, ref_longitude, ARCLEN, AZ,planet.ellipsoid_m); 
 AZ = bearing + atan2d(-endposition(2),endposition(1)); % convert position to azimuth angle
 ARCLEN = norm([endposition(1),endposition(2)]); % distance in meters
-endlocation = reckon(ref_latitude, ref_longitude, ARCLEN, AZ, planet); 
+endlocation = reckon(ref_latitude, ref_longitude, ARCLEN, AZ,planet.ellipsoid_m); 
 
 % Calculate distance to reference point
 ref_flightdist = norm(startposition - ref_position);
@@ -380,7 +380,7 @@ projectile(n).velocity(current,:) = projectile(n).speed(current) * projectile(n)
 % Calculation initial latitude and longitude location
 AZ = bearing + atan2d(-projectile(n).position(current,2),projectile(n).position(current,1)); % convert position to azimuth angle
 ARCLEN = norm([projectile(n).position(current,1),projectile(n).position(current,2)]); % distance in meters
-projectile(n).location(current,:) = reckon(ref_latitude, ref_longitude, ARCLEN, AZ, planet); 
+projectile(n).location(current,:) = reckon(ref_latitude, ref_longitude, ARCLEN, AZ,planet.ellipsoid_m); 
 
 % Calculate initial conditions
 projectile(n).pressure(current) = pressure_model(projectile(n).position(current,3));
@@ -396,12 +396,12 @@ projectile(n).Mach(current) = projectile(n).airspeed(current)/projectile(n).spee
 projectile(n).CD(current) = dragcoef(projectile(n).Mach(current), projectile(n).cubicity);
 airvelocityunitvector = projectile(n).airvelocity(current,:)/norm(projectile(n).airvelocity(current,:));
 projectile(n).DragForce(current,:) = airvelocityunitvector(current,:).*dragforce(projectile(n).airspeed(current), projectile(n).rho(current), projectile(n).CD(current), projectile(n).frontalarea);
-g = G*earthmass/(earthradius + projectile(n).position(current,3))^2;
+g = planet.G*planet.mass_kg/(planet.radius_m + projectile(n).position(current,3))^2;
 projectile(n).v_terminal(current) = sqrt((2*projectile(n).mass*g)/(projectile(n).rho(current)*projectile(n).frontalarea*projectile(n).CD(current)));
 projectile(n).MagnusForce(current,:) = MagnusMult * 8/3 * pi * projectile(n).radius^3 * projectile(n).rho(current) * projectile(n).CD(current) * cross(projectile(n).airvelocity(current,:), projectile(n).spin(current,:));
 projectile(n).force(current,1) = projectile(n).DragForce(current,1); % drag force in the x direction
 projectile(n).force(current,2) = projectile(n).DragForce(current,2); % drag force in the y direction
-projectile(n).force(current,3) = projectile(n).DragForce(current,3)-G*earthmass*projectile(n).mass/(earthradius + projectile(n).position(current,3))^2; % z drag force and gravity applied down
+projectile(n).force(current,3) = projectile(n).DragForce(current,3)-planet.G*planet.mass_kg*projectile(n).mass/(planet.radius_m + projectile(n).position(current,3))^2; % z drag force and gravity applied down
 projectile(n).acceleration(current,:) = projectile(n).force(current,:)./ projectile(n).mass;
 projectile(n).maxtimestep = 99999;
 
@@ -542,11 +542,11 @@ while inflightcount > 0
             airvelocityunitvector = projectile(n).airvelocity(current,:)/norm(projectile(n).airvelocity(current,:));
             projectile(n).DragForce(current,:) = airvelocityunitvector(current,:).*dragforce(projectile(n).airspeed(current), projectile(n).rho(current), projectile(n).CD(current), projectile(n).frontalarea);
             projectile(n).MagnusForce(current,:) = MagnusMult * 8 * pi / 3 * projectile(n).radius * projectile(n).rho(current) * projectile(n).CD(current) * cross(projectile(n).velocity(current,:), projectile(n).spin(current,:));
-            g = G*earthmass/(earthradius + projectile(n).position(current,3))^2;
+            g = planet.G*planet.mass_kg/(planet.radius_m + projectile(n).position(current,3))^2;
             projectile(n).v_terminal(current) = sqrt((2*projectile(n).mass*g)/(projectile(n).rho(current)*projectile(n).frontalarea*projectile(n).CD(current)));
             projectile(n).force(current,1) = projectile(n).DragForce(current,1) + projectile(n).MagnusForce(current,1); % drag force in the x direction
             projectile(n).force(current,2) = projectile(n).DragForce(current,2) + projectile(n).MagnusForce(current,2); % drag force in the y direction
-            projectile(n).force(current,3) = projectile(n).DragForce(current,3) + projectile(n).MagnusForce(current,3) - G*earthmass*projectile(n).mass/(earthradius + projectile(n).position(current,3))^2; % gravity applied down
+            projectile(n).force(current,3) = projectile(n).DragForce(current,3) + projectile(n).MagnusForce(current,3) - planet.G*planet.mass_kg*projectile(n).mass/(planet.radius_m + projectile(n).position(current,3))^2; % gravity applied down
 
             % Shift data to previous
             for i = history:-1:2
@@ -579,7 +579,7 @@ while inflightcount > 0
             % Calculation latitude and longitude location
             AZ = bearing + atan2d(-projectile(n).position(current,2),projectile(n).position(current,1)); % convert position to azimuth angle
             ARCLEN = norm([projectile(n).position(current,1),projectile(n).position(current,2)]); % distance in meters
-            projectile(n).location(current,:) = reckon(ref_latitude, ref_longitude, ARCLEN, AZ, planet); 
+            projectile(n).location(current,:) = reckon(ref_latitude, ref_longitude, ARCLEN, AZ,planet.ellipsoid_m); 
             
             % Calculate new acceleration
             projectile(n).acceleration(current,:) = projectile(n).force(current,:)./ projectile(n).mass;
@@ -738,7 +738,7 @@ while inflightcount > 0
                 % Calculation latitude and longitude location
                 AZ = bearing + atan2d(-projectile(rockcount).position(current,2),projectile(rockcount).position(current,1)); % convert position to azimuth angle
                 ARCLEN = norm([projectile(rockcount).position(current,1),projectile(rockcount).position(current,2)]); % distance in meters
-                projectile(rockcount).location(current,:) = reckon(ref_latitude, ref_longitude, ARCLEN, AZ, planet); 
+                projectile(rockcount).location(current,:) = reckon(ref_latitude, ref_longitude, ARCLEN, AZ,planet.ellipsoid_m); 
 
                 % Calculate initial conditions
                 projectile(rockcount).pressure(current) = pressure_model(projectile(rockcount).position(current,3));
@@ -753,12 +753,12 @@ while inflightcount > 0
                 projectile(rockcount).CD(current) = dragcoef(projectile(rockcount).Mach(current), projectile(rockcount).cubicity);
                 airvelocityunitvector = projectile(rockcount).airvelocity(current,:)/norm(projectile(rockcount).airvelocity(current,:));
                 projectile(rockcount).DragForce(current,:) = airvelocityunitvector(current,:).*dragforce(projectile(rockcount).airspeed(current), projectile(rockcount).rho(current), projectile(rockcount).CD(current), projectile(rockcount).frontalarea);
-                g = G*earthmass/(earthradius + projectile(rockcount).position(current,3))^2;
+                g = planet.G*planet.mass_kg/(planet.radius_m + projectile(rockcount).position(current,3))^2;
                 projectile(rockcount).v_terminal(current) = sqrt((2*projectile(rockcount).mass*g)/(projectile(rockcount).rho(current)*projectile(rockcount).frontalarea*projectile(rockcount).CD(current)));
                 projectile(rockcount).MagnusForce(current,:) = MagnusMult * 8 * pi / 3 * projectile(rockcount).radius * projectile(rockcount).rho(current) * projectile(rockcount).CD(current) * cross(projectile(rockcount).velocity(current,:), projectile(rockcount).spin(current,:));
                 projectile(rockcount).force(current,1) = projectile(rockcount).DragForce(current,1); % drag force in the x direction
                 projectile(rockcount).force(current,2) = projectile(rockcount).DragForce(current,2); % drag force in the y direction
-                projectile(rockcount).force(current,3) = projectile(rockcount).DragForce(current,3)-G*earthmass*projectile(rockcount).mass/(earthradius + projectile(rockcount).position(current,3))^2; % gravity applied down
+                projectile(rockcount).force(current,3) = projectile(rockcount).DragForce(current,3)-planet.G*planet.mass_kg*projectile(rockcount).mass/(planet.radius_m + projectile(rockcount).position(current,3))^2; % gravity applied down
                 projectile(rockcount).acceleration(current,:) = projectile(rockcount).force(current,:)./ projectile(rockcount).mass;
                 projectile(rockcount).maxtimestep = norm(projectile(rockcount).velocity(current,:))./norm(projectile(rockcount).acceleration(current,:))/2; % half the time for speed to reach zero
             end

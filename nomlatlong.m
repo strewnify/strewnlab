@@ -10,6 +10,10 @@ else
     resetdiary = false;
 end
 
+% Load spheroid and nominal height
+planet = getPlanet();  % reference ellipsoid
+nom_height_m = 40000; % height for nominal LAT/LONG determination. DO NOT CHANGE, requires database rebuild
+
 LAT = NaN;
 LONG = NaN;
 slantRange_m = inf;
@@ -31,15 +35,12 @@ elseif isnan(ref_Height_km)
 
 % Generate nominal LAT and LONG
 else
-    % Load spheroid and nominal height
-    planet = referenceEllipsoid('earth','meters');  % reference ellipsoid used by mapping/aerospace tools, DO NOT CHANGE units
-    nom_height_m = 40000; % height for nominal LAT/LONG determination. DO NOT CHANGE, requires database rebuild
     test_height_m = nom_height_m;
 
     error_count = 0;
     while error_count < 100
         try
-            [LAT, LONG, slantRange_m] = aer2geosolve(ref_Bearing_deg,ref_ZenithAngle_deg - 90,ref_Lat,ref_Long,ref_Height_km*1000,test_height_m, planet);
+            [LAT, LONG, slantRange_m] = aer2geosolve(ref_Bearing_deg,ref_ZenithAngle_deg - 90,ref_Lat,ref_Long,ref_Height_km*1000,test_height_m,planet.ellipsoid_m);
             break
         catch
             error_count = error_count + 1;

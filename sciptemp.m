@@ -1,10 +1,9 @@
 nom_lat = 43;
 
-earthradius = 6371000;
-planet = referenceEllipsoid('earth','m');
+planet = getPlanet();
 % Calculate aspect ratio at event latitude, for graphing
-lat_metersperdeg = 2*earthradius*pi/360;
-long_metersperdeg = 2*earthradius*pi*cos(deg2rad(nom_lat))/360;
+lat_metersperdeg = 2*planet.radius_m*pi/360;
+long_metersperdeg = 2*planet.radius_m*pi*cos(deg2rad(nom_lat))/360;
 
 alt1 = 30000:200:35000;
 alt2 = 20000:200:31000;
@@ -24,7 +23,7 @@ for sceni = 1:15
 
         alt1i(i1) = alt1(idx);
         % Solve GOES1 project location for altitude
-        [G1_AZ, G1_ELEV, slantRange] = geodetic2aer(43.24 + G_err,-76.54 + G_err2,10000,0,-75.199997,35786020,planet);
+        [G1_AZ, G1_ELEV, slantRange] = geodetic2aer(43.24 + G_err,-76.54 + G_err2,10000,0,-75.199997,35786020,planet.ellipsoid_m);
         [G1_LAT(i1),G1_LONG(i1),slantrange] = aer2geosolve(G1_AZ,G1_ELEV,0,-75.199997,35786020,alt1(idx),planet);
 
         % Solve St. Thomas 1 projected location for altitude
@@ -37,7 +36,7 @@ for sceni = 1:15
 
         alt2i(I2) = alt2(idx);
         % Solve GOES2 project location for altitude
-        [G2_AZ, G2_ELEV, slantRange] = geodetic2aer(43.13 + G_err,-76.645 + G_err2,10000,0,-75.199997,35786020,planet);
+        [G2_AZ, G2_ELEV, slantRange] = geodetic2aer(43.13 + G_err,-76.645 + G_err2,10000,0,-75.199997,35786020,planet.ellipsoid_m);
         [G2_LAT(I2),G2_LONG(I2),slantrange] = aer2geosolve(G2_AZ,G2_ELEV,0,-75.199997,35786020,alt2 (idx),planet);
 
         % Solve St. Thomas 2 projected location for altitude

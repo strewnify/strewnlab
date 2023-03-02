@@ -1,10 +1,10 @@
 % STREWNCONFIG load strewn field configuration file
 
+% Initialize
+strewn_initialize
+
 % Load private keys
 loadprivate
-
-% Set system properties
-datetime.setDefaultFormats('defaultdate','yyyy-MM-dd HH:mm:ss');
 
 user_TimeZone = 'America/Detroit'; 
 user_LAT =  42.664841;
@@ -74,10 +74,7 @@ for cnt = 1:1296
 end
 
 % Constants
-G = 6.674*10^-11; % gravitational constant in m^3 kg^-1 s^-2
-earthradius = 6371000; % radius of Earth in meters
-earthmass = 5.972*10^24; % mass of Earth in kg
-planet = referenceEllipsoid('earth','meters');  % reference ellipsoid used by mapping/aerospace tools, DO NOT CHANGE units
+planet = getPlanet();
 
 % Data filters
 slowmeteor_min_kps = 15; % meteors below this speed will be reported from ASGARD, regardless of altitude

@@ -205,3 +205,1832 @@ skipdownload =
   <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
    1
 strewnify
+2023-02-23T14:32:49Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
+2023-02-23T14:32:49Z | ERROR | SAVE_DATABASE | Database file not loaded safely, save failed. Backup database before saving!
+2023-02-23T14:33:10Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
+{Unrecognized function or variable 'DatabaseFilename'.
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('save_database', 'C:\Users\james\Documents\GitHub\strewnlab\save_database.m', 22)" style="font-weight:bold">save_database</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewnlab\save_database.m',22,0)">line 22</a>)
+    save(DatabaseFilename,Database_prefix)} 
+opentoline('C:\Users\james\Documents\GitHub\strewnlab\save_database.m',22,0)
+strewnconfig
+load_database
+2023-02-23T14:33:31Z | USER | LOAD_DATABASE | There is a database already loaded in memory. Which would you like to use?  (Either way, a backup will be created and no data will be lost.)
+2023-02-23T14:33:34Z | USER | LOAD_DATABASE | Selected to use database from file.
+2023-02-23T14:33:34Z | DATABASE | LOAD_DATABASE | Workspace database backed up to StrewnifyDatabase_BACKUPWS_202302231433.mat file.
+2023-02-23T14:33:34Z | DATABASE | LOAD_DATABASE | Data loaded from StrewnifyDatabase.mat file.
+2023-02-23T14:33:34Z | DATABASE | LOAD_DATABASE | Database backed up to StrewnifyDatabase_BACKUP_202302231433.mat file.
+help validplace
+ <strong>validplace</strong> looks for a single valid place name or abbreviation in a string, and
+ returns the corrected state name, along with start and end index.  If more
+ than one match is found, an empty string and NaN's are returned.
+
+open validplace.m
+open reportevents_test.m
+getlocation_test(45.902,-73.6775)
+
+lat/lon = 45.902, -73.6775
+ans =
+    'Saint-Esprit, Quebec, Canada'
+test = getlocation_test(45.902,-73.6775)
+
+lat/lon = 45.902, -73.6775
+test =
+    'Saint-Esprit, Quebec, Canada'
+length(test)
+ans =
+    28
+length(getlocation_test(45.902,-73.6775))
+
+lat/lon = 45.902, -73.6775
+ans =
+    28
+lat = randbetween(-90,90); lon = randbetween(-180,180); length(getlocation_test(lat, lon))
+
+lat/lon = 12.6598, 11.1313
+ans =
+    21
+lat = randbetween(-90,90); lon = randbetween(-180,180); length(getlocation_test(lat, lon))
+
+lat/lon = 64.5995, -19.3155
+ans =
+    26
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = -20.9914, 34.3291
+{The end operator must be used within an array index expression.} 
+len_array = 26
+len_array =
+    26
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = -35.0928, -143.6012
+len_array =
+    26     5
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = -23.0509, -100.0241
+len_array =
+    26     5     5
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 25.7808, 99.5962
+len_array =
+    26     5     5    19
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = -12.5939, 43.5821
+len_array =
+    26     5     5    19     5
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = -39.7666, -7.9028
+len_array =
+    26     5     5    19     5     5
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = -33.3465, 117.7812
+len_array =
+    26     5     5    19     5     5    40
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 43.769, -128.048
+len_array =
+    26     5     5    19     5     5    40     5
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = -77.7123, 11.5692
+len_array =
+    26     5     5    19     5     5    40     5    10
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 43.912, 120.8641
+len_array =
+    26     5     5    19     5     5    40     5    10    31
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 39.7193, 139.5441
+len_array =
+    26     5     5    19     5     5    40     5    10    31     5
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = -60.6864, -107.5537
+len_array =
+    26     5     5    19     5     5    40     5    10    31     5     5
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 68.7531, -13.6948
+len_array =
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = -56.331, 80.9576
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Column 14
+     5
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 69.0395, 107.2841
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 15
+     5    22
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 61.735, 13.6967
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 16
+     5    22    23
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = -52.274, 10.9604
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 17
+     5    22    23     5
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 61.7944, -102.4775
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 18
+     5    22    23     5    40
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 39.0107, 130.5606
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 19
+     5    22    23     5    40     5
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = -5.1724, -14.2185
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 20
+     5    22    23     5    40     5     5
+lat = randbetween(-90,90); lon = randbetween(-180,180); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 79.6551, 46.2033
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 21
+     5    22    23     5    40     5     5     5
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 38.0639, -103.9384
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 22
+     5    22    23     5    40     5     5     5    34
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 33.2139, -104.8478
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 23
+     5    22    23     5    40     5     5     5    34    34
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 37.1897, -112.2774
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 24
+     5    22    23     5    40     5     5     5    34    34    33
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 34.8999, -115.1692
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 25
+     5    22    23     5    40     5     5     5    34    34    33    33
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 31.3992, -82.1122
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 36.3094, -102.4538
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Column 27
+    29
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 37.0776, -98.8141
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 28
+    29    29
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 36.5243, -88.8726
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 29
+    29    29    31
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 36.1802, -99.9165
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 30
+    29    29    31    33
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 34.8537, -115.594
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 31
+    29    29    31    33    25
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 39.1655, -102.6953
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 32
+    29    29    31    33    25    33
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 34.27, -118.8286
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 33
+    29    29    31    33    25    33    38
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 35.1043, -81.4519
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 34
+    29    29    31    33    25    33    38    41
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 32.7535, -90.2635
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 35
+    29    29    31    33    25    33    38    41    34
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 31.168, -89.2268
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 36
+    29    29    31    33    25    33    38    41    34    39
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 37.6572, -98.3693
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 37
+    29    29    31    33    25    33    38    41    34    39    33
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 31.6932, -82.7952
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 38
+    29    29    31    33    25    33    38    41    34    39    33    30
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 32.0821, -119.2096
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 36.0161, -95.7052
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Column 40
+    37
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 34.6885, -96.1475
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 41
+    37    32
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 37.2346, -103.6756
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 42
+    37    32    32
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 35.9761, -102.9716
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 43
+    37    32    32    29
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 31.2184, -106.0019
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 44
+    37    32    32    29    35
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 35.4675, -114.916
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 45
+    37    32    32    29    35    34
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 30.815, -108.4217
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 46
+    37    32    32    29    35    34    31
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 36.7682, -101.7183
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 47
+    37    32    32    29    35    34    31    31
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 34.9922, -117.6609
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 48
+    37    32    32    29    35    34    31    31    32
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 30.7361, -106.4849
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 49
+    37    32    32    29    35    34    31    31    32    28
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 33.3607, -80.6016
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 50
+    37    32    32    29    35    34    31    31    32    28    39
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 37.5166, -94.1388
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 51
+    37    32    32    29    35    34    31    31    32    28    39    32
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 38.8287, -99.5244
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 52
+    37    32    32    29    35    34    31    31    32    28    39    32    28
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 33.762, -84.6495
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 52
+    37    32    32    29    35    34    31    31    32    28    39    32    28
+  Column 53
+    38
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 32.4576, -113.4399
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 52
+    37    32    32    29    35    34    31    31    32    28    39    32    28
+  Columns 53 through 54
+    38    22
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 36.586, -109.7753
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 52
+    37    32    32    29    35    34    31    31    32    28    39    32    28
+  Columns 53 through 55
+    38    22    34
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 31.576, -108.9358
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 52
+    37    32    32    29    35    34    31    31    32    28    39    32    28
+  Columns 53 through 56
+    38    22    34    40
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 32.9871, -119.7638
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 52
+    37    32    32    29    35    34    31    31    32    28    39    32    28
+  Columns 53 through 57
+    38    22    34    40     5
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 32.2865, -93.1953
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 52
+    37    32    32    29    35    34    31    31    32    28    39    32    28
+  Columns 53 through 58
+    38    22    34    40     5    32
+lat = randbetween(30,40); lon = randbetween(-80,-120); len_array(end+1) = length(getlocation_test(lat, lon))
+
+lat/lon = 39.8167, -109.754
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 52
+    37    32    32    29    35    34    31    31    32    28    39    32    28
+  Columns 53 through 59
+    38    22    34    40     5    32    29
+lat = randbetween(30,40); lon = randbetween(-80,-120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 36.1917, -81.1268
+location =
+    'North Wilkesboro, North Carolina, United States'
+lat = randbetween(30,40); lon = randbetween(-80,-120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 34.9217, -107.9589
+location =
+    'Grants, New Mexico, United States'
+lat = randbetween(30,40); lon = randbetween(-80,-120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 35.971, -98.2647
+location =
+    'Hitchcock, Oklahoma, United States'
+lat = randbetween(30,40); lon = randbetween(-80,-120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 31.2977, -97.9112
+location =
+    'Pidcoke, Texas, United States'
+lat = randbetween(30,40); lon = randbetween(-80,-120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 31.4906, -109.658
+location =
+    'Douglas, Arizona, United States'
+lat = randbetween(30,40); lon = randbetween(-80,-120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 35.2871, -87.4649
+location =
+    'Lawrenceburg, Tennessee, United States'
+lat = randbetween(30,40); lon = randbetween(-80,-120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 37.1853, -99.9672
+location =
+    'Ashland, Kansas, United States'
+lat = randbetween(30,40); lon = randbetween(-80,-120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 38.9398, -81.9713
+location =
+    'Letart, West Virginia, United States'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 43.8707, 33.0869
+location =
+    'ocean'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 57.791, 58.552
+location =
+    'Kyn, Perm Krai, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 56.3199, 24.015
+location =
+    'Geručiai, Šiauliai County, Lithuania'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 33.432, 13.1665
+location =
+    'ocean'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 47.2231, 54.8974
+location =
+    'Karasu, Atyrau, Kazakhstan'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 41.2212, 90.063
+location =
+    'Bayingolin Mongol Autonomous Prefecture, Xinjiang, China'
+open getlocation_test.m
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 43.6681, 84.1355
+location =
+    'Yi Li Ha Sa Ke Zi Zhi Zhou, Xin Jiang Wei Wu Er Zi Zhi Qu, China'
+open getlocation_test.m
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 57.8852, 98.0968
+location =
+    'Krasnoyarsk Krai, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 31.1954, 115.875
+location =
+    'Lu'An, Anhui, China'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 56.639, 75.9304
+location =
+    'Karbyza, Omsk, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 30.3286, 117.2256
+location =
+    'Chizhou, Anhui, China'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 41.5658, 46.7584
+location =
+    'Yukhary Chardakhlar, Zaqatala, Azerbaijan'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 45.3086, 65.2989
+location =
+    'Kyzylorda, Kazakhstan'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 58.7668, 102.359
+location =
+    'Krasnoyarsk Krai, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 44.3012, 105.0935
+location =
+    'Ömnögovi, Mongolia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 41.6963, 3.9978
+location =
+    'ocean'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 39.223, 37.0656
+location =
+    'Sivas, Türkiye'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 43.8389, 57.5523
+location =
+    'Zhaslyk, Qoraqalpog’iston Respublikasi, Uzbekistan'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 51.2022, 42.8102
+location =
+    'Mirnyi, Volgograd, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 58.2432, 30.7189
+location =
+    'Terebutitsy, Novgorod, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 52.3619, 108.9069
+location =
+    'Tegda, Buryatia, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 47.5366, 108.5934
+location =
+    'Khentii, Mongolia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 31.7005, 65.9219
+location =
+    'Nazar Kala, Kandahar, Afghanistan'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 30.0888, 16.6851
+location =
+    'Sirte, Libya'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 42.2247, 26.4804
+location =
+    'Dryanovo, Yambol, Bulgaria'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 46.0594, 36.016
+location =
+  0×0 empty <a href="matlab:helpPopup char" style="font-weight:bold">char</a> array
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 51.259, 69.6214
+location =
+    'Stepnoe, Akmola, Kazakhstan'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 37.1757, 5.8152
+location =
+    'ocean'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 30.1011, 21.0669
+location =
+    'Ajdabiya, Ajdabiya, Libya'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 44.7361, 73.2092
+location =
+    'Jambyl, Kazakhstan'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 33.6833, 14.2298
+location =
+    'ocean'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 39.4254, 8.7183
+location =
+    'Sardinia, Italy'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 42.2638, 32.4429
+location =
+    'ocean'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 48.9177, 24.8102
+location =
+    'Pidpechery, Ivano-Frankivsk, Ukraine'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 49.6276, 21.6031
+location =
+    'Poraj, Podkarpackie, Poland'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 32.838, 110.0399
+location =
+    'Ankang, Shaanxi, China'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 46.7472, 48.9522
+location =
+    'Astrakhan, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 33.3134, 65.4348
+location =
+    'Kajran, Daykundi, Afghanistan'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 33.3384, 26.7947
+location =
+    'ocean'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 34.1596, 38.0453
+location =
+    'As Sawwanah ash Sharqiyah, محافظة حمص, Syria'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 40.3933, 111.3083
+location =
+    'Hohhot, Inner Mongolia, China'
+test = getlocation_test(34.1596, 38.0453)
+
+lat/lon = 34.1596, 38.0453
+test =
+    'As Sawwanah ash Sharqiyah, محافظة حمص, Syria'
+location_raw = webread(['https://maps.googleapis.com/maps/api/geocode/json?latlng=' num2str(34.1596) ',' num2str(38.0453) '&key=' GoogleMapsAPIkey])
+location_raw = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+    plus_code: [1×1 struct]
+      results: {4×1 cell}
+       status: 'OK'
+help native2unicode
+ <strong>native2unicode</strong>	Convert bytes to Unicode characters
+    UNICODESTR = <strong>native2unicode</strong>(BYTES) converts text containing 
+    numeric values in the range [0,255] to a Unicode character 
+    representation and returns UNICODESTR as a character vector.
+    <strong>native2unicode</strong> treats BYTES as a vector of 8-bit bytes. BYTES is 
+    assumed to be in MATLAB's default character encoding scheme. The 
+    output vector, UNICODESTR, has the same general array shape as BYTES.
+    You can use the function FREAD to generate input to this function.
+ 
+    UNICODESTR = <strong>native2unicode</strong>(BYTES,ENCODING) does the conversion
+    with the assumption that BYTES is in the character encoding
+    scheme specified by ENCODING. ENCODING must be an empty character 
+    vector, string scalar containing 
+    no characters, name, or alias for an encoding scheme. 
+    Some examples are 'UTF-8', 'latin1', 'US-ASCII', and 'Shift_JIS'. 
+    If ENCODING is unspecified or is empty, MATLAB's default encoding scheme is used.
+ 
+    If BYTES is a character vector or string scalar, it is returned unchanged.
+ 
+    Example:
+ 
+        fid = fopen('japanese.txt');
+        b = fread(fid,'*uint8')';
+        fclose(fid);
+        str = <strong>native2unicode</strong>(b,'Shift_JIS');
+        disp(str);
+   
+    reads and displays some Japanese text. For the final command,
+    disp(str), to display this text correctly, the contents of str
+    must consist entirely of Unicode characters. The call to
+    <strong>native2unicode</strong> converts text read from the file to Unicode and
+    returns it in str. The Shift_JIS argument ensures that str
+    contains the same string on any computer, regardless of how it
+    is configured for language. Note that the computer must be
+    configured to display Japanese (e.g. a Japanese Windows machine)
+    for the output of disp(str) to be correct.
+ 
+    Here is an equivalent way to read and display Japanese text, again 
+    assuming that the computer is configured to display Japanese: 
+ 
+        fid = fopen('japanese.txt', 'r', 'n', 'Shift_JIS');
+        str = fread(fid, '*char')';
+        fclose(fid);
+        disp(str);
+ 
+    See also <a href="matlab:help unicode2native">unicode2native</a>.
+
+    <a href="matlab:doc native2unicode">Documentation for native2unicode</a>
+
+native2unicode('هذه' ,'UTF-8')
+ans =
+    'هذه'
+location_raw.results
+ans =
+  4×1 <a href="matlab:helpPopup cell" style="font-weight:bold">cell</a> array
+    {1×1 struct}
+    {1×1 struct}
+    {1×1 struct}
+    {1×1 struct}
+location_raw.results{4}
+ans = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+    address_components: [1×1 struct]
+     formatted_address: 'Syria'
+              geometry: [1×1 struct]
+              place_id: 'ChIJp8Y8QdzmGBURIPYqiPRGdYc'
+                 types: {2×1 cell}
+location_raw.results{4}.address_components
+ans = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+     long_name: 'Syria'
+    short_name: 'SY'
+         types: {2×1 cell}
+location_raw.results{3}.address_components
+ans = 
+  2×1 <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> array with fields:
+    long_name
+    short_name
+    types
+location_raw.results{3}.address_components.long_name
+ans =
+    'Homs Governorate'
+ans =
+    'Syria'
+location_raw.results{1}.address_components.long_name
+ans =
+    '525W+R4'
+ans =
+    'As Sawwanah ash Sharqiyah'
+ans =
+    'تدمر'
+ans =
+    'محافظة حمص'
+ans =
+    'Syria'
+location_raw.results{1}.address_components(3).long_name
+ans =
+    'تدمر'
+test = location_raw.results{1}.address_components(3).long_name
+test =
+    'تدمر'
+test(1)
+ans =
+    'ت'
+double(test(1))
+ans =
+        1578
+bytes = unicode2native(test, 'UTF-8');
+bytes = unicode2native(test, 'UTF-8')
+bytes =
+  1×8 <a href="matlab:helpPopup uint8" style="font-weight:bold">uint8</a> row vector
+   216   170   216   175   217   133   216   177
+any(test>127)
+ans =
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+   1
+test>127
+ans =
+  1×4 <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a> array
+   1   1   1   1
+test = 'hello'
+test =
+    'hello'
+any(test>127)
+ans =
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+   0
+char(1:129)
+ans =
+    '	
+           !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
+test = getlocation_test(34.1596, 38.0453)
+
+lat/lon = 34.1596, 38.0453
+test =
+    'محافظة حمص'
+test = getlocation_test(34.1596, 38.0453)
+
+lat/lon = 34.1596, 38.0453
+test =
+    'As Sawwanah ash Sharqiyah, محافظة حمص, Syria'
+test = getlocation_test(34.1596, 38.0453)
+
+lat/lon = 34.1596, 38.0453
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Syria'
+                       locality: 'As Sawwanah ash Sharqiyah'
+    administrative_area_level_1: 'محافظة حمص'
+    administrative_area_level_2: 'Palmyra'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: '525W+R4 As Sawwanah ash Sharqiyah، Syria'
+                     shortadmin: 'Palmyra'
+test =
+    'As Sawwanah ash Sharqiyah, محافظة حمص, Syria'
+test = getlocation_test(34.1596, 38.0453)
+
+lat/lon = 34.1596, 38.0453
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: ''
+                       locality: ''
+    administrative_area_level_1: 'محافظة حمص'
+    administrative_area_level_2: 'تدمر'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: '525W+R4 As Sawwanah ash Sharqiyah، Syria'
+                     shortadmin: 'تدمر'
+test =
+    'محافظة حمص'
+test = location_raw.results{1}.address_components(4).long_name
+test =
+    'محافظة حمص'
+double(test)
+ans =
+  Columns 1 through 6
+        1605        1581        1575        1601        1592        1577
+  Columns 7 through 10
+          32        1581        1605        1589
+test = getlocation_test(34.1596, 38.0453)
+
+lat/lon = 34.1596, 38.0453
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Syria'
+                       locality: 'As Sawwanah ash Sharqiyah'
+    administrative_area_level_1: 'Homs Governorate'
+    administrative_area_level_2: 'Palmyra'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: '525W+R4 As Sawwanah ash Sharqiyah، Syria'
+                     shortadmin: 'Palmyra'
+test =
+    'As Sawwanah ash Sharqiyah, Homs, Syria'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 56.6495, 94.3854
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Russia'
+                       locality: ''
+    administrative_area_level_1: 'Krasnoyarsk Krai'
+    administrative_area_level_2: 'Sukhobuzimsky District'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'Krasnoyarsk Krai, Russia, 663719'
+                     shortadmin: 'Sukhobuzimsky District'
+location =
+    'Krasnoyarsk Krai, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 32.2341, 49.2153
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Iran'
+                       locality: 'Ab Mayak'
+    administrative_area_level_1: 'Khuzestan Province'
+    administrative_area_level_2: ''
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: '66M8+J4 Ab Mayak, Iran'
+location =
+    'Ab Mayak, Khuzestan, Iran'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 41.9017, 48.3775
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Russia'
+                       locality: 'Belidzhi'
+    administrative_area_level_1: 'Republic of Dagestan'
+    administrative_area_level_2: 'Derbentsky District'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'W92G+MX Belidzhi, Republic of Dagestan, Russia'
+                     shortadmin: 'Derbentsky District'
+location =
+    'Belidzhi, Republic of Dagestan, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 59.2186, 27.0232
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Estonia'
+                       locality: 'Virunurme'
+    administrative_area_level_1: 'Ida-Viru County'
+    administrative_area_level_2: ''
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: '629F+C7 Virunurme, Ida-Viru County, Estonia'
+location =
+    'Virunurme, Ida-Viru, Estonia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 33.2573, 95.6036
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'China'
+                       locality: 'Yushu'
+    administrative_area_level_1: 'Qinghai'
+    administrative_area_level_2: ''
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'Zadoi County, Yushu, China, 815399'
+location =
+    'Yushu, Qinghai, China'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 31.3444, 115.1147
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'China'
+                       locality: 'Huanggang'
+    administrative_area_level_1: 'Hubei'
+    administrative_area_level_2: ''
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: '84V7+QV Huangtugangzhen, Macheng, Huanggang, Hubei, China'
+location =
+    'Huanggang, Hubei, China'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 54.0493, 115.1927
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Russia'
+                       locality: ''
+    administrative_area_level_1: 'Zabaykalsky Krai'
+    administrative_area_level_2: 'Tungokochensky District'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'Zabaykalsky Krai, Russia, 674110'
+                     shortadmin: 'Tungokochensky District'
+location =
+    'Zabaykalsky Krai, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 52.9725, 72.2043
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Kazakhstan'
+                       locality: ''
+    administrative_area_level_1: 'Akmola Province'
+    administrative_area_level_2: 'Enbekshilder District'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'Enbekshilder District, Kazakhstan'
+                     shortadmin: 'Enbekshilder District'
+location =
+    'Akmola, Kazakhstan'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 59.6712, 66.6318
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Russia'
+                       locality: ''
+    administrative_area_level_1: 'Khanty-Mansi Autonomous Okrug'
+    administrative_area_level_2: 'Kondinsky District'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'Khanty-Mansi Autonomous Okrug, Russia, 628215'
+                     shortadmin: 'Kondinsky District'
+location =
+    'Khanty-Mansi Autonomous Okrug, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 44.8766, 28.871
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Romania'
+                       locality: 'Enisala'
+    administrative_area_level_1: 'Tulcea'
+    administrative_area_level_2: 'Sarichioi'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'VVGC+JC Enisala, Romania'
+                     shortadmin: 'Sarichioi'
+location =
+    'Enisala, Tulcea, Romania'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 35.8788, 58.1136
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Iran'
+                       locality: 'Naubahar'
+    administrative_area_level_1: 'Razavi Khorasan Province'
+    administrative_area_level_2: ''
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'V4H7+GC Naubahar, Iran'
+location =
+    'Naubahar, Razavi Khorasan, Iran'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 51.3265, 118.4895
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Russia'
+                       locality: ''
+    administrative_area_level_1: 'Zabaykalsky Krai'
+    administrative_area_level_2: 'Aleksandrovo-Zavodskiy Rayon'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'Нeizvestnaya doroga, Zabaykalsky Krai, Russia'
+                     shortadmin: 'Aleksandrovo-Zavodskiy Rayon'
+location =
+    'Zabaykalsky Krai, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 40.0386, 24.8602
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Greece'
+                       locality: ''
+    administrative_area_level_1: ''
+    administrative_area_level_2: ''
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: 'ocean'
+                      formatted: 'Greece'
+location =
+    'ocean'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 40.3584, 9.176
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Italy'
+                       locality: ''
+    administrative_area_level_1: 'Sardinia'
+    administrative_area_level_2: 'Province of Nuoro'
+    administrative_area_level_3: 'Orani'
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: '955G+99 Orani, Province of Nuoro, Italy'
+                     shortadmin: 'Orani'
+location =
+    'Sardinia, Italy'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 48.948, 44.139
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Russia'
+                       locality: 'Samofalovka'
+    administrative_area_level_1: 'Volgograd Oblast'
+    administrative_area_level_2: 'Gorodishchensky District'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'W4XQ+6J Samofalovka, Volgograd Oblast, Russia'
+                     shortadmin: 'Gorodishchensky District'
+location =
+    'Samofalovka, Volgograd, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 56.6209, 50.0363
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Russia'
+                       locality: 'Semenovka'
+    administrative_area_level_1: 'Mari El Republic'
+    administrative_area_level_2: 'Mari-Turekskiy Rayon'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'J2CP+9G Semenovka, Mari El Republic, Russia'
+                     shortadmin: 'Mari-Turekskiy Rayon'
+location =
+    'Semenovka, Mari El Republic, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 56.7232, 25.356
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Latvia'
+                       locality: 'Ozoli'
+    administrative_area_level_1: 'Aizkraukle Municipality'
+    administrative_area_level_2: 'Bebru pagasti'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'P9F4+79 Ozoli, Bebru pagasti, Latvia'
+                     shortadmin: 'Bebru pagasti'
+location =
+    'Ozoli, Aizkraukle, Latvia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 53.9079, 102.7103
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Russia'
+                       locality: 'Vasil'evskoe'
+    administrative_area_level_1: 'Irkutsk Oblast'
+    administrative_area_level_2: 'Nukutsky District'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'WP56+54 Vasil'evskoe, Irkutsk Oblast, Russia'
+                     shortadmin: 'Nukutsky District'
+location =
+    'Vasil'evskoe, Irkutsk, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 42.8129, 69.8409
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Kazakhstan'
+                       locality: 'Terekty'
+    administrative_area_level_1: 'South Kazakhstan Province'
+    administrative_area_level_2: 'Baydibek District'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'RR7R+59 Terekty, Kazakhstan'
+                     shortadmin: 'Baydibek District'
+location =
+    'Terekty, South Kazakhstan, Kazakhstan'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 32.751, 28.5711
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: ''
+                       locality: ''
+    administrative_area_level_1: ''
+    administrative_area_level_2: ''
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: 'ocean'
+                      formatted: ''
+location =
+    'ocean'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 47.8131, 61.5107
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                        country: 'Kazakhstan'
+                       locality: ''
+    administrative_area_level_1: 'Kyzylorda Province'
+    administrative_area_level_2: 'Aral District'
+    administrative_area_level_3: ''
+    administrative_area_level_4: ''
+                          water: ''
+                      formatted: 'Aral District, Kazakhstan'
+                     shortadmin: 'Aral District'
+location =
+    'Kyzylorda, Kazakhstan'
+len_array
+len_array =
+  Columns 1 through 13
+    26     5     5    19     5     5    40     5    10    31     5     5     5
+  Columns 14 through 26
+     5    22    23     5    40     5     5     5    34    34    33    33    32
+  Columns 27 through 39
+    29    29    31    33    25    33    38    41    34    39    33    30     5
+  Columns 40 through 52
+    37    32    32    29    35    34    31    31    32    28    39    32    28
+  Columns 53 through 65
+    38    22    34    40     5    32    29    47    33    34    29    31    38
+  Columns 66 through 78
+    30    36     5    22    36     5    26    56    64    24    19    21    21
+  Columns 79 through 91
+    41    21    24    18     5    14    50    25    29    23    17    33    12
+  Columns 92 through 104
+    26     0    27     5    25    18     5    15     5    36    27    22    17
+  Columns 105 through 117
+    29     5    44    29    24    25    38    28    21    23    24    18    37
+  Columns 118 through 129
+    24    31    24     5    15    30    35    25    29    37     5    21
+histogram(len_array)
+histogram(len_array)
+help histogram
+ <strong>histogram</strong>  Plots a histogram.
+    <strong>histogram</strong>(X) plots a histogram of X. <strong>histogram</strong> uses an automatic binning 
+    algorithm that returns bins with a uniform width, chosen to cover the 
+    range of elements in X and reveal the underlying shape of the distribution.  
+    X can be of numeric, datetime, or duration types, and can be a vector, 
+    matrix, or multidimensional array. If X is not a vector, then <strong>histogram</strong> 
+    treats it as a single column vector, X(:), and plots a single histogram.
+ 
+    <strong>histogram</strong>(X,M), where M is a scalar, uses M bins.
+ 
+    <strong>histogram</strong>(X,EDGES), where EDGES is a vector, specifies the edges of 
+    the bins.
+ 
+    The value X(i) is in the kth bin if EDGES(k) <= X(i) < EDGES(k+1). The 
+    last bin will also include the right edge such that it will contain X(i)
+    if EDGES(end-1) <= X(i) <= EDGES(end).
+ 
+    <strong>histogram</strong>(...,'BinWidth',BW) uses bins of width BW. If X is datetime, 
+    BW must be a scalar duration or calendarDuration. To prevent from accidentally
+    creating too many bins, a maximum of 65536 bins can be created when
+    specifying 'BinWidth'. If BW is too small such that more bins
+    are needed, <strong>histogram</strong> uses a larger bin width corresponding 
+    to the maximum number of bins.
+ 
+    <strong>histogram</strong>(...,'BinLimits',[BMIN,BMAX]) plots a histogram with only 
+    elements in X between BMIN and BMAX inclusive, X(X>=BMIN & X<=BMAX).
+ 
+    <strong>histogram</strong>(...,'Normalization',NM) specifies the normalization scheme 
+    of the histogram values. The normalization scheme affects the scaling 
+    of the histogram along the vertical axis (or horizontal axis if 
+    Orientation is 'horizontal'). NM can be:
+                   'count'   The height of each bar is the number of 
+                             observations in each bin. The sum of the
+                             bar heights is generally equal to NUMEL(X),
+                             but is less than if some of the input 
+                             data is not included in the bins.
+             'probability'   The height of each bar is the relative 
+                             number of observations (number of observations
+                             in bin / total number of observations), and
+                             the sum of the bar heights is less than or 
+                             equal to 1.
+            'countdensity'   The height of each bar is the number of 
+                             observations in each bin / width of bin. The 
+                             area (height * width) of each bar is the number
+                             of observations in the bin, and the sum of
+                             the bar areas is less than or equal to NUMEL(X). 
+                             This option is not supported for datetime or 
+                             duration data.
+                     'pdf'   Probability density function estimate. The height 
+                             of each bar is, (number of observations in bin)
+                             / (total number of observations * width of bin).
+                             The area of each bar is the relative number of
+                             observations, and the sum of the bar areas is 
+                             less than or equal to 1. This option is not 
+                             supported for datetime or duration data.
+                'cumcount'   The height of each bar is the cumulative 
+                             number of observations in each bin and all
+                             previous bins. The height of the last bar
+                             is less than or equal to NUMEL(X).
+                     'cdf'   Cumulative density function estimate. The height 
+                             of each bar is the cumulative relative number
+                             of observations in each bin and all previous bins.
+                             The height of the last bar is less than or equal 
+                             to 1.
+ 
+    <strong>histogram</strong>(...,'DisplayStyle',STYLE) specifies the display style of the 
+    histogram. STYLE can be:
+                     'bar'   Display a histogram bar plot. This is the default.
+                  'stairs'   Display a stairstep plot, which shows the 
+                             outlines of the histogram without filling the 
+                             interior. 
+ 
+    <strong>histogram</strong>(...,'BinMethod',BM), uses the specified automatic binning 
+    algorithm to determine the number and width of the bins. BM can be:
+                    'auto'   The default 'auto' algorithm chooses a bin 
+                             width to cover the data range and reveal the 
+                             shape of the underlying distribution.
+                   'scott'   Scott's rule is optimal if the data is close  
+                             to being normally distributed, but is also 
+                             appropriate for most other distributions. It 
+                             uses a bin width of 
+                             3.5*STD(X(:))*NUMEL(X)^(-1/3).
+                      'fd'   The Freedman-Diaconis rule is less sensitive  
+                             to outliers in the data, and may be more 
+                             suitable for data with heavy-tailed 
+                             distributions. It uses a bin width of 
+                             2*IQR(X(:))*NUMEL(X)^(-1/3), where IQR is the 
+                             interquartile range.
+                'integers'   The integer rule is useful with integer data, 
+                             as it creates a bin for each integer. It uses 
+                             a bin width of 1 and places bin edges halfway 
+                             between integers. This option is not 
+                             supported for datetime or duration data.
+                 'sturges'   Sturges' rule is a simple rule that is popular
+                             due to its simplicity. It chooses the number 
+                             of bins to be CEIL(1 + LOG2(NUMEL(X))).
+                    'sqrt'   The Square Root rule is another simple rule 
+                             widely used in other software packages. It 
+                             chooses the number of bins to be
+                             CEIL(SQRT(NUMEL(X))).
+    For datetime data, BM can also be the following time units: 'second', 
+    'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year', 'decade', 
+    or 'century'. For duration data, BM can be these time units: 'second', 
+    'minute', 'hour', 'day', 'year'. If BM is a time unit, <strong>histogram</strong> places 
+    bin edges at boundaries of the time unit.
+ 
+    To prevent from accidentally creating too many bins, a maximum of 65536 
+    bins can be created when specifying 'BinMethod'. If the data range is 
+    too large and more bins are needed, <strong>histogram</strong> uses a larger bin width 
+    corresponding to the maximum number of bins.
+ 
+    <strong>histogram</strong>(...,NAME,VALUE) set the property NAME to VALUE. 
+      
+    <strong>histogram</strong>('BinEdges', EDGES, 'BinCounts', COUNTS) where COUNTS is a 
+    vector of length equal to length(EDGES)-1, manually specifies
+    the bin counts. <strong>histogram</strong> plots the counts and does not do any data binning.
+ 
+    <strong>histogram</strong>(AX,...) plots into AX instead of the current axes.
+        
+    H = <strong>histogram</strong>(...) also returns a histogram object. Use this to inspect 
+    and adjust the properties of the histogram.
+ 
+    Class support for inputs X, EDGES:
+       float: double, single
+       integers: uint8, int8, uint16, int16, uint32, int32, uint64, int64
+       logical
+       datetime, duration
+ 
+    See also <a href="matlab:help histcounts">histcounts</a>, <a href="matlab:help histogram2">histogram2</a>, <a href="matlab:help histcounts2">histcounts2</a>, <a href="matlab:help discretize">discretize</a>, <a href="matlab:help matlab.graphics.chart.primitive.Histogram">matlab.graphics.chart.primitive.Histogram</a>
+
+    <a href="matlab:doc histogram">Documentation for histogram</a>
+    <a href="matlab:matlab.internal.language.introspective.overloads.displayOverloads('histogram')">Other functions named histogram</a>
+
+histogram(len_array,5)
+histogram(len_array,7)
+histogram(len_array,8)
+histogram(len_array,9)
+histogram(len_array,10)
+location_raw = webread(['https://maps.googleapis.com/maps/api/geocode/json?latlng=' num2str(72.2952) ',' num2str(-137.402) '&key=' GoogleMapsAPIkey])
+location_raw = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+    plus_code: [1×1 struct]
+      results: [1×1 struct]
+       status: 'OK'
+location_raw = webread(['https://maps.googleapis.com/maps/api/geocode/json?latlng=' num2str(45.902) ',' num2str(-73.6775) '&key=' GoogleMapsAPIkey])
+location_raw = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+    plus_code: [1×1 struct]
+      results: {9×1 cell}
+       status: 'OK'
+open getlocation_test.m
+test = getlocation_test(34.1596, 38.0453)
+
+lat/lon = 34.1596, 38.0453
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                              country: 'Syria'
+                             locality: 'As Sawwanah ash Sharqiyah'
+          administrative_area_level_1: 'Homs Governorate'
+          administrative_area_level_2: 'Palmyra'
+          administrative_area_level_3: ''
+          administrative_area_level_4: ''
+                                water: ''
+                            formatted: '525W+R4 As Sawwanah ash Sharqiyah، Syria'
+                       locality_short: 'As Sawwanah ash Sharqiyah'
+                        country_short: 'SY'
+    administrative_area_level_2_short: 'Palmyra'
+    administrative_area_level_1_short: 'Homs Governorate'
+                           shortadmin: 'Palmyra'
+test =
+    'As Sawwanah ash Sharqiyah, Homs, Syria'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 57.4216, 78.9217
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                              country: 'Russia'
+                             locality: ''
+          administrative_area_level_1: 'Tomsk Oblast'
+          administrative_area_level_2: 'Parabel'skiy Rayon'
+          administrative_area_level_3: ''
+          administrative_area_level_4: ''
+                                water: ''
+                            formatted: 'Tomsk Oblast, Russia, 636620'
+    administrative_area_level_1_short: 'Tomsk Oblast'
+                        country_short: 'RU'
+    administrative_area_level_2_short: 'Parabel'skiy Rayon'
+                           shortadmin: 'Parabel'skiy Rayon'
+location =
+    'Tomsk, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 44.9896, 75.4459
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                              country: 'Kazakhstan'
+                             locality: 'Araltobe'
+          administrative_area_level_1: 'Almaty Province'
+          administrative_area_level_2: 'Balkhash District'
+          administrative_area_level_3: ''
+          administrative_area_level_4: ''
+                                water: ''
+                            formatted: 'XCQW+R9 Araltobe, Kazakhstan'
+                       locality_short: 'Araltobe'
+    administrative_area_level_2_short: 'Balkhash District'
+    administrative_area_level_1_short: 'Almaty Province'
+                        country_short: 'KZ'
+                           shortadmin: 'Balkhash District'
+location =
+    'Araltobe, Almaty, Kazakhstan'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 32.5908, 2.9785
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                              country: 'Algeria'
+                             locality: 'Metlili'
+          administrative_area_level_1: 'Ghardaia Province'
+          administrative_area_level_2: 'Metlili'
+          administrative_area_level_3: ''
+          administrative_area_level_4: ''
+                                water: ''
+                            formatted: 'Metlili, Algeria'
+                       locality_short: 'Metlili'
+    administrative_area_level_2_short: 'Metlili'
+    administrative_area_level_1_short: 'Ghardaia Province'
+                        country_short: 'DZ'
+                           shortadmin: 'Metlili'
+location =
+    'Metlili, Ghardaia, Algeria'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 52.5469, 37.4983
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                              country: 'Russia'
+                             locality: 'Prusynok'
+          administrative_area_level_1: 'Oryol Oblast'
+          administrative_area_level_2: 'Verkhovsky District'
+          administrative_area_level_3: ''
+          administrative_area_level_4: ''
+                                water: ''
+                            formatted: 'GFWX+Q8 Prusynok, Oryol Oblast, Russia'
+                       locality_short: 'Prusynok'
+    administrative_area_level_2_short: 'Verkhovsky District'
+    administrative_area_level_1_short: 'Oryol Oblast'
+                        country_short: 'RU'
+                           shortadmin: 'Verkhovsky District'
+location =
+    'Prusynok, Oryol, Russia'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 31.9947, 110.6373
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                              country: 'China'
+                             locality: 'Shiyan'
+          administrative_area_level_1: 'Hubei'
+          administrative_area_level_2: ''
+          administrative_area_level_3: ''
+          administrative_area_level_4: ''
+                                water: ''
+                            formatted: 'XJVP+VW Huilong Township, Hubei, Fang County, Shiyan, Hubei, China'
+                       locality_short: 'Shiyan'
+    administrative_area_level_1_short: 'Hubei'
+                        country_short: 'CN'
+location =
+    'Shiyan, Hubei, China'
+open getlocation_test.m
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 31.6308, 6.289
+acceptable =
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+   1
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                              country: 'Algeria'
+                             locality: 'Hassi Messaoud'
+          administrative_area_level_1: 'Ouargla Province'
+          administrative_area_level_2: 'Hassi Messaoud'
+          administrative_area_level_3: ''
+          administrative_area_level_4: ''
+                                water: ''
+                            formatted: 'J7MQ+4FR, Hassi Messaoud, Algeria'
+                       locality_short: 'HME'
+    administrative_area_level_2_short: 'Hassi Messaoud'
+    administrative_area_level_1_short: 'Ouargla Province'
+                        country_short: 'DZ'
+                           shortadmin: 'Hassi Messaoud'
+location =
+    'Hassi Messaoud, Ouargla, Algeria'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 47.206, 51.5822
+acceptable =
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+   1
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                              country: 'Kazakhstan'
+                             locality: 'Karatyu'
+          administrative_area_level_1: 'Atyrau Province'
+          administrative_area_level_2: 'Makhambet District'
+          administrative_area_level_3: ''
+          administrative_area_level_4: ''
+                                water: ''
+                            formatted: '6H4J+9V Karatyu, Kazakhstan'
+                       locality_short: 'Karatyu'
+    administrative_area_level_2_short: 'Makhambet District'
+    administrative_area_level_1_short: 'Atyrau Province'
+                        country_short: 'KZ'
+                           shortadmin: 'Makhambet District'
+location =
+    'Karatyu, Atyrau, Kazakhstan'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 30.8211, 4.0633
+acceptable =
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+   1
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                              country: 'Algeria'
+                             locality: 'El Menia'
+          administrative_area_level_1: 'Ghardaia Province'
+          administrative_area_level_2: 'El Menia'
+          administrative_area_level_3: ''
+          administrative_area_level_4: ''
+                                water: ''
+                            formatted: 'El Menia, Algeria'
+                       locality_short: 'El Menia'
+    administrative_area_level_2_short: 'El Menia'
+    administrative_area_level_1_short: 'Ghardaia Province'
+                        country_short: 'DZ'
+                           shortadmin: 'El Menia'
+location =
+    'El Menia, Ghardaia, Algeria'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 37.1566, 13.5308
+acceptable =
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+   1
+output = 
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+                              country: 'Italy'
+                             locality: ''
+          administrative_area_level_1: 'Sicilia'
+          administrative_area_level_2: 'Libero consorzio comunale di Agrigento'
+          administrative_area_level_3: 'Agrigento'
+          administrative_area_level_4: ''
+                                water: 'ocean'
+                            formatted: '5G4J+J8 Villaggio Mosè AG, Italy'
+    administrative_area_level_3_short: 'Agrigento'
+    administrative_area_level_2_short: 'AG'
+    administrative_area_level_1_short: 'Sicilia'
+                        country_short: 'IT'
+                           shortadmin: 'Agrigento'
+location =
+    'ocean'
+lat = randbetween(30,60); lon = randbetween(-2,120); location = getlocation_test(lat, lon); len_array(end+1) = length(location); location
+
+lat/lon = 48.9099, 56.1225
+{Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('urlreadwrite', 'C:\Program Files\MATLAB\R2020b\toolbox\matlab\iofun\private\urlreadwrite.m', 73)" style="font-weight:bold">urlreadwrite</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2020b\toolbox\matlab\iofun\private\urlreadwrite.m',73,0)">line 73</a>)
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('urlread', 'C:\Program Files\MATLAB\R2020b\toolbox\matlab\iofun\urlread.m', 47)" style="font-weight:bold">urlread</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2020b\toolbox\matlab\iofun\urlread.m',47,0)">line 47</a>)
+[s,status] = urlreadwrite(mfilename,catchErrors,url,varargin{:});
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('getElevations', 'C:\Users\james\Documents\GitHub\strewnlab\getElevations.m', 63)" style="font-weight:bold">getElevations</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewnlab\getElevations.m',63,0)">line 63</a>)
+  str = urlread(url);
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('identifywater', 'C:\Users\james\Documents\GitHub\strewnlab\identifywater.m', 20)" style="font-weight:bold">identifywater</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewnlab\identifywater.m',20,0)">line 20</a>)
+            elevation_in_m(idx) = getElevations(lat(idx),lon(idx),'key',
+            GoogleMapsAPIkey);
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('getlocation_test', 'C:\Users\james\Documents\GitHub\strewnlab\getlocation_test.m', 29)" style="font-weight:bold">getlocation_test</a> (<a href="matlab: opentoline('C:\Users\james\Documents\GitHub\strewnlab\getlocation_test.m',29,0)">line 29</a>)
+[body_of_water,elevation_out] = identifywater(lat,lon);   } 

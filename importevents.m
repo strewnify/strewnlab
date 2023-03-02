@@ -5,11 +5,6 @@ database_out = database_in;
 % Import config to assign data quality
 strewnconfig
 
-% Duplicate event identification thresholds
-location_err_km = import_data.(datasource).location_err_km; 
-time_err_s = import_data.(datasource).time_err_s;
-time_err_min = ceil(time_err_s/60);
-
 num_new = 0;
 num_newsources = 0;
 num_updated = 0;
@@ -67,14 +62,14 @@ for event_i = 1:size_import
                 end
                 
                 % Assign end point as reference point
-                try
-                    importdata.ref_Lat = importdata.end_Lat;
-                    importdata.ref_Long = importdata.end_Long;
-                    importdata.ref_Height_km = importdata.end_Height_km;
-                    importdata.ref_Description(:) = {'end'};
-                catch
-                    logformat(sprintf('Reference point not found for %s.%s.%s, updated record created.',import_data.(datasource).LatestData.EventID_nom{event_i}, datatype, datasource),'WARN')
-                end
+%                 try
+                    import_data.(datasource).LatestData.ref_Lat = import_data.(datasource).LatestData.end_Lat;
+                    import_data.(datasource).LatestData.ref_Long = import_data.(datasource).LatestData.end_Long;
+                    import_data.(datasource).LatestData.ref_Height_km = import_data.(datasource).LatestData.end_Height_km;
+                    import_data.(datasource).LatestData.ref_Description(:) = {'end'};
+%                 catch
+%                     logformat(sprintf('Reference point not found for %s.%s.%s, updated record created.',import_data.(datasource).LatestData.EventID_nom{event_i}, datatype, datasource),'WARN')
+%                 end
             end
 
             if ~strcmp(datasource,'NEOB') && ~strcmp(datasource,'ASGARD')
@@ -103,7 +98,7 @@ for event_i = 1:size_import
 
     % Generate possible EventID matches
     EventID_nom = eventid(import_data.(datasource).LatestData.LAT(event_i),import_data.(datasource).LatestData.LONG(event_i),import_data.(datasource).LatestData.DatetimeUTC(event_i));
-    PossibleEventIDs = alteventids(import_data.(datasource).LatestData.LAT(event_i),import_data.(datasource).LatestData.LONG(event_i),import_data.(datasource).LatestData.DatetimeUTC(event_i),time_err_min,location_err_km);
+    PossibleEventIDs = alteventids(import_data.(datasource).LatestData.LAT(event_i),import_data.(datasource).LatestData.LONG(event_i),import_data.(datasource).LatestData.DatetimeUTC(event_i),import_data.(datasource).time_err_s,import_data.(datasource).location_err_km);
     PossibleEventIDs = PossibleEventIDs(isfield(database_out,PossibleEventIDs) | strcmp(PossibleEventIDs,EventID_nom)); % ID's in the database or the nominal ID
     
     % Issue: some unique ID's may not be listed, due to incorrect source data
@@ -164,7 +159,7 @@ for event_i = 1:size_import
 
             % Calculate deltas
             dup_timedelta_s = abs(seconds(import_data.(datasource).LatestData.DatetimeUTC(event_i) - database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).DatetimeUTC));
-            dup_dist_km = distance(import_data.(datasource).LatestData.LAT(event_i),import_data.(datasource).LatestData.LONG(event_i),database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).LAT,database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).LONG,planet) / 1000;
+            dup_dist_km = distance(import_data.(datasource).LatestData.LAT(event_i),import_data.(datasource).LatestData.LONG(event_i),database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).LAT,database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).LONG,planet.ellipsoid_m) / 1000;
 
             % Calculate thresholds as the sum of expected error for both sources
             max_timedelta_s = import_data.(datasource).time_err_s + import_data.(CompSource).time_err_s;

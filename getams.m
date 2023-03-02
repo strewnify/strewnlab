@@ -73,7 +73,7 @@ AMS_data.Datetime = AMS_data.avg_date_utc;
 AMS_data.LAT = round(AMS_data.end_lat,4);
 AMS_data.LONG = round(AMS_data.end_long,4);
 AMS_data.Altitude = round(AMS_data.end_alt./1000,3);
-[temp_distance_meters, temp_bearing] = distance(AMS_data.start_lat,AMS_data.start_long,AMS_data.end_lat,AMS_data.end_long,planet);
+[temp_distance_meters, temp_bearing] = distance(AMS_data.start_lat,AMS_data.start_long,AMS_data.end_lat,AMS_data.end_long,planet.ellipsoid_m);
 AMS_data.CurveDist = temp_distance_meters ./ 1000; % convert meters to kilometers
 AMS_data.Bearing = round(temp_bearing,3);
 clear temp_distance

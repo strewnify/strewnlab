@@ -9,7 +9,7 @@ for i = 2:size(GLM_data,1)
 end
 end_height = met_h(end);
 
-% [GOES16data.m2sat_AZ, GOES16data.m2sat_ELEV, GOES16data.slantRange] = geodetic2aer(sat_lat, sat_long, sat_h, GOES16data.latitude, GOES16data.longitude, 0, planet);
+% [GOES16data.m2sat_AZ, GOES16data.m2sat_ELEV, GOES16data.slantRange] = geodetic2aer(sat_lat, sat_long, sat_h, GOES16data.latitude, GOES16data.longitude, 0,planet.ellipsoid_m);
 [GLM_data.met_LAT, GLM_data.met_LONG, GLM_data.met_h] = aer2geodetic(GLM_data.m2sat_AZ, GLM_data.m2sat_ELEV, met_h./sin(deg2rad(GLM_data.m2sat_ELEV)), GLM_data.latitude, GLM_data.longitude,0 , planet);
 
 %plot(GLM_data.met_LONG, GLM_data.met_LAT )
@@ -17,8 +17,8 @@ end_height = met_h(end);
 %plot(GLM_data.time_s, GLM_data.met_h )
 
 % Calculate aspect ratio at event latitude, for graphing
-lat_metersperdeg = 2*earthradius*pi/360;
-long_metersperdeg = 2*earthradius*pi*cos(deg2rad(GLM_data.met_LAT(1)))/360;
+lat_metersperdeg = 2*planet.radius_m*pi/360;
+long_metersperdeg = 2*planet.radius_m*pi*cos(deg2rad(GLM_data.met_LAT(1)))/360;
 
 % % Resample filter
 % filter = false(size(GLM_data,1),1);

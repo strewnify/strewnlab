@@ -32,9 +32,8 @@ map_handle.WindowState = 'maximized';
 pause(1)
 [latitudeLimits,longitudeLimits] = geolimits(gx,latlim,lonlim)
 
-earthradius = 6371000;
-lat_metersperdeg = 2*earthradius*pi/360;
-long_metersperdeg = 2*earthradius*pi*cos(deg2rad(latitudeLimits(1)))/360;
+lat_metersperdeg = 2*planet.radius_m*pi/360;
+long_metersperdeg = 2*planet.radius_m*pi*cos(deg2rad(latitudeLimits(1)))/360;
 
 % show search polygons
 ax2 = axes; % create cartesian axes

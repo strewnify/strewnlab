@@ -4,7 +4,7 @@
 if ~exist('AMS_data','var')
     % load API key
     strewnconfig
-
+    
     % Open a waitbar
     handleAMS = waitbar(0,'Downloading AMS reports...'); 
 
@@ -106,7 +106,7 @@ title(['AMS End Reports: ' datestr(now_UTC,'mmm DD, YYYY') ' to ' datestr(now_UT
 linelength_km = 500;
 num_pending = size(AMS_data,1);
 for obs_i = 1:num_pending
-    [AMS_data.lat_endproj, AMS_data.long_endproj] = reckon(AMS_data.latitude, AMS_data.longitude, linelength_km*1000, AMS_data.final_azimuth, planet);
+    [AMS_data.lat_endproj, AMS_data.long_endproj] = reckon(AMS_data.latitude, AMS_data.longitude, linelength_km*1000, AMS_data.final_azimuth,planet.ellipsoid_m);
     plot(gend,[AMS_data.latitude(obs_i) AMS_data.lat_endproj(obs_i)],[AMS_data.longitude(obs_i) AMS_data.long_endproj(obs_i)],'b-')
     plot(gend,AMS_data.latitude(obs_i),AMS_data.longitude(obs_i),'ko')
 end
@@ -121,7 +121,7 @@ end
 % linelength_km = 500;
 % num_pending = size(AMS_data,1);
 % for obs_i = 1:num_pending
-%     [AMS_data.lat_endproj, AMS_data.long_endproj] = reckon(AMS_data.latitude, AMS_data.longitude, linelength_km*1000, AMS_data.final_azimuth, planet);
+%     [AMS_data.lat_endproj, AMS_data.long_endproj] = reckon(AMS_data.latitude, AMS_data.longitude, linelength_km*1000, AMS_data.final_azimuth,planet.ellipsoid_m);
 %     plot([AMS_data.longitude(obs_i) AMS_data.long_endproj(obs_i)], [AMS_data.latitude(obs_i) AMS_data.lat_endproj(obs_i)],'b-')
 %     plot(AMS_data.longitude(obs_i),AMS_data.latitude(obs_i),'ko')
 % end
