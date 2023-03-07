@@ -14,7 +14,7 @@ while numpoints
 % Find points inside ellipse
 (strewnLAT-xo)^2/a + (y-yo)^2/b +(z-zo)^2/c < 1
 scatter(ellipseLAT,ellipseLON)
-area = areaint(ellipseLAT,ellipseLON,planet.radius_m)
+area = areaint(ellipseLAT,ellipseLON,planet.ellipsoid_m.MeanRadius)
 
 end
 

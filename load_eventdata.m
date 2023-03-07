@@ -107,8 +107,8 @@ cd(mainfolder);
 [body_of_water, ground] = identifywater(nom_lat, nom_long);
 
 % Calculate aspect ratio at event latitude, for graphing
-lat_metersperdeg = 2*planet.radius_m*pi/360;
-long_metersperdeg = 2*planet.radius_m*pi*cos(deg2rad(nom_lat))/360;
+lat_metersperdeg = 2*planet.ellipsoid_m.MeanRadius*pi/360;
+long_metersperdeg = 2*planet.ellipsoid_m.MeanRadius*pi*cos(deg2rad(nom_lat))/360;
 
 % Calculate nominal release vector
 slope = -1/tan(degtorad(nom_angle));
@@ -118,12 +118,12 @@ darkposition = [-(geometric_elevation - darkflight_elevation) / slope 0 darkflig
 
 % Calculation nominal start and end locations
 AZ = nom_bearing + atan2d(-startposition(2),startposition(1)); % convert position to azimuth angle
-ARCLEN = (360 * norm([startposition(1),startposition(2)]))/(2 * pi * planet.radius_m); % distance in degrees of arc
+ARCLEN = (360 * norm([startposition(1),startposition(2)]))/(2 * pi * planet.ellipsoid_m.MeanRadius); % distance in degrees of arc
 startlocation = reckon(nom_lat, nom_long, ARCLEN, AZ); 
 AZ = nom_bearing + atan2d(-endposition(2),endposition(1)); % convert position to azimuth angle
-ARCLEN = (360 * norm([endposition(1),endposition(2)]))/(2 * pi * planet.radius_m); % distance in degrees of arc
+ARCLEN = (360 * norm([endposition(1),endposition(2)]))/(2 * pi * planet.ellipsoid_m.MeanRadius); % distance in degrees of arc
 endlocation = reckon(nom_lat, nom_long, ARCLEN, AZ); 
-ARCLEN = (360 * norm([darkposition(1),darkposition(2)]))/(2 * pi * planet.radius_m); % distance in degrees of arc
+ARCLEN = (360 * norm([darkposition(1),darkposition(2)]))/(2 * pi * planet.ellipsoid_m.MeanRadius); % distance in degrees of arc
 darklocation = reckon(nom_lat, nom_long, ARCLEN, AZ); 
 
 % Calculate nominal path for visualization
@@ -132,12 +132,12 @@ nom_startposition = [(nom_startaltitude - geometric_elevation) / nom_slope 0 nom
 nom_endposition = [-(geometric_elevation - ground) / slope 0 ground];
 nom_darkposition = [-(geometric_elevation - darkflight_elevation) / slope 0 darkflight_elevation];
 nom_AZ = nom_bearing + atan2d(-nom_startposition(2),nom_startposition(1)); % convert position to azimuth angle
-nom_ARCLEN = (360 * norm([nom_startposition(1),nom_startposition(2)]))/(2 * pi * planet.radius_m); % distance in degrees of arc
+nom_ARCLEN = (360 * norm([nom_startposition(1),nom_startposition(2)]))/(2 * pi * planet.ellipsoid_m.MeanRadius); % distance in degrees of arc
 nom_startlocation = reckon(nom_lat, nom_long, nom_ARCLEN, nom_AZ); 
 nom_AZ = nom_bearing + atan2d(-nom_endposition(2),nom_endposition(1)); % convert position to azimuth angle
-nom_ARCLEN = (360 * norm([nom_endposition(1),nom_endposition(2)]))/(2 * pi * planet.radius_m); % distance in degrees of arc
+nom_ARCLEN = (360 * norm([nom_endposition(1),nom_endposition(2)]))/(2 * pi * planet.ellipsoid_m.MeanRadius); % distance in degrees of arc
 nom_endlocation = reckon(nom_lat, nom_long, nom_ARCLEN, nom_AZ); 
-nom_ARCLEN = (360 * norm([nom_darkposition(1),nom_darkposition(2)]))/(2 * pi * planet.radius_m); % distance in degrees of arc
+nom_ARCLEN = (360 * norm([nom_darkposition(1),nom_darkposition(2)]))/(2 * pi * planet.ellipsoid_m.MeanRadius); % distance in degrees of arc
 nom_darklocation = reckon(nom_lat, nom_long, nom_ARCLEN, nom_AZ); 
 
 

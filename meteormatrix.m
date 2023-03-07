@@ -116,7 +116,7 @@ for density_input = 2800:500:3800
             WindDrag(i) = 0;
         end
         Fx(i) = -DragForce(i)*sin(anglerad(i))-WindDrag(i);
-        Fy(i) = DragForce(i)*cos(anglerad(i))-planet.G*planet.mass_kg*mass/(planet.radius_m+y(i-1))^2;
+        Fy(i) = DragForce(i)*cos(anglerad(i))-G_constant*planet.mass_kg*mass/(planet.ellipsoid_m.MeanRadius+y(i-1))^2;
         ax(i) = Fx(i)/mass;
         ay(i)= Fy(i)/mass;
 

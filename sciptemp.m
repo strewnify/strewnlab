@@ -2,8 +2,8 @@ nom_lat = 43;
 
 planet = getPlanet();
 % Calculate aspect ratio at event latitude, for graphing
-lat_metersperdeg = 2*planet.radius_m*pi/360;
-long_metersperdeg = 2*planet.radius_m*pi*cos(deg2rad(nom_lat))/360;
+lat_metersperdeg = 2*planet.ellipsoid_m.MeanRadius*pi/360;
+long_metersperdeg = 2*planet.ellipsoid_m.MeanRadius*pi*cos(deg2rad(nom_lat))/360;
 
 alt1 = 30000:200:35000;
 alt2 = 20000:200:31000;

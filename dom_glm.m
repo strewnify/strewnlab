@@ -17,8 +17,8 @@ end_height = met_h(end);
 %plot(GLM_data.time_s, GLM_data.met_h )
 
 % Calculate aspect ratio at event latitude, for graphing
-lat_metersperdeg = 2*planet.radius_m*pi/360;
-long_metersperdeg = 2*planet.radius_m*pi*cos(deg2rad(GLM_data.met_LAT(1)))/360;
+lat_metersperdeg = 2*planet.ellipsoid_m.MeanRadius*pi/360;
+long_metersperdeg = 2*planet.ellipsoid_m.MeanRadius*pi*cos(deg2rad(GLM_data.met_LAT(1)))/360;
 
 % % Resample filter
 % filter = false(size(GLM_data,1),1);

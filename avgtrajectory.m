@@ -2,7 +2,7 @@
 % unknown trajectory.
 
 planet = getPlanet();
-planet_rad_km = planet.radius_m / 1000;
+planet_rad_km = planet.ellipsoid_m.MeanRadius / 1000;
 
 % generate randomly distributed polar coordinate points inside a circle
 % credit to aioobe on stack overflow, for his elegant solution

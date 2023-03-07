@@ -53,7 +53,7 @@ for i = 1:numbins
         zonename = ['MassZone' char(64+i) '_' zonename_short '_' SimFilename SimVersionSfx];
         
         % save strewn area to variable        
-        eval(['strewnarea_km2_' zonename_short ' = areaint(latitudes,longitudes,planet.radius_m/1000)']) 
+        eval(['strewnarea_km2_' zonename_short ' = areaint(latitudes,longitudes,planet.ellipsoid_m.MeanRadius/1000)']) 
         
         % change directory
         cd([exportfolder '\zoneplots'])
