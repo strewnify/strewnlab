@@ -4,6 +4,10 @@ function [ CNEOS_data ] = getcneos_test(startdate, enddate)
 
 % Load config
 strewnconfig
+
+% extend wait time for slow connections
+webread_options = weboptions('Timeout',webread_timeout);
+
 nowtime_utc = datetime('now','TimeZone','UTC');
 
 % if timezone is empty, assume UTC

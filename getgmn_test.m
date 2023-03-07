@@ -35,7 +35,7 @@ GMN_folder = 'monthly';
 GMN_filename = 'traj_summary_monthly_202302.txt';
 %GMN_filename = 'traj_summary_all.txt';
 logformat('GMN data not retrieved by date, disable/reenable','DEBUG')
-%urlwrite(['https://globalmeteornetwork.org/data/traj_summary_data/' GMN_folder '/' GMN_filename],GMN_filename);
+urlwrite(['https://globalmeteornetwork.org/data/traj_summary_data/' GMN_folder '/' GMN_filename],GMN_filename);
 waitbar(0, handleGMN,'Reading Global Meteor Network data...'); 
 GMN_raw = readtable(GMN_filename);
 %delete(filename)

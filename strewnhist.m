@@ -19,7 +19,7 @@ filter_darkflight = darkflight_elevation - error_elevation;
 
 % Wind variation
 %error_windmin = weather_minsigma; error_windmax = weather_maxsigma;
-error_windmin = -1.4; error_windmax = -0.6;
+error_windmin = -0.9; error_windmax = 0;
 
 % Lookup the mass filtered indices
 filter = (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= error_windmin) & (strewndata.error_wind <= error_windmax);
@@ -33,13 +33,14 @@ if meas_density ~= 0
 end
 
 % remove percentage of searched polygons
-for area_idx = 1:size(EventData_searched,2)
-    searched_data = inpolygon(strewndata.Latitude,strewndata.Longitude,EventData_searched(area_idx).lat,EventData_searched(area_idx).lon);
-    searched = percentfilter(searched_data, EventData_searched(area_idx).efficiency);   
-    filter = filter & ~searched;
-    
-end
+if exist('EventData_searched','var')
+    for area_idx = 1:size(EventData_searched,2)
+        searched_data = inpolygon(strewndata.Latitude,strewndata.Longitude,EventData_searched(area_idx).lat,EventData_searched(area_idx).lon);
+        searched = percentfilter(searched_data, EventData_searched(area_idx).efficiency);   
+        filter = filter & ~searched;
 
+    end
+end
 % Convert meters to degrees of latitude and longitude
 lat_gridsize = gridsize / lat_metersperdeg;
 long_gridsize = gridsize / long_metersperdeg;

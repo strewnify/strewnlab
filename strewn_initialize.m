@@ -13,7 +13,7 @@ if ~initialized
 
     % Initialize settings
     datetime.setDefaultFormats('defaultdate','yyyy-MM-dd HH:mm:ss');
-    
+          
     % Define planet data
     global planet_data
     planet_data = struct;

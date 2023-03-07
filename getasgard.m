@@ -3,6 +3,9 @@ function [ ASGARD_data ] = getasgard(dayhistory)
 
 strewnconfig
 
+% extend wait time for slow connections
+webread_options = weboptions('Timeout',webread_timeout);
+
 % Limit start date
 % ASGARD data is not available before Dec 14, 2011
 mindate = datetime(2011,12,14);

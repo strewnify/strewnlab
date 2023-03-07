@@ -4,6 +4,9 @@
 if ~exist('AMS_data','var')
     % load API key
     strewnconfig
+
+    % extend wait time for slow connections
+    webread_options = weboptions('Timeout',webread_timeout);
     
     % Open a waitbar
     handleAMS = waitbar(0,'Downloading AMS reports...'); 

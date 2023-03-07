@@ -1,8 +1,7 @@
 function [ longitudes, latitudes ] = strewnzone(strewndata, minmass, maxmass, numpoints)
 %STREWNZONE Filled area plot of strewn field.
-%   STREWNZONE takes output from the APOCALYPSE projectile simulation
+%   STREWNZONE takes output from the STREWNIFY projectile simulation
 %   program and plots the strewn field as a shaded polygon.
-%   Input sigmamult is the number of standard deviations to include
 
 clear latitudes
 clear longitudes

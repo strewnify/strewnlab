@@ -1,5 +1,6 @@
 function plotsearches(search_data)
 % PLOTSEARCHES
+planet = getPlanet();
 
 % count search polygons and get all points to set map limits
 num_areas = size(search_data,2);
@@ -23,7 +24,7 @@ lonlim(2) = lonlim(2) + 0.05*(lonlim(2) - lonlim(1));
 % Create a map
 gx = geoaxes('Basemap','satellite')
 [latitudeLimits,longitudeLimits] = geolimits(gx,latlim,lonlim)
-title('All search areas shown / DO NOT ZOOM, not supported')
+title(['All Search Areas - ' datestr(datetime('now','TimeZone','UTC'),'yyyy/mm/dd HH:MM UTC')])
 
 map_handle = gcf;
 map_handle.WindowState = 'maximized';
@@ -47,8 +48,19 @@ ax2.YTick = [];
 
 for area_idx = 1:num_areas
     if ~strcmp(search_data(area_idx).notes,'poor')
-        patch(ax2,search_data(area_idx).lon, search_data(area_idx).lat,'white','FaceAlpha',0.2) % Modify patch color and transparency     
+        patch(ax2,search_data(area_idx).lon, search_data(area_idx).lat,'blue','FaceAlpha',search_data(area_idx).efficiency/300) % Modify patch color and transparency     
     end
 end
+
+% Test code to merge polygons
+% need to experiment more
+% poly1 = polyshape({EventData_searched(1).lon},{EventData_searched(1).lat})
+% poly1(:) = polyshape({EventData_searched(:).lon},{EventData_searched(:).lat})
+% polyshape({EventData_searched(:).lon},{EventData_searched(:).lat})
+% poly1 = union(polyshape({EventData_searched(1).lon},{EventData_searched(1).lat}))
+
+
+
+
 
 

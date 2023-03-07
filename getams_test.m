@@ -3,6 +3,10 @@ function [ AMS_data ] = getams_test(startdate,enddate)
 
 % Load config
 strewnconfig
+
+% extend wait time for slow connections
+webread_options = weboptions('Timeout',webread_timeout);
+
 min_reports = 10; % reports threshold
 nowtime_utc = datetime('now','TimeZone','UTC');
 

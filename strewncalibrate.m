@@ -11,8 +11,8 @@ plotmargin = [5 5 5 5];
 plot_material = 'all';
 
 % Wind bins
-wnd_min = -1.4;
-wnd_max = -0.2;
+wnd_min = -0.9;
+wnd_max = 0.3;
 wnd_step = (wnd_max - wnd_min)/3; 
 wnd_bins = wnd_min:wnd_step:wnd_max;
 wind_bins_lower_edges = wnd_bins(1:3);
@@ -30,8 +30,8 @@ bin_idx = 1:numel(bin_edges);
 plot_idx = find(bin_counts > 0);
 lower_edges = log_base.^bin_edges(plot_idx);
 upper_edges = log_base.^bin_edges(plot_idx + 1);
-% lower_edges = [0.001 0.01 0.1 0.5 1 2 5 10 50];
-% upper_edges = [0.01 0.1 0.5 1 2 5 10 50 100];
+lower_edges = [0.001 0.05 0.25 0.5 1];
+upper_edges = [0.05 0.25 0.5 1 5];
 
 % Setup plot
 figure
@@ -61,7 +61,7 @@ for wind_idx = 1:numel(wind_bins_lower_edges)
     if ~strcmp(plot_material,'all')
         filter = filter & strcmp(strewndata.material, plot_material);
     end
-    plot_limit_values = setplotlimits(strewndata.Longitude(filter), strewndata.Latitude(filter), plotmargin);
+    plot_limit_values = setplotlimits([strewndata.Longitude(filter);EventData_Finds.Longitude], [strewndata.Latitude(filter);EventData_Finds.Latitude], plotmargin);
 
 
    

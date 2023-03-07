@@ -3,18 +3,17 @@
 % Initialize
 strewn_initialize
 
-% Load private keys
-loadprivate
-
 user_TimeZone = 'America/Detroit'; 
 user_LAT =  42.664841;
 user_LONG = -83.687051;
-webread_options = weboptions('Timeout',60);  % extend wait time for slow connections
-winusername = getenv('USERNAME'); % get windows username for folder structure
+webread_timeout = 60;
 userpresent = true; % default value, modified in scheduled functions
 
 % temporary utc time offset, bug fix needed
 utc_offset = hours(-5);
+
+% Get windows username for folder structure
+winusername = getenv('USERNAME'); 
 
 % Set main folder and go to it
 try
@@ -54,6 +53,9 @@ end
 
 % Add working directory and subfolders to search path
 addpath(genpath(mainfolder)) 
+
+% Load private keys
+loadprivate
 
 % Database settings
 DatabaseFilename = 'StrewnifyDatabase'; %.mat filename

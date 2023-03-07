@@ -12,6 +12,9 @@ if ~exist('check_configloaded','var') || ~check_configloaded
     strewnconfig
 end
 
+% extend wait time for slow connections
+webread_options = weboptions('Timeout',webread_timeout);
+
 % Get current time
 nowtime = datetime('now','TimeZone','UTC');
 

@@ -5,6 +5,9 @@ function [ AMS_data ] = getams(startyear, endyear, min_reports)
 % Load settings
 strewnconfig
 
+% extend wait time for slow connections
+webread_options = weboptions('Timeout',webread_timeout);
+
 % Open a waitbar
 handleAMS = waitbar(0,'Downloading AMS reports...'); 
 

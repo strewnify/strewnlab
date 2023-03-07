@@ -25,18 +25,18 @@ kmltxt_path = [kmltxt_path newline '		<name>' foldername '</name>'];
 kmltxt_path = [kmltxt_path newline '		<open>1</open>'];
 
 % write pin data
-for i = 1:numel(LATS)
+for idx = 1:numel(LATS)
     kmltxt_path = [kmltxt_path newline '		<Placemark>'];
     
     % if label is not provided, use Pin 1, Pin 2,...
     if nargin == 6
-        kmltxt_path = [kmltxt_path newline '			<name>Pin ' num2str(i) '</name>'];
+        kmltxt_path = [kmltxt_path newline '			<name>Pin ' num2str(idx) '</name>'];
     else
-        kmltxt_path = [kmltxt_path newline '			<name>' labels{i} '</name>'];
+        kmltxt_path = [kmltxt_path newline '			<name>' labels{idx} '</name>'];
     end
     kmltxt_path = [kmltxt_path newline '			<Point>'];
     kmltxt_path = [kmltxt_path newline '				<coordinates>'];
-    kmltxt_path = [kmltxt_path newline sprintf('					%.6f,%.6f,%.1f',LONS(i),LATS(i),Altitudes(i))];
+    kmltxt_path = [kmltxt_path newline sprintf('					%.6f,%.6f,%.1f',LONS(idx),LATS(idx),Altitudes(idx))];
     kmltxt_path = [kmltxt_path newline '				</coordinates>'];
     kmltxt_path = [kmltxt_path newline '			</Point>'];
     kmltxt_path = [kmltxt_path newline '		</Placemark>'];
@@ -60,4 +60,4 @@ fclose(fid);
 % return to home directory
 cd(homefolder)
 
-points = [1:i ; LATS ; LONS]';
+points = [1:idx ; LATS ; LONS]';

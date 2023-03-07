@@ -156,7 +156,7 @@ end
 % Example: [ 1 1 1 2; 24344 24344 21000 21000; 0.103 0.050 0.010 0.0003];
 predefinedsplits = true;
 lognrndmultlow = 0.001; % typically 0.001
-lognrndmulthigh = 0.1; % typically 0.1
+lognrndmulthigh = 0.5; % typically 0.1
 count1 = randbetween(2,100); % number of fragments
 
 for i = 1:count1

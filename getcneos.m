@@ -5,6 +5,9 @@ function [ CNEOS_data ] = getcneos()
 % load webread options
 strewnconfig
 
+% extend wait time for slow connections
+webread_options = weboptions('Timeout',webread_timeout);
+
 % Set date/time display format to show times
 datetime.setDefaultFormats('defaultdate','yyyy-MM-dd HH:mm:ss');
 
