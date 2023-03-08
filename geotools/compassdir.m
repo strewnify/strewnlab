@@ -1,5 +1,5 @@
 function [ direction ] = compassdir( azimuth )
-% [DIRECTION] = COMPASSDIR(AZIMUTH) Converts azimuth in degrees to 32-point 
+% [DIRECTION] = COMPASSDIR(AZIMUTH) Converts azimuth in degrees to 16-point 
 % compass rose direction
 
 %initialize compass direction to default

@@ -24,10 +24,10 @@ for sceni = 1:15
         alt1i(i1) = alt1(idx);
         % Solve GOES1 project location for altitude
         [G1_AZ, G1_ELEV, slantRange] = geodetic2aer(43.24 + G_err,-76.54 + G_err2,10000,0,-75.199997,35786020,planet.ellipsoid_m);
-        [G1_LAT(i1),G1_LONG(i1),slantrange] = aer2geosolve(G1_AZ,G1_ELEV,0,-75.199997,35786020,alt1(idx),planet);
+        [G1_LAT(i1),G1_LONG(i1),slantrange] = aer2geosolve(G1_AZ,G1_ELEV,0,-75.199997,35786020,alt1(idx),planet.ellipsoid_m);
 
         % Solve St. Thomas 1 projected location for altitude
-        [ST1_LAT(i1),ST1_LONG(i1),slantrange] = aer2geosolve(84.22 + ST_err1,3.08974 + ST_err2,42.792764,-81.161779,237,alt1(idx),planet);
+        [ST1_LAT(i1),ST1_LONG(i1),slantrange] = aer2geosolve(84.22 + ST_err1,3.08974 + ST_err2,42.792764,-81.161779,237,alt1(idx),planet.ellipsoid_m);
         
         i1=i1+1;
     end
@@ -37,10 +37,10 @@ for sceni = 1:15
         alt2i(I2) = alt2(idx);
         % Solve GOES2 project location for altitude
         [G2_AZ, G2_ELEV, slantRange] = geodetic2aer(43.13 + G_err,-76.645 + G_err2,10000,0,-75.199997,35786020,planet.ellipsoid_m);
-        [G2_LAT(I2),G2_LONG(I2),slantrange] = aer2geosolve(G2_AZ,G2_ELEV,0,-75.199997,35786020,alt2 (idx),planet);
+        [G2_LAT(I2),G2_LONG(I2),slantrange] = aer2geosolve(G2_AZ,G2_ELEV,0,-75.199997,35786020,alt2 (idx),planet.ellipsoid_m);
 
         % Solve St. Thomas 2 projected location for altitude
-        [ST2_LAT(I2),ST2_LONG(I2),slantrange] = aer2geosolve(85.60 + ST_err3,2.86871 + ST_err4,42.792757,-81.161503,237,alt2 (idx),planet);
+        [ST2_LAT(I2),ST2_LONG(I2),slantrange] = aer2geosolve(85.60 + ST_err3,2.86871 + ST_err4,42.792757,-81.161503,237,alt2 (idx),planet.ellipsoid_m);
         I2=I2+1;
     end
     

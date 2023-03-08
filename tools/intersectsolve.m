@@ -1,4 +1,4 @@
-
+% INTERSECTSOLVE Solves for the intersection point of two 3D lines
 traj_AZ = 102.1629
 traj_ELEV = -48.5766
 traj_lat = 49.831261

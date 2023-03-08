@@ -254,11 +254,6 @@ while weatherdatamissing
         end
         clear download_stationdata
 
-        % % Get filenames from user
-        % Directory = strcat(pwd,'\*.txt');
-        % Filenames = uipickfiles('Prompt','Select start files...','FilterSpec',Directory,'output','cell');
-        % NumFiles = size(Filenames,2);
-
         % Update waitbar
         waitbar((stationprogress + 0.5)/(IGRA_StationTarget+1),WaitbarHandle,sprintf('Reading Weather Data, File %0.0f\nLocation: %s', station, EventData_IGRA_Nearby.StationName{station}));
 
