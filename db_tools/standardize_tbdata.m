@@ -40,6 +40,8 @@ for unit_i = 1:numel(out_units)
     data_tb = renamevars(data_tb,oldNames,newNames);
 end
 
+
+
 % Standardize column order, after unit conversion
 % multiple units included to future-protect for standard changes
 standard_order = [{'EventID_nom'} {'EventID'} {'SourceKey'} {'EventName'} {'DatetimeUTC'} {'Datetime'} {'Timezone'} {'Datetime_local'} {'Bearing_deg'} {'ZenithAngle_deg'} {'ImpactEnergyEst_kt'}];
