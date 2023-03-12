@@ -1,4 +1,4 @@
-function [ location_string, locality, state, country ] = getlocation(lat,lon,max_length)
+function [ location_string, locality, state, country, water_string, land_string ] = getlocation(lat,lon,max_length)
 % LOCATION = GETLOCATION( LATITUDE, LONGITUDE )     Query Google Maps
 % reverse geocoding service to determine the locality of a set of
 % coordinates.  Google charges $5 per 1000 requests, so please do not abuse

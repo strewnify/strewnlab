@@ -135,9 +135,8 @@ end
 % % Filter events before dayhistory
 % File_data = File_data(File_data.DatetimeUTC >= startdate & File_data.DatetimeUTC <= enddate,:);
 
-% Standardize output data
-File_data.DateAccessed(:) = nowtime_utc; % Add timestamp
-File_data = standardize_tbdata(File_data); % Convert units and set column order
+% Add timestamp
+File_data.DateAccessed(:) = nowtime_utc; 
 
 % Re-enable table row assignment warning
 warning('on','MATLAB:table:RowsAddedExistingVars');

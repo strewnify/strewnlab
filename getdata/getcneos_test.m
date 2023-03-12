@@ -97,9 +97,8 @@ CNEOS_data.SourceKey = CNEOS_data.EventID_nom;
 % Filter events by date
 CNEOS_data = CNEOS_data(CNEOS_data.DatetimeUTC >= startdate & CNEOS_data.DatetimeUTC <= enddate,:);
 
-% Standardize output data
-CNEOS_data.DateAccessed(:) = nowtime_utc; % Add timestamp
-CNEOS_data = standardize_tbdata(CNEOS_data); % Convert units and set column order
+% Add timestamp
+CNEOS_data.DateAccessed(:) = nowtime_utc; 
 
 % Re-enable table row assignment warning
 warning('on','MATLAB:table:RowsAddedExistingVars');

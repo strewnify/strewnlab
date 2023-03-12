@@ -85,7 +85,7 @@ for date_idx = startdate:days(1):enddate
                 html_speedstring = html_eventdata((html_data_idx(1)-8):(html_data_idx(1)));
                 html_speed_idx1 = strfind(html_speedstring, '>') + 1;
                 html_speed_idx2 = strfind(html_speedstring, 'k') - 2;
-                ASGARD_raw.ref_Speed_kps(event,1) = str2double(html_speedstring(html_speed_idx1:html_speed_idx2));
+                ASGARD_raw.entry_Speed_kps(event,1) = str2double(html_speedstring(html_speed_idx1:html_speed_idx2));
                 
                 % Parse entry height
                 html_startstring = html_eventdata((html_data_idx(2)-8):(html_data_idx(2)));
@@ -97,9 +97,8 @@ for date_idx = startdate:days(1):enddate
                 html_endstring = html_eventdata((html_data_idx(3)-8):(html_data_idx(3)));
                 html_end_idx1 = strfind(html_endstring, '>') + 1;
                 html_end_idx2 = strfind(html_endstring, 'k') - 2;
-                ASGARD_raw.ref_Height_km(event,1) = str2double(html_endstring(html_end_idx1:html_end_idx2));
-                ASGARD_raw.end_Height_km(event,1) = ASGARD_raw.ref_Height_km(event,1);
-                ASGARD_raw.ref_Description(event,1) = {'End'};
+                ASGARD_raw.end_Height_km(event,1) = str2double(html_endstring(html_end_idx1:html_end_idx2));
+                
             else
                 warning(['Could not parse event ' num2str(j) ' data at ' Hyperlink2 '.']) 
             end
@@ -141,15 +140,15 @@ for date_idx = startdate:days(1):enddate
             end
             try
                 latidx = strfind(orbitcode,'lat');
-                ASGARD_raw.ref_Lat(event,1) = str2double(orbitcode((latidx(1)+19):(latidx(1)+28)));
-                ASGARD_raw.ref_Long(event,1) = wrapTo180(str2double(orbitcode((latidx(1)+54):(latidx(1)+63))));
+                ASGARD_raw.end_Lat(event,1) = str2double(orbitcode((latidx(1)+19):(latidx(1)+28)));
+                ASGARD_raw.end_Long(event,1) = wrapTo180(str2double(orbitcode((latidx(1)+54):(latidx(1)+63))));
             catch
-                ASGARD_raw.ref_Lat(event,1) = NaN;
-                ASGARD_raw.ref_Long(event,1) = NaN;
+                ASGARD_raw.end_Lat(event,1) = NaN;
+                ASGARD_raw.end_Long(event,1) = NaN;
             end
         end
     catch
-        warning(['Could not read ' Hyperlink2 ' Skipping to next...'])
+        logformat(['Could not read ' Hyperlink2 ' Skipping to next...'],'WARN')
     end
 end
 
@@ -160,8 +159,8 @@ if readpages == 0
 end
 
 % Filter out small events
-if contains('end_Height_km',ASGARD_raw.Properties.VariableNames) && contains('ref_Speed_kps',ASGARD_raw.Properties.VariableNames)
-    alt_filter = (ASGARD_raw.end_Height_km < end_alt_max_km) & (ASGARD_raw.ref_Speed_kps < Speed_max_kps);
+if contains('end_Height_km',ASGARD_raw.Properties.VariableNames) && contains('entry_Speed_kps',ASGARD_raw.Properties.VariableNames)
+    alt_filter = (ASGARD_raw.end_Height_km < end_alt_max_km) & (ASGARD_raw.entry_Speed_kps < Speed_max_kps);
 else
     error('ASGARD data read error. Unexpected data format.')
 end
@@ -180,14 +179,13 @@ for event_i = 1:ASGARD_numrecords
 end
 
 % Assign EventID
-ASGARD_data.EventID_nom = arrayfun(@eventid,ASGARD_data.ref_Lat,ASGARD_data.ref_Long,ASGARD_data.DatetimeUTC,'UniformOutput',false);
+ASGARD_data.EventID_nom = arrayfun(@eventid,ASGARD_data.end_Lat,ASGARD_data.end_Long,ASGARD_data.DatetimeUTC,'UniformOutput',false);
 
 % Filter events before dayhistory
 ASGARD_data = ASGARD_data(ASGARD_data.DatetimeUTC >= startdate & ASGARD_data.DatetimeUTC <= enddate,:);
 
-% Standardize output data
-ASGARD_data.DateAccessed(:) = nowtime_utc; % Add timestamp
-ASGARD_data = standardize_tbdata(ASGARD_data); % Convert units and set column order
+% Add timestamp
+ASGARD_data.DateAccessed(:) = nowtime_utc; 
 
 % Re-enable table row assignment warning
 warning('on','MATLAB:table:RowsAddedExistingVars');

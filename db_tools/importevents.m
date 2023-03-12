@@ -31,6 +31,8 @@ numvar = numel(import_data.(datasource).LatestData.Properties.VariableNames);
 % Turn off table warning
 warning('off','MATLAB:table:RowsAddedExistingVars');
 
+data_types = type_events(import_data.(datasource).LatestData);
+
 % Check the new events against the database
 for event_i = 1:size_import
     
@@ -38,62 +40,14 @@ for event_i = 1:size_import
     new_event = false;
     new_source = false;
     
+    % get datatypes
+    datatype = data_types{event_i};
+    
     % Update waitbar
     waitbar(event_i/size_import,waitbarhandle,['Reviewing ' datasource ' Events...  ' num2str(event_i) ' of ' num2str(size_import) newline num2str(num_new) ' Events Added,  ' num2str(num_updated+num_newsources), ' Events Updated']);
     
-    % Determine data type for import
-    if ismember('EventName',fieldnames(import_data.(datasource).LatestData)) && contains(import_data.(datasource).LatestData.EventName(event_i),'Doppler')
-         datatype = 'Doppler';
-    else
-         datatype = 'Trajectory';
-    end
-    
-    switch datatype
-        case 'Trajectory'
-
-            % Assign reference point for EventID calculation
-            % if no reference point is defined, define it as end point
-            if ~strcmp(datasource,'NEOB') && ~strcmp(datasource,'ASGARD')&&...
-                ~(ismember('ref_Lat',fieldnames(import_data.(datasource).LatestData)) && ismember('ref_Long',fieldnames(import_data.(datasource).LatestData)) && ismember('ref_Height_km',fieldnames(import_data.(datasource).LatestData)) && ismember('ref_Description',fieldnames(import_data.(datasource).LatestData)))
-                
-                % if any critical inputs are missing
-                if ismember('ref_Lat',fieldnames(import_data.(datasource).LatestData)), ismember('ref_Long',fieldnames(import_data.(datasource).LatestData)),ismember('ref_Height_km',fieldnames(import_data.(datasource).LatestData)),ismember('ref_Description',fieldnames(import_data.(datasource).LatestData))
-                    error('Invalid input data.  Resolve reference point values for ref_Lat, ref_Long, and ref_Height_km')
-                end
-                
-                % Assign end point as reference point
-%                 try
-                    import_data.(datasource).LatestData.ref_Lat = import_data.(datasource).LatestData.end_Lat;
-                    import_data.(datasource).LatestData.ref_Long = import_data.(datasource).LatestData.end_Long;
-                    import_data.(datasource).LatestData.ref_Height_km = import_data.(datasource).LatestData.end_Height_km;
-                    import_data.(datasource).LatestData.ref_Description(:) = {'end'};
-%                 catch
-%                     logformat(sprintf('Reference point not found for %s.%s.%s, updated record created.',import_data.(datasource).LatestData.EventID_nom{event_i}, datatype, datasource),'WARN')
-%                 end
-            end
-
-            if ~strcmp(datasource,'NEOB') && ~strcmp(datasource,'ASGARD')
-                nomcalc = true;
-                [import_data.(datasource).LatestData.LAT(event_i), import_data.(datasource).LatestData.LONG(event_i)] =...
-                    nomlatlong(import_data.(datasource).LatestData.Bearing_deg(event_i),import_data.(datasource).LatestData.ZenithAngle_deg(event_i),import_data.(datasource).LatestData.ref_Lat(event_i),import_data.(datasource).LatestData.ref_Long(event_i),import_data.(datasource).LatestData.ref_Height_km(event_i));
-            else
-                nomcalc = false;
-                import_data.(datasource).LatestData.LAT(event_i) = import_data.(datasource).LatestData.ref_Lat(event_i);
-                import_data.(datasource).LatestData.LONG(event_i) = import_data.(datasource).LatestData.ref_Long(event_i);
-            end
-
-            % Post processing - complex functions for each record
-            if ~ismember('Timezone',fieldnames(import_data.(datasource).LatestData)) && ~isnan(import_data.(datasource).LatestData.LONG(event_i))
-                import_data.(datasource).LatestData.Timezone(event_i) = {timezonecalc(import_data.(datasource).LatestData.LONG(event_i))};
-                import_data.(datasource).LatestData.Datetime_local(event_i) = datetime(import_data.(datasource).LatestData.DatetimeUTC(event_i),'TimeZone',import_data.(datasource).LatestData.Timezone{event_i});
-                %import_data.(datasource).LatestData.HyperMap(event_i) = {['https://maps.google.com/?q=' num2str(import_data.(datasource).LatestData.LAT(event_i),'%f') '%20' num2str(import_data.(datasource).LatestData.LONG(event_i),'%f')]};
-            else
-                import_data.(datasource).LatestData.Timezone(event_i) = {'+00:00'};
-                %import_data.(datasource).LatestData.HyperMap(event_i) = {''};
-            end
-
-        otherwise
-            warning('unhandled datatype')
+    if ~strcmp(datatype,'Trajectory')
+        logformat(sprintf('Unhandled datatype in %s import: %s',datasource,datatype),'DEBUG')
     end
 
     % Generate possible EventID matches
@@ -442,7 +396,7 @@ for event_i = 1:size_import
    
     % Log event id for problem events
     if data_changed || new_event || new_source
-        if nomcalc && (import_data.(datasource).LatestData.LAT(event_i) == import_data.(datasource).LatestData.ref_Lat(event_i)) && (import_data.(datasource).LatestData.LONG(event_i) == import_data.(datasource).LatestData.ref_Long(event_i))
+        if ~strcmp(datasource,'NEOB') && ~strcmp(datasource,'ASGARD') && (import_data.(datasource).LatestData.LAT(event_i) == import_data.(datasource).LatestData.ref_Lat(event_i)) && (import_data.(datasource).LatestData.LONG(event_i) == import_data.(datasource).LatestData.ref_Long(event_i))
             logformat(sprintf('Nominal coordinate extrapolation failed for %s from %s.', EventID_nom, datasource))
         elseif contains(EventID_nom,'X')
             logformat(sprintf('EventID defaulted for %s from %s.', EventID_nom, datasource))

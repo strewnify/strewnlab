@@ -1,7 +1,4 @@
-%LOAD_EVENTDATA  Meteor simulation.
-%   LOAD_EVENTDATA loads meteor event data from an Excel file
-%
-%   Program written by Jim Goodall, August 2019
+% LOAD_EVENTDATA loads meteor event data from an Excel file
 
 % Load config file
 strewnconfig

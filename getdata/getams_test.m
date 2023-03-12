@@ -83,7 +83,7 @@ for year_index = startyear:endyear
         end
         
     catch
-        warning(['AMS data not found for ' num2str(year_index) '!  No reports exist or internet connection.'])
+        logformat(['AMS data not found for ' num2str(year_index) '!  No reports exist or internet connection.'],'WARN')
     end
     
 end
@@ -98,7 +98,7 @@ sdb_varnames = [sdb_varnames {'epicenter_lat'} {'epicenter_long'} {'threshold'} 
 
 % Rename group 3
 source_varnames = [source_varnames {'RA'} {'d_Dec'} {'avg_date_utc'} {'avg_date_local'} {'timezone'} {'avg_duration'} {'pageid'}];
-sdb_varnames = [sdb_varnames {'RA'} {'d_Dec'} {'DatetimeUTC'} {'avg_date_local'} {'source_timezone'} {'avg_duration'} {'pageid'}];
+sdb_varnames = [sdb_varnames {'RA'} {'d_Dec'} {'DatetimeUTC'} {'avg_date_local'} {'source_timezone'} {'duration_s'} {'pageid'}];
 
 AMS_data = renamevars(AMS_data, source_varnames, sdb_varnames);
 
@@ -121,9 +121,8 @@ end
 % Filter events before dayhistory
 AMS_data = AMS_data(AMS_data.DatetimeUTC >= startdate & AMS_data.DatetimeUTC <= enddate,:);
 
-% Standardize output data
-AMS_data.DateAccessed(:) = nowtime_utc; % Add timestamp
-AMS_data = standardize_tbdata(AMS_data); % Convert units and set column order
+% Add timestamp
+AMS_data.DateAccessed(:) = nowtime_utc; 
 
 % Re-enable table row assignment warning
 warning('on','MATLAB:table:RowsAddedExistingVars');

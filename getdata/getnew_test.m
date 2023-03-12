@@ -61,13 +61,27 @@ for source_i = 1:numel(getsources)
     startdate_eff = max([startdate_utc, (nowtime_utc - days(dayhistory_max)), startdate_min_utc]);
         
     % Clear existing data
+    sdb_ImportData.(source_name).LatestDataRaw = []; 
     sdb_ImportData.(source_name).LatestData = []; 
     
     % Arbitrate data source get function, and get data
-    if strcmp(sdb_ImportData.(source_name).source_filename,'none')
-        sdb_ImportData.(source_name).LatestData = sdb_ImportData.(source_name).getfunction(startdate_eff,enddate_utc);        
-    else
-        sdb_ImportData.(source_name).LatestData = sdb_ImportData.(source_name).getfunction(sdb_ImportData.(source_name).source_filename);
+    try
+        if strcmp(sdb_ImportData.(source_name).source_filename,'none')
+            sdb_ImportData.(source_name).LatestDataRaw = sdb_ImportData.(source_name).getfunction(startdate_eff,enddate_utc);        
+        else
+            sdb_ImportData.(source_name).LatestDataRaw = sdb_ImportData.(source_name).getfunction(sdb_ImportData.(source_name).source_filename);
+        end
+
+    catch
+        logformat(sprintf('Error in retrieving %s records.',source_name),'DEBUG')
+    end
+    
+    % Standardize the data
+    try
+        % Convert units,arbitrate missing signals, re-order columns
+        sdb_ImportData.(source_name).LatestData = standardize_tbdata(sdb_ImportData.(source_name).LatestDataRaw,source_name); 
+    catch
+        logformat(sprintf('Error in standardizing %s records.',source_name),'DEBUG')
     end
     
     % Import data into local database
