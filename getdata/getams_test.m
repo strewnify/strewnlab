@@ -90,7 +90,7 @@ end
 
 % Rename group 1
 source_varnames = [{'event_id'} {'average_magnitude'} {'start_lat'} {'start_long'} {'start_alt'} {'end_lat'} {'end_long'} {'end_alt'} {'impact_lat'} {'impact_long'}];
-sdb_varnames = [{'AMS_eventid'} {'average_magnitude'} {'entry_Lat'} {'entry_Long'} {'entry_Height_m'} {'end_Lat'} {'end_Long'} {'end_Height_m'} {'impact_lat'} {'impact_long'}];
+sdb_varnames = [{'AMS_eventid'} {'average_magnitude'} {'entry_Lat'} {'entry_Long'} {'entry_Height_m'} {'end_Lat'} {'end_Long'} {'end_Height_m'} {'impact_Lat'} {'impact_Long'}];
 
 % Rename group 2
 source_varnames = [source_varnames {'epicenter_lat'} {'epicenter_long'} {'threshold'} {'min_hour_diff'} {'comp_precision'} {'min_rating'} {'end_threshold'} {'optimized_ratings'} {'num_reports_for_options'} {'RA_dec'}];
@@ -106,7 +106,7 @@ AMS_data = renamevars(AMS_data, source_varnames, sdb_varnames);
 AMS_data(AMS_data.NumReports <= 0,:) = [];  % Delete records with no trajectory
 
 % Impact Energy rough estimate
-AMS_data.ImpactEnergy_Est = AMS_data.NumReports ./ 10000;
+AMS_data.ImpactEnergy_Est_kt = AMS_data.NumReports ./ 10000;
 
 % Assign Event identifiers
 AMS_data.EventID_nom = arrayfun(@eventid,AMS_data.end_Lat,AMS_data.end_Long,AMS_data.DatetimeUTC,'UniformOutput',false);

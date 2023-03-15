@@ -14,6 +14,7 @@ if isempty(initialized) || ~initialized
 % Check for unknown initialization error
 elseif isempty(planet_data) ||...
         ~isfield(planet_data,'mass_kg') ||...
+        ~isfield(planet_data,'min_height_m')
         ~isfield(planet_data,'ellipsoid_m')
     logformat('Unexpected missing planet data.','ERROR')    
 

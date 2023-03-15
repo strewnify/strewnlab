@@ -175,7 +175,8 @@ for event_i = 1:size_import
         logformat('Requesting user input for manual merge.','USER')
 
         % Prompt user
-        [SELECTION,OK] = listdlg('ListString',PossibleEventIDs,'PromptString','Select Matching Event','Name','Multiple Matching Events','ListSize',[250 75], 'SelectionMode', 'single');
+        %[SELECTION,OK] = listdlg('ListString',PossibleEventIDs,'PromptString','Select Matching Event','Name','Multiple Matching Events','ListSize',[250 75], 'SelectionMode', 'single');
+        OK = false; % DEBUG - need solution for automated merge
         if OK
             
             msg = [sprintf('User selected %s from %s matches ', PossibleEventIDs{SELECTION}, datasource) sprintf('%s, ', PossibleEventIDs{1:(end-1)}) sprintf('%s', PossibleEventIDs{end})];

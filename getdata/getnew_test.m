@@ -25,7 +25,6 @@ logformat('Database in development, temporary name ''MeteorDatabase'' used to ov
 load_database
 
 % Query user for databases
-usersuccess = false;
 SourceList = fieldnames(sdb_ImportData);
 [getsources,usersuccess] = listdlg('ListString',SourceList,'SelectionMode','multiple','Name','Select Sources', 'OKString','Load','PromptString','Select Sources for Import:','ListSize',[300,300]);
 if ~usersuccess
@@ -60,33 +59,47 @@ for source_i = 1:numel(getsources)
     startdate_min_utc = sdb_ImportData.(source_name).startdate_min_utc; % earliest date in source
     startdate_eff = max([startdate_utc, (nowtime_utc - days(dayhistory_max)), startdate_min_utc]);
         
-    % Clear existing data
-    sdb_ImportData.(source_name).LatestDataRaw = []; 
-    sdb_ImportData.(source_name).LatestData = []; 
+    % set to false, to skip import and re-process old data
+    importnew = false;
     
-    % Arbitrate data source get function, and get data
-    try
-        if strcmp(sdb_ImportData.(source_name).source_filename,'none')
-            sdb_ImportData.(source_name).LatestDataRaw = sdb_ImportData.(source_name).getfunction(startdate_eff,enddate_utc);        
-        else
-            sdb_ImportData.(source_name).LatestDataRaw = sdb_ImportData.(source_name).getfunction(sdb_ImportData.(source_name).source_filename);
+    if importnew
+        % Clear existing data
+        sdb_ImportData.(source_name).OldDataRaw = sdb_ImportData.(source_name).LatestDataRaw; 
+        sdb_ImportData.(source_name).OldData = sdb_ImportData.(source_name).LatestData; 
+
+        sdb_ImportData.(source_name).LatestDataRaw = []; 
+        sdb_ImportData.(source_name).LatestData = []; 
+
+        % Arbitrate data source get function, and get data
+        try
+            if strcmp(sdb_ImportData.(source_name).source_filename,'none')
+                sdb_ImportData.(source_name).LatestDataRaw = sdb_ImportData.(source_name).getfunction(startdate_eff,enddate_utc);        
+            else
+                sdb_ImportData.(source_name).LatestDataRaw = sdb_ImportData.(source_name).getfunction(sdb_ImportData.(source_name).source_filename);
+            end
+
+        catch
+            logformat(sprintf('Error in retrieving %s records.',source_name),'DEBUG')
+        end
+    end
+    
+    % if records were retrieved, clean the data and import events
+    if ~isempty(sdb_ImportData.(source_name).LatestDataRaw)
+        % Standardize the data
+        try
+            % Convert units,arbitrate missing signals, re-order columns
+            sdb_ImportData.(source_name).LatestData = tbdata_standardize(sdb_ImportData,source_name,'LatestDataRaw',sdb_Variables); 
+            import_ok = true;
+        catch
+            import_ok = false;
+            logformat(sprintf('Error in standardizing %s records.',source_name),'DEBUG')
         end
 
-    catch
-        logformat(sprintf('Error in retrieving %s records.',source_name),'DEBUG')
+        % Import data into local database
+        if import_ok
+            sdb_MeteorData = importevents(sdb_MeteorData, sdb_ImportData, source_name, handleNewEvents);
+        end
     end
-    
-    % Standardize the data
-    try
-        % Convert units,arbitrate missing signals, re-order columns
-        sdb_ImportData.(source_name).LatestData = standardize_tbdata(sdb_ImportData.(source_name).LatestDataRaw,source_name); 
-    catch
-        logformat(sprintf('Error in standardizing %s records.',source_name),'DEBUG')
-    end
-    
-    % Import data into local database
-    sdb_MeteorData = importevents(sdb_MeteorData, sdb_ImportData, source_name, handleNewEvents);
-
     %logformat(sprintf('',),'DATA');
 end
 

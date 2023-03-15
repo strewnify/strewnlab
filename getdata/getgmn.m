@@ -29,10 +29,10 @@ handleGMN = waitbar(0,'Downloading Global Meteor Network data...');
 warning('off','MATLAB:table:RowsAddedExistingVars');
 
 % Import the file
-%GMN_folder = 'daily';
-GMN_folder = 'monthly';
-%GMN_filename = 'traj_summary_yesterday.txt';
-GMN_filename = 'traj_summary_monthly_202302.txt';
+GMN_folder = 'daily';
+%GMN_folder = 'monthly';
+GMN_filename = 'traj_summary_yesterday.txt';
+%GMN_filename = 'traj_summary_monthly_202302.txt';
 %GMN_filename = 'traj_summary_all.txt';
 logformat('GMN data not retrieved by date, disable/reenable','DEBUG')
 urlwrite(['https://globalmeteornetwork.org/data/traj_summary_data/' GMN_folder '/' GMN_filename],GMN_filename);
@@ -76,16 +76,7 @@ GMN_data.DatetimeUTC = datetime(GMN_data.Beginning_1,'InputFormat','yyyy-MM-dd H
 GMN_data.Hyperlink1 = repmat({'https://globalmeteornetwork.org/data/'},[GMN_numrecords 1]);
 GMN_data.DateAccessed = repmat(nowtime_utc,[GMN_numrecords 1]);
 
-% Post processing - complex functions for each record
-logformat('Move trajectory error to post processing','DEBUG')
-for i = 1:GMN_numrecords
-
-    % Waitbar
-    waitbar(i/GMN_numrecords, handleGMN,'Reading Global Meteor Network data...')
-
-    [GMN_data.Bearing_deg(i),ELEV_nom,GMN_data.err_Bearing(i), GMN_data.err_ZenithAngle_deg(i), slantrange_nom] = trajectoryerror(GMN_data.entry_Lat(i),GMN_data.entry_Long(i),GMN_data.entry_Height_km(i)*1000,GMN_data.end_Lat(i),GMN_data.end_Long(i),GMN_data.end_Height_km(i)*1000,GMN_data.err_entry_Lat(i),GMN_data.err_entry_Long(i),GMN_data.err_entry_Height_km(i)*1000,GMN_data.err_end_Lat(i),GMN_data.err_entry_Long(i),GMN_data.err_end_Height_km(i)*1000);
-    GMN_data.ZenithAngle_deg(i) = 90 - ELEV_nom;
-end
+% Post processing
 
 % Assign EventID
 GMN_data.EventID_nom = arrayfun(@eventid,GMN_data.end_Lat,GMN_data.end_Long,GMN_data.DatetimeUTC,'UniformOutput',false);
