@@ -20,11 +20,10 @@ data_types = type_events(std_tb);
 
 % Identify measured values
 % Debug, update based on variable database
-
-errVar = sdb_Variables.err_calc_method ~= 'none'; % 
-meas_var = cellstr(sdb_Variables.var_name(errVar)); % measured variables
-err_method = cellstr(sdb_Variables.err_calc(errVar)); % get error calculation method
-err_var = cellstr(sdb_Variables.err_var(errVar));
+errVar = db_Variables.err_calc_method ~= 'none'; % 
+meas_var = cellstr(db_Variables.var_name(errVar)); % measured variables
+err_var = cellstr(db_Variables.err_var(errVar)); % error variables
+err_method = cellstr(db_Variables.err_calc_method(errVar)); % get error calculation method
 
 % If measurement error is not given, estimate based on source
 for var_i = 1:length(meas_var)

@@ -159,45 +159,20 @@ for event_i = 1:size_import
     % Update num possible
     num_possible = numel(PossibleEventIDs);
     
-    % if multiple possible matches remaining, ask for user selection
+    % if multiple possible matches still remain, move event to manual merge
     if num_possible > 1
-                
-        % manually resolve duplicates
-        reportevents_test(database_out,PossibleEventIDs)
-
-        % Display new event data
-        testimport.DatetimeUTC
-        testimport.SourceKey
-        testimport.Hyperlink1
-
-        % Log activity
-        logformat([sprintf('Auto-merge failed, %s from %s matches ', import_data.(datasource).LatestData.SourceKey{event_i}, datasource) sprintf('%s, ', PossibleEventIDs{1:(end-1)}) sprintf('%s', PossibleEventIDs{end})])
-        logformat('Requesting user input for manual merge.','USER')
-
-        % Prompt user
-        %[SELECTION,OK] = listdlg('ListString',PossibleEventIDs,'PromptString','Select Matching Event','Name','Multiple Matching Events','ListSize',[250 75], 'SelectionMode', 'single');
-        OK = false; % DEBUG - need solution for automated merge
-        if OK
-            
-            msg = [sprintf('User selected %s from %s matches ', PossibleEventIDs{SELECTION}, datasource) sprintf('%s, ', PossibleEventIDs{1:(end-1)}) sprintf('%s', PossibleEventIDs{end})];
-            
-            % clear possible ID's and use selection from user
-            num_possible = 1;
-            PossibleEventIDs = PossibleEventIDs(SELECTION); % Remove all other options
-        else
-            msg = 'User cancelled merge.  Unresolved duplicate.';
-        end 
         
-        % Logging
-        logformat(msg)
-        ChangeAddendum = [ChangeAddendum msg];
-    end
-    
-    % if multiple possible matches still remain after user selection, merge has failed
-    if num_possible > 1
-                
+        % Increment the EventID
+        EventID_nom(13:14) = EventIDidx{nom_increment};
+        
+        % Import the data into Manual Merge
+        database_out.ManualMerge.(EventID_nom).(datatype).(datasource) = table2struct(import_data.(datasource).LatestData(event_i,:));
+        
+        new_event = true;
+        num_new = num_new + 1;
+      
         % report merge failure
-        logformat([sprintf('Merge failure, %s from %s matches ', EventID_nom, datasource) sprintf('%s, ', PossibleEventIDs{1:(end-1)}) sprintf('%s', PossibleEventIDs{end})],'DEBUG')
+        logformat([sprintf('Merge failure, %s from %s matches. Imported to ManualMerge.%s', EventID_nom, datasource, EventID_nom) sprintf('%s, ', PossibleEventIDs{1:(end-1)}) sprintf('%s', PossibleEventIDs{end})],'DEBUG')
         
         warning('off','MATLAB:table:RowsAddedExistingVars');
         ChangeLog_idx = ChangeLog_idx + 1;

@@ -16,13 +16,8 @@ warning('off','MATLAB:table:RowsAddedExistingVars');
 dayhistory = 15000;
 %dayhistory = 30;
 
-% Temporary
-DatabaseFilename = 'MeteorDatabase'; %.mat filename OVERWRITES DATABASE FILENAME FROM STREWNCONFIG
-Database_EventData_varname = 'sdb_MeteorData';
-logformat('Database in development, temporary name ''MeteorDatabase'' used to overwrite strewnconfig.','DEBUG')
-
 %Load the database
-load_database
+load_database_test
 
 % Query user for databases
 SourceList = fieldnames(sdb_ImportData);
@@ -60,7 +55,7 @@ for source_i = 1:numel(getsources)
     startdate_eff = max([startdate_utc, (nowtime_utc - days(dayhistory_max)), startdate_min_utc]);
         
     % set to false, to skip import and re-process old data
-    importnew = false;
+    importnew = true;
     
     if importnew
         % Clear existing data
@@ -86,14 +81,14 @@ for source_i = 1:numel(getsources)
     % if records were retrieved, clean the data and import events
     if ~isempty(sdb_ImportData.(source_name).LatestDataRaw)
         % Standardize the data
-        try
+%         try
             % Convert units,arbitrate missing signals, re-order columns
             sdb_ImportData.(source_name).LatestData = tbdata_standardize(sdb_ImportData,source_name,'LatestDataRaw',sdb_Variables); 
             import_ok = true;
-        catch
-            import_ok = false;
-            logformat(sprintf('Error in standardizing %s records.',source_name),'DEBUG')
-        end
+%         catch
+%             import_ok = false;
+%             logformat(sprintf('Error in standardizing %s records.',source_name),'DEBUG')
+%         end
 
         % Import data into local database
         if import_ok

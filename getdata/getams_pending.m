@@ -17,7 +17,7 @@ if ~exist('AMS_data','var')
     % Set date limits
     % the result seems to be off by one day, so a day is added.
     now_UTC = datetime('now','TimeZone','UTC') + days(1);
-    start_UTC = now_UTC - days(2);
+    start_UTC = now_UTC - days(14);
     date_min = datestr(start_UTC,'YYYY-mm-DD');
     date_max = datestr(now_UTC,'YYYY-mm-DD');
 
@@ -96,7 +96,7 @@ title(['AMS Start Reports: ' datestr(now_UTC,'mmm DD, YYYY') ' to ' datestr(now_
 linelength_km = 500;
 num_pending = size(AMS_data,1);
 for obs_i = 1:num_pending
-    [AMS_data.lat_startproj, AMS_data.long_startproj] = reckon(AMS_data.latitude, AMS_data.longitude, linelength_km*1000, cellfun(@str2num,AMS_data.initial_azimuth), planet);
+    [AMS_data.lat_startproj, AMS_data.long_startproj] = reckon(AMS_data.latitude, AMS_data.longitude, linelength_km*1000, cellfun(@str2num,AMS_data.initial_azimuth), planet.ellipsoid_m);
     plot(gstart,[AMS_data.latitude(obs_i) AMS_data.lat_startproj(obs_i)], [AMS_data.longitude(obs_i) AMS_data.long_startproj(obs_i)],'b-')
     plot(gstart,AMS_data.latitude(obs_i), AMS_data.longitude(obs_i), 'ko')
 end

@@ -110,3 +110,38 @@ end
 
 end
 
+
+%     code from importevents
+%     % if multiple possible matches remaining, ask for user selection
+%     if num_possible > 1
+%                 
+%         % manually resolve duplicates
+%         reportevents_test(database_out,PossibleEventIDs)
+% 
+%         % Display new event data
+%         testimport.DatetimeUTC
+%         testimport.SourceKey
+%         testimport.Hyperlink1
+% 
+%         % Log activity
+%         logformat([sprintf('Auto-merge failed, %s from %s matches ', import_data.(datasource).LatestData.SourceKey{event_i}, datasource) sprintf('%s, ', PossibleEventIDs{1:(end-1)}) sprintf('%s', PossibleEventIDs{end})])
+%         logformat('Requesting user input for manual merge.','USER')
+% 
+%         % Prompt user
+%         %[SELECTION,OK] = listdlg('ListString',PossibleEventIDs,'PromptString','Select Matching Event','Name','Multiple Matching Events','ListSize',[250 75], 'SelectionMode', 'single');
+%         OK = false; % DEBUG - need solution for automated merge
+%         if OK
+%             
+%             msg = [sprintf('User selected %s from %s matches ', PossibleEventIDs{SELECTION}, datasource) sprintf('%s, ', PossibleEventIDs{1:(end-1)}) sprintf('%s', PossibleEventIDs{end})];
+%             
+%             % clear possible ID's and use selection from user
+%             num_possible = 1;
+%             PossibleEventIDs = PossibleEventIDs(SELECTION); % Remove all other options
+%         else
+%             msg = 'User cancelled merge.  Unresolved duplicate.';
+%         end 
+%         
+%         % Logging
+%         logformat(msg)
+%         ChangeAddendum = [ChangeAddendum msg];
+%     end

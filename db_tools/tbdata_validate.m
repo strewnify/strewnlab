@@ -1,23 +1,27 @@
-function [std_tb] = tbdata_validate(import_table, db_Variables)
+function [std_tb] = tbdata_validate(import_table, db_Variables, data_source)
 % TBDATA_COLUMNORDER validate incoming data and remove invalid values
 %[std_tb] = tbdata_columnorder(import_table)
 
 % copy the input table
 std_tb = import_table;
 
-% Get planet data for min Height
-planet = getPlanet();
+% Minimum height for meteor data
+% used to identify bad data, such as 0
+min_height_m = 1000; 
 
 % DEBUG, need to add import logging, to capture these bad data errors
 
 db_varname = db_Variables.var_name; % get variable name order from database
 validation = db_Variables.validation; % get validation type from database
 import_varnames = std_tb.Properties.VariableNames;
+if nargin == 2
+    data_source = 'unknown source';
+end
 
-% Move variables to the beginning, in reverse order
+% For each variable, check validity
 for var_i = 1:length(db_varname)
     
-    % If the variable exists in the file, check non-missing data for validity
+    % If the variable exists in the table, check non-missing data for validity
     check = datapresent(std_tb,db_varname(var_i));
     if nnz(check) > 0
         switch validation(var_i)
@@ -40,14 +44,14 @@ for var_i = 1:length(db_varname)
                 
             case 'height_m'
                 % Find data less than min height in meters
-                baddata = check & (std_tb.(db_varname{var_i}) < planet.min_height_m);
+                baddata = check & (std_tb.(db_varname{var_i}) < min_height_m);
                 
                 % delete the bad data
                 std_tb.(db_varname{var_i})(baddata) = missing;
                 
             case 'height_km'
                 % Find data less than min height in km
-                baddata = check & (std_tb.(db_varname{var_i}) < (planet.min_height_m/1000));
+                baddata = check & (std_tb.(db_varname{var_i}) < (min_height_m/1000));
                 
                 % delete the bad data
                 std_tb.(db_varname{var_i})(baddata) = missing;
@@ -73,10 +77,24 @@ for var_i = 1:length(db_varname)
                 % delete the bad data
                 std_tb.(db_varname{var_i})(baddata) = missing;
                 
+            case 'integer'
+                % find data outside the 0 to 90 range
+                baddata = check & (mod(std_tb.(db_varname{var_i}),1) > 0);
+                                
+                % delete the bad data
+                std_tb.(db_varname{var_i})(baddata) = missing;
+                
             case 'none'
                 % do nothing
+                baddata = false;
+                
             otherwise
-                logformat(sprintf('Unknown validation type in variable database: %s',validation(var_i)),'DEBUG')
+                baddata = check;                
+        end
+        
+        % Log errors
+        if nnz(baddata) > 0
+            logformat(sprintf('''%s'' validation failed for %.0f of %.0f records in %s data.',db_varname{var_i},nnz(baddata),numel(check),data_source),'DEBUG')
         end
     end
 end

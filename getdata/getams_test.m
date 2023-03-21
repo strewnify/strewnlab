@@ -1,4 +1,4 @@
-function [ AMS_data ] = getams_test(startdate,enddate)
+function [ AMS_data, AMS_json] = getams_test(startdate,enddate)
 % AMS_DATA = GETAMS( DAYHISTORY )    Download events from the American Meteor Society database.
 
 % Load config
@@ -38,18 +38,22 @@ warning('off','MATLAB:table:RowsAddedExistingVars');
 % Initialize row for output
 row = 0;
 startrow = 0;
+years = startyear:endyear;
 
-for year_index = startyear:endyear
+for year_idx = 1:length(years)
     
    try
         % Query online database
-        AMS_json = webread([URL_AMS_API 'year=' num2str(year_index) '&min_reports=' num2str(min_reports) '&format=json&api_key=' AMS_APIkey],webread_options);
+        download = webread([URL_AMS_API 'year=' num2str(years(year_idx)) '&min_reports=' num2str(min_reports) '&format=json&api_key=' AMS_APIkey],webread_options);
+        download.year = years(year_idx); % assign year to struct
+        AMS_json(year_idx) = download; % save year json to struct
+        clear download        
         
         % start new year
         startrow = startrow + row;
         clear AMS_raw
-        AMS_raw = struct2cell(AMS_json.result);
-        AMS_raw_pageid = fieldnames(AMS_json.result);        
+        AMS_raw = struct2cell(AMS_json(year_idx).result);
+        AMS_raw_pageid = fieldnames(AMS_json(year_idx).result);        
         numrows = size(AMS_raw,1);
         Variables = fieldnames(AMS_raw{1})';
         InitCells = { 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 'text' 0 nowtime_utc nowtime_utc 'text' 0};
@@ -62,7 +66,7 @@ for year_index = startyear:endyear
         for row = 1:numrows
 
              % Update waitbar
-             waitbar(row/numrows,handleAMS,['Downloading ' num2str(year_index) ' AMS reports']);
+             waitbar(row/numrows,handleAMS,['Downloading ' num2str(years(year_idx)) ' AMS reports']);
 
              % Get AMS page ID
              AMS_data.pageid(startrow + row) = {regexprep(AMS_raw_pageid{row},'(?:_)','/')};
@@ -74,7 +78,7 @@ for year_index = startyear:endyear
                     try
                         eval(['AMS_data.' Variables{column} '(' num2str(startrow + row) ',' num2str(1) ') = datetime(AMS_raw{' num2str(row) '}.' Variables{column} ',''TimeZone'',''UTC'');']);
                     catch
-                        eval(['AMS_data.' Variables{column} '(' num2str(startrow + row) ',' num2str(1) ') = datetime(' year_index ',1,1,''TimeZone'',''UTC'');']); % invalid dates default to noon on January 1
+                        eval(['AMS_data.' Variables{column} '(' num2str(startrow + row) ',' num2str(1) ') = datetime(' years(year_idx) ',1,1,''TimeZone'',''UTC'');']); % invalid dates default to noon on January 1
                     end
                 else
                     eval(['AMS_data.' Variables{column} '(' num2str(startrow + row) ',' num2str(1) ') = str2double(AMS_raw{' num2str(row) '}.' Variables{column} ');']);
@@ -83,7 +87,7 @@ for year_index = startyear:endyear
         end
         
     catch
-        logformat(['AMS data not found for ' num2str(year_index) '!  No reports exist or internet connection.'],'WARN')
+        logformat(['AMS data not found for ' num2str(years(year_idx)) '!  No reports exist or internet connection.'],'WARN')
     end
     
 end

@@ -18,7 +18,8 @@ if ~initialized
     global planet_data
     planet_data = struct;
     planet_data.mass_kg = 5.972*10^24; % mass of Earth in kg
-    planet_data.min_height_m = -420; % lowest elevation on earth
+    planet_data.min_ground_m = -420; % lowest ground elevation on earth
+    planet_data.max_ground_m = 8849; % highest ground elevation on earth
     planet_data.ellipsoid_m = referenceEllipsoid('earth','meters');  % reference ellipsoid used by mapping/aerospace tools, DO NOT CHANGE units
     
     % Set initialization complete
