@@ -51,6 +51,12 @@ if ~(exist(backupfolder,'dir')==7)
     mkdir(backupfolder) % create folder
 end
 
+% Data folder
+datafolder = [mainfolder '\data'];
+if ~(exist(datafolder,'dir')==7)
+    mkdir(datafolder) % create folder
+end
+
 % Add working directory and subfolders to search path
 addpath(genpath(mainfolder)) 
 
@@ -61,6 +67,7 @@ loadprivate
 DatabaseFilename = 'StrewnifyDatabase'; %.mat filename
 Database_prefix = 'sdb_*'; % all variables in the database must have this prefix, to be saved properly
 Database_EventData_varname = 'sdb_Events'; % database integrity check, if this variable is not found, error
+column_width = 25; % column width for reports and location string length.  WARNING: Database rebuild required to update old events.
 
 % Generate a cell array of EventID increments, in case of multiple events in one hour
 % Supports up to 1296 additional events

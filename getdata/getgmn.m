@@ -5,6 +5,12 @@ function [ GMN_data ] = getgmn(startdate,enddate)
 strewnconfig
 nowtime_utc = datetime('now','TimeZone','UTC');
 
+% Data folder
+GMNfolder = [datafolder '\GMN'];
+if ~(exist(GMNfolder,'dir')==7)
+    mkdir(GMNfolder) % create folder
+end
+
 % if timezone is empty, assume UTC
 if isempty(startdate.TimeZone) || ~strcmp(startdate.TimeZone,'UTC')
     startdate.TimeZone = 'UTC';
@@ -22,24 +28,73 @@ if isnat(enddate) || enddate > nowtime_utc
     enddate = nowtime_utc;
 end
 
+% Create an array of needed filenames
+nom_startdate = datetime(year(startdate),month(startdate),15);
+nom_enddate = datetime(year(enddate),month(enddate),15);
+nom_dates = nom_startdate:calmonths(1):nom_enddate;
+filenames = strcat('traj_summary_monthly_',cellstr(datestr(nom_dates,'yyyymm')),'.txt');
+nummonths = length(filenames);
+
 % Open a waitbar
 handleGMN = waitbar(0,'Downloading Global Meteor Network data...'); 
 
-% Disable table row assignment warning
+% Disable warnings
 warning('off','MATLAB:table:RowsAddedExistingVars');
+warning('off','MATLAB:table:ModifiedAndSavedVarnames');
 
-% Import the file
-GMN_folder = 'daily';
-%GMN_folder = 'monthly';
-GMN_filename = 'traj_summary_yesterday.txt';
-%GMN_filename = 'traj_summary_monthly_202302.txt';
-%GMN_filename = 'traj_summary_all.txt';
-logformat('GMN data not retrieved by date, disable/reenable','DEBUG')
-urlwrite(['https://globalmeteornetwork.org/data/traj_summary_data/' GMN_folder '/' GMN_filename],GMN_filename);
-waitbar(0, handleGMN,'Reading Global Meteor Network data...'); 
-GMN_raw = readtable(GMN_filename);
-%delete(filename)
-% 
+% Change directory
+cd(GMNfolder)
+
+% Download files
+for month_i = 1:nummonths
+    
+    % Update waitbar
+    waitbar(month_i/nummonths, handleGMN,sprintf('Accessing Global Meteor Network data... %s',datestr(nom_dates(month_i),'mmm yyyy'))); 
+        
+    % If the file doesn't exist or it is the current month, download it
+    if exist(filenames{month_i}, 'file') ~= 2 ||...
+            ((month(datetime('now')) == month(nom_dates(month_i))) && (year(datetime('now')) == year(nom_dates(month_i))))
+        try
+            % Import the file
+            urlwrite(['https://globalmeteornetwork.org/data/traj_summary_data/monthly/' filenames{month_i}],filenames{month_i});
+            
+        catch
+             logformat(['GMN data not found for ' datestr(datetime(),'mmmm yyyy') '!  No reports exist or internet connection.'],'WARN')
+        end
+    end
+end
+
+% Read files
+GMN_raw = table; % intialize table
+for month_i = 1:nummonths
+    
+    % Update waitbar
+    waitbar(month_i/nummonths, handleGMN,sprintf('Reading Global Meteor Network data... %s',datestr(nom_dates(month_i),'mmm yyyy'))); 
+    
+    % Read table data and append
+    if exist(filenames{month_i}, 'file') == 2
+        try
+            try
+                GMN_raw = [GMN_raw; readtable(filenames{month_i})];
+            catch
+                
+                % convert {'None'} cell values to NaN
+                GMN_raw.x____14(strcmp(GMN_raw.x____14,'None')) = {'NaN'};
+                S = sprintf('%s ', GMN_raw.x____14{:});
+                GMN_raw.x____14 = sscanf(S, '%f');
+                
+                % Try appending again
+                GMN_raw = [GMN_raw; readtable(filenames{month_i})];
+            end
+        catch
+            logformat(sprintf('Error reading %s.  Could not append to GMN data.',filenames{month_i}),'DEBUG')
+        end
+    end
+    
+end
+
+% Go back to main directory
+cd(mainfolder)
 
 %Need to fix this
 %Warning: Column headers from the file were modified to make them valid MATLAB
@@ -87,8 +142,9 @@ GMN_data = GMN_data(GMN_data.DatetimeUTC >= startdate & GMN_data.DatetimeUTC <= 
 % Add timestamp
 GMN_data.DateAccessed(:) = nowtime_utc; 
 
-% Re-enable table row assignment warning
+% Re-enable warnings
 warning('on','MATLAB:table:RowsAddedExistingVars');
+warning('on','MATLAB:table:ModifiedAndSavedVarnames');
 
 % Log
 logformat(sprintf('%0.0f records retrieved from GMN',size(GMN_data,1)),'DATA')

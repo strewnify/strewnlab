@@ -9,11 +9,12 @@ num_new = 0;
 num_newsources = 0;
 num_updated = 0;
 %fields_donotimport = {'EventID' 'DateAccessed'};
-fields_donotimport = {'EventID'};
-fields_donotcompare = {'EventID' 'DateAccessed'};
-fields_ignorenewfields = {'EventID' 'DateAdded' 'DateUpdated' 'DateAccessed'};
+fields_donotimport = {'EventID' 'source_record'};
+fields_donotcompare = {'EventID' 'DateAccessed' 'source_record'};
+fields_ignorenewfields = {'EventID' 'DateAdded' 'DateUpdated' 'DateAccessed' 'source_record' 'Location' 'Locality' 'State' 'Country'};
 
 % Update log
+warning('off','MATLAB:table:RowsAddedExistingVars');
 ChangeLog_idx = size(database_out.ChangeLog,1) + 1;
 nowtime = datetime('now','TimeZone','UTC');
 database_out.ChangeLog.DatetimeUTC(ChangeLog_idx) = nowtime;
@@ -36,6 +37,7 @@ data_types = type_events(import_data.(datasource).LatestData);
 % Check the new events against the database
 for event_i = 1:size_import
     
+    record_cmp = 1; % record to compare
     data_changed = false;
     new_event = false;
     new_source = false;
@@ -141,7 +143,8 @@ for event_i = 1:size_import
                     try
                        if matches(database_out.(PossibleEventIDs{dup_i}).(datatype).(datasource)(source_i).SourceKey,import_data.(datasource).LatestData.SourceKey{event_i})  % try to access already imported data
                            PossibleEventIDs = PossibleEventIDs(dup_i); % delete all other options
-                           dup_i = num_possible + 1; % break loop
+                           record_cmp = source_i;
+                           dup_i = num_possible + 1; % break outer loop
                            source_i = temp_sources + 1; % break loop
                            %logformat(sprintf('Source Key %s from %s found in %s. Previously matched event.',import_data.(datasource).LatestData.SourceKey{event_i},datasource,PossibleEventIDs{dup_i}),'DATABASE')                   
                        end
@@ -168,9 +171,6 @@ for event_i = 1:size_import
         % Import the data into Manual Merge
         database_out.ManualMerge.(EventID_nom).(datatype).(datasource) = table2struct(import_data.(datasource).LatestData(event_i,:));
         
-        new_event = true;
-        num_new = num_new + 1;
-      
         % report merge failure
         logformat([sprintf('Merge failure, %s from %s matches. Imported to ManualMerge.%s', EventID_nom, datasource, EventID_nom) sprintf('%s, ', PossibleEventIDs{1:(end-1)}) sprintf('%s', PossibleEventIDs{end})],'DEBUG')
         
@@ -217,17 +217,17 @@ for event_i = 1:size_import
                 
                 % compare each field
                 for v = 1:num_fields
-                    eval(['data_old = database_out.(EventID_nom).(datatype).(datasource)(1).' fields_compare{v} ';'])
+                    data_old = database_out.(EventID_nom).(datatype).(datasource)(record_cmp).(fields_compare{v});
                     
-                    % test
-                    if size(database_out.(EventID_nom).(datatype).(datasource),2) > 1
-                        eval(['data_2old = database_out.(EventID_nom).(datatype).(datasource)(2).' fields_compare{v} ';'])
-                    else
-                        data_2old = data_old;
-                    end
-                    
+%                     % test
+%                     if size(database_out.(EventID_nom).(datatype).(datasource),2) > 1
+%                         data_2old = database_out.(EventID_nom).(datatype).(datasource)(2).(fields_compare{v});
+%                     else
+%                         data_2old = data_old;
+%                     end
+%                     
                     %eval(['data_new = import_data.(datasource).LatestData.' fields_compare{v} '(' num2str(event_i) ');' ])
-                    eval(['data_new = testimport.' fields_compare{v} ';'])
+                    data_new = testimport.(fields_compare{v});
                     
                     % if data changed
                     try
@@ -241,18 +241,18 @@ for event_i = 1:size_import
                         end
                     end
                     
-                    try
-                        old2_datamatch =  isequaln(data_2old, data_new) || (or(iscell(data_2old),iscell(data_new)) && matches(data_2old,data_new));
-                    catch
-                        old2_datamatch =  isequaln(data_2old, data_new);
-                    end
+%                     try
+%                         old2_datamatch =  isequaln(data_2old, data_new) || (or(iscell(data_2old),iscell(data_new)) && matches(data_2old,data_new));
+%                     catch
+%                         old2_datamatch =  isequaln(data_2old, data_new);
+%                     end
 
-                    if ~old_datamatch && ~old2_datamatch
+                    if ~old_datamatch % && ~old2_datamatch
                           data_changed = true;
                           EventID_nom
                           fields_compare{v}
                           data_old
-                          data_2old
+%                           data_2old
                           data_new
                           %error('test')
                         break;
@@ -277,6 +277,7 @@ for event_i = 1:size_import
                  % this method failed for dissimilar structures error
                  %database_out.(EventID_nom).(datatype).(datasource)(1) = testimport;
                 
+                                  
                 % Log
                 logformat(sprintf('Data changed for %s.%s.%s, updated record created.',EventID_nom, datatype, datasource),'DATABASE')
                 
@@ -354,7 +355,10 @@ for event_i = 1:size_import
         new_event = true;
         num_new = num_new + 1;
         
-        logformat(sprintf('New event added, duplicate index incremented: %s.%s.%s',EventID_nom, datatype, datasource),'DATABASEBASE')
+        logformat(sprintf('New event added, duplicate index incremented: %s.%s.%s',EventID_nom, datatype, datasource),'DATABASE')
+        
+        % Turn off table warning
+        warning('off','MATLAB:table:RowsAddedExistingVars');
         
         % Add change log record
         ChangeLog_idx = ChangeLog_idx + 1;
@@ -370,8 +374,56 @@ for event_i = 1:size_import
         logformat('Unknown error.','ERROR')
     end
    
-    % Log event id for problem events
+    % Post-processing and logging for modified records
     if data_changed || new_event || new_source
+        
+        % Add event location description
+        if ~isnan(database_out.(EventID_nom).(datatype).(datasource)(1).ref_Lat) && ~isnan(database_out.(EventID_nom).(datatype).(datasource)(1).ref_Long)
+            
+            % coordinates didn't change, just copy location data
+            if data_changed && isfield( database_out.(EventID_nom).(datatype).(datasource)(1), 'Location') && ...
+                database_out.(EventID_nom).(datatype).(datasource)(1).ref_Lat == database_out.(EventID_nom).(datatype).(datasource)(1).ref_Lat
+
+                try
+                    database_out.(EventID_nom).(datatype).(datasource)(1).Location = database_out.(EventID_nom).(datatype).(datasource)(2).Location;
+                    database_out.(EventID_nom).(datatype).(datasource)(1).Locality = database_out.(EventID_nom).(datatype).(datasource)(2).Locality;
+                    database_out.(EventID_nom).(datatype).(datasource)(1).State = database_out.(EventID_nom).(datatype).(datasource)(2).State;
+                    database_out.(EventID_nom).(datatype).(datasource)(1).Country = database_out.(EventID_nom).(datatype).(datasource)(2).Country;
+                    update_location = false;
+                catch
+                    update_location = true;
+                end
+            else
+                update_location = true;
+            end
+            
+            % coordinates changed or copy failed, update location
+            if update_location
+                [ location_string, locality, state, country, ~, ~ ] = getlocation(database_out.(EventID_nom).(datatype).(datasource)(1).ref_Lat,database_out.(EventID_nom).(datatype).(datasource)(1).ref_Long,column_width-3);
+                if ~isfield( database_out.(EventID_nom).(datatype).(datasource)(1), 'Location') ||...
+                        (isfield( database_out.(EventID_nom).(datatype).(datasource)(1), 'Location') && isempty(database_out.(EventID_nom).(datatype).(datasource)(1).Location))                        
+                    database_out.(EventID_nom).(datatype).(datasource)(1).Location = location_string;
+                end
+                if ~isfield( database_out.(EventID_nom).(datatype).(datasource)(1), 'Locality') ||...
+                        (isfield( database_out.(EventID_nom).(datatype).(datasource)(1), 'Locality') && isempty(database_out.(EventID_nom).(datatype).(datasource)(1).Locality))                        
+                    database_out.(EventID_nom).(datatype).(datasource)(1).Locality = locality;
+                end
+                if ~isfield( database_out.(EventID_nom).(datatype).(datasource)(1), 'State') ||...
+                        (isfield( database_out.(EventID_nom).(datatype).(datasource)(1), 'State') && isempty(database_out.(EventID_nom).(datatype).(datasource)(1).State))                        
+                    database_out.(EventID_nom).(datatype).(datasource)(1).State = state;
+                end
+                if ~isfield( database_out.(EventID_nom).(datatype).(datasource)(1), 'Country') ||...
+                        (isfield( database_out.(EventID_nom).(datatype).(datasource)(1), 'Country') && isempty(database_out.(EventID_nom).(datatype).(datasource)(1).Country))                        
+                    database_out.(EventID_nom).(datatype).(datasource)(1).Country = country;
+                end
+                clear location_string
+                clear locality
+                clear state
+                clear country
+            end
+        end
+        
+        % log problems
         if ~strcmp(datasource,'NEOB') && ~strcmp(datasource,'ASGARD') && (import_data.(datasource).LatestData.LAT(event_i) == import_data.(datasource).LatestData.ref_Lat(event_i)) && (import_data.(datasource).LatestData.LONG(event_i) == import_data.(datasource).LatestData.ref_Long(event_i))
             logformat(sprintf('Nominal coordinate extrapolation failed for %s from %s.', EventID_nom, datasource))
         elseif contains(EventID_nom,'X')
@@ -383,6 +435,7 @@ for event_i = 1:size_import
     clear testimport
     clear new_event
     clear new_source
+    clear record_cmp
     clear data_changed
 end
 

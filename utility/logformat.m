@@ -38,7 +38,7 @@ if strcmp(get(0,'Diary'),'on') || iserror
 
     % Add debug log for unknown log type
     if isempty(rank)
-        fprintf('%s | %s | %s\n', nowstring, 'DEBUG', 'Unknown log type. Logging output to DEBUG.');
+        fprintf('%s | DEBUG | LOGFORMAT | Unknown log type %s. Logging output to DEBUG below.\n', nowstring, type );
         LogType = 'DEBUG';
     else
         LogType = validTypes{rank};
@@ -52,7 +52,7 @@ if iserror
     
     % Stop logging
     diary off
-    
+        
     % Close waitbars
     close(findall(0,'type','figure','tag','TMWWaitbar'))
     

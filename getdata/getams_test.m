@@ -110,7 +110,7 @@ AMS_data = renamevars(AMS_data, source_varnames, sdb_varnames);
 AMS_data(AMS_data.NumReports <= 0,:) = [];  % Delete records with no trajectory
 
 % Impact Energy rough estimate
-AMS_data.ImpactEnergy_Est_kt = AMS_data.NumReports ./ 10000;
+AMS_data.ImpactEnergyEst_kt = AMS_data.NumReports ./ 10000;
 
 % Assign Event identifiers
 AMS_data.EventID_nom = arrayfun(@eventid,AMS_data.end_Lat,AMS_data.end_Long,AMS_data.DatetimeUTC,'UniformOutput',false);

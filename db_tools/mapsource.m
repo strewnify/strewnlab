@@ -4,6 +4,9 @@ function [import_mapping] = mapsource(example_record, db_Variables)
 
 % existing import data variables
 import_var = fieldnames(example_record);
+
+% Remove table fields
+import_var(strcmp(import_var,'Properties')|strcmp(import_var,'Row')|strcmp(import_var,'Variables')) = [];
 numvar = numel(import_var);
 
 % get import data types

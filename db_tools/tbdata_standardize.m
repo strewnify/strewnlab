@@ -2,6 +2,9 @@ function [std_tb] = tbdata_standardize(import_data, datasource, raw_tb, db_Varia
 % STANDARDIZE_TBDATA converts units, arbitrates data, and re-orders columns
 %[STD_TB] = STANDARDIZE_TBDATA(DATA_TB) Clean table data
 
+% Open a waitbar
+handleStd = waitbar(0,sprintf('Validating %s Data ...',datasource));
+
 % Get planet data
 planet = getPlanet();
 
@@ -12,7 +15,23 @@ std_tb = import_data.(datasource).(raw_tb);
 std_tb = tbdata_validate(std_tb, db_Variables);
 
 % Unit conversion
+waitbar(1/4,handleStd,sprintf('Converting %s Data ...',datasource));
 std_tb = tbdata_unitconvert(std_tb);
+
+% Determine if duplicate records exist for the same SourceKey
+% Assign record id numbers
+% Sort by process date, if available
+waitbar(2/4,handleStd,sprintf('Sorting %s Data ...',datasource));
+if ismember('DateProcessed',std_tb.Properties.VariableNames)
+    std_tb = sortrows(std_tb,'DateProcessed','ascend');
+end
+unique_keys = unique(std_tb.SourceKey);
+for event_i = 1:length(unique_keys)
+    records = find(matches(std_tb.SourceKey,unique_keys(event_i)));
+    std_tb.source_record(records) = length(records):-1:1;
+end
+
+waitbar(3/4,handleStd,sprintf('Standardizing %s Data ...',datasource));
 
 % Get datatypes to choose arbitration methods
 % (Don't store in table)
@@ -140,6 +159,10 @@ if nnz(defaultTZ) > 0
 end
 
 % Apply standard column order
+waitbar(4/4,handleStd,sprintf('Standardizing %s Data ...',datasource));
 std_tb = tbdata_columnorder(std_tb, db_Variables);
+
+% Close waitbar
+close(handleStd)
 
 
