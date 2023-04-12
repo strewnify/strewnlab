@@ -12,7 +12,7 @@ planet = getPlanet();
 std_tb = import_data.(datasource).(raw_tb);
 
 % Validate input data
-std_tb = tbdata_validate(std_tb, db_Variables);
+std_tb = tbdata_validate(std_tb, db_Variables, datasource);
 
 % Unit conversion
 waitbar(1/4,handleStd,sprintf('Converting %s Data ...',datasource));

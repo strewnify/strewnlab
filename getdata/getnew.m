@@ -24,7 +24,7 @@ end
 
 % Get data from the AMS fireball database
 if ~exist('AMS_data','var')
-    AMS_data = getams(startyear,endyear,10);
+    AMS_data = getams(startyear,endyear,5, 2.5);
 end
 
 % Get data from the ASGARD site

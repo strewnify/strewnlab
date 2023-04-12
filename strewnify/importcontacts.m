@@ -24,7 +24,7 @@ try
     PATHNAME = [mainprefix '\Downloads\'];
     FILENAME = ['strewn_contacts' datetimestring '.csv'];
     options = weboptions('MediaType', 'application/json', 'ArrayFormat', 'csv');
-    websave(FILENAME,'https://docs.google.com/spreadsheet/ccc?key=1-l-29FPTCz5rEr1AOYbUYrFXR9NRKsZXxqs0QiVxanA&output=csv&pref=1',weboptions)
+    websave(FILENAME,'https://docs.google.com/spreadsheet/ccc?key=1-l-29FPTCz5rEr1AOYbUYrFXR9NRKsZXxqs0QiVxanA&output=csv&pref=1',weboptions);
     dateFormat = 'MM/dd/yyyy h:mm:SS aa';
     cd(mainfolder)
     logformat(sprintf('%s retrieved from Google Drive',FILENAME),'INFO')
@@ -116,7 +116,7 @@ for idx = start_idx:importsize
     
     % Resolve location
     sdb_Contacts.Location(end) = validplace(contactdata{idx,col_loc},sdb_placenames,false);
-    [sdb_Contacts.LAT(end) sdb_Contacts.LONG(end) ] = getcoordinates(char(sdb_Contacts.Location(end)));
+    [sdb_Contacts.LAT(end), sdb_Contacts.LONG(end) ] = getcoordinates(char(sdb_Contacts.Location(end)));
         
     sdb_Contacts.notify(end) = true;
     

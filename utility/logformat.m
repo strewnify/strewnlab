@@ -15,7 +15,7 @@ iserror = strcmp(type,'ERROR');
 
 % Only run this function if diary is on or if there is an error 
 % (and crash is happening anyway, below)
-if strcmp(get(0,'Diary'),'on') || iserror
+if strcmp(get(0,'Diary'),'on') || ~exist('logging','var') || logging || iserror
 
     [ST, ~] = dbstack('-completenames', 1);
     if isempty(ST) % main console call

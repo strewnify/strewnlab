@@ -131,26 +131,24 @@ for event_i = 1:size_import
     % Remove non-matching events from the duplicate list
     PossibleEventIDs(delete_i) = []; 
     num_possible = numel(PossibleEventIDs);
-    
-    % Check for previous matches
-    if num_possible > 1
-        % for each possible event id
-        for dup_i = 1:num_possible
-           try
-               % check each source in the database for that ID 
-               temp_sources = size({database_out.(PossibleEventIDs{dup_i}).(datatype).(datasource).SourceKey},2); 
-               for source_i = 1:temp_sources
-                    try
-                       if matches(database_out.(PossibleEventIDs{dup_i}).(datatype).(datasource)(source_i).SourceKey,import_data.(datasource).LatestData.SourceKey{event_i})  % try to access already imported data
-                           PossibleEventIDs = PossibleEventIDs(dup_i); % delete all other options
-                           record_cmp = source_i;
-                           dup_i = num_possible + 1; % break outer loop
-                           source_i = temp_sources + 1; % break loop
-                           %logformat(sprintf('Source Key %s from %s found in %s. Previously matched event.',import_data.(datasource).LatestData.SourceKey{event_i},datasource,PossibleEventIDs{dup_i}),'DATABASE')                   
-                       end
-                    end
-               end
-            end
+
+    % Check for SourceKey matches
+    % for each possible event id
+    for dup_i = 1:num_possible
+       try
+           % check each source in the database for that ID 
+           temp_sources = size({database_out.(PossibleEventIDs{dup_i}).(datatype).(datasource).SourceKey},2); 
+           for source_i = 1:temp_sources
+                try
+                   if matches(database_out.(PossibleEventIDs{dup_i}).(datatype).(datasource)(source_i).SourceKey,import_data.(datasource).LatestData.SourceKey{event_i})  % try to access already imported data
+                       PossibleEventIDs = PossibleEventIDs(dup_i); % delete all other options
+                       record_cmp = source_i;
+                       dup_i = num_possible + 1; % break outer loop
+                       source_i = temp_sources + 1; % break loop
+                       %logformat(sprintf('Source Key %s from %s found in %s. Previously matched event.',import_data.(datasource).LatestData.SourceKey{event_i},datasource,PossibleEventIDs{dup_i}),'DATABASE')                   
+                   end
+                end
+           end
         end
     end
     % Init change summary addendum
@@ -214,40 +212,24 @@ for event_i = 1:size_import
             
             % otherwise, check each field for differences
             else
-                
-                % compare each field
                 for v = 1:num_fields
                     data_old = database_out.(EventID_nom).(datatype).(datasource)(record_cmp).(fields_compare{v});
                     
-%                     % test
-%                     if size(database_out.(EventID_nom).(datatype).(datasource),2) > 1
-%                         data_2old = database_out.(EventID_nom).(datatype).(datasource)(2).(fields_compare{v});
-%                     else
-%                         data_2old = data_old;
-%                     end
-%                     
-                    %eval(['data_new = import_data.(datasource).LatestData.' fields_compare{v} '(' num2str(event_i) ');' ])
                     data_new = testimport.(fields_compare{v});
                     
                     % if data changed
                     try
-                        old_datamatch =  isequaln(data_old, data_new) || (or(iscell(data_old),iscell(data_new)) && matches(data_old,data_new));
+                        datamatch =  isequaln(data_old, data_new) || (or(iscell(data_old),iscell(data_new)) && matches(data_old,data_new));
                     catch
                         data_new = {data_new};
                         try
-                            old_datamatch =  isequaln(data_old, data_new) || (or(iscell(data_old),iscell(data_new)) && matches(data_old,data_new));
+                            datamatch =  isequaln(data_old, data_new) || (or(iscell(data_old),iscell(data_new)) && matches(data_old,data_new));
                         catch
-                            old_datamatch =  isequaln(data_old, data_new);
+                            datamatch =  isequaln(data_old, data_new);
                         end
                     end
-                    
-%                     try
-%                         old2_datamatch =  isequaln(data_2old, data_new) || (or(iscell(data_2old),iscell(data_new)) && matches(data_2old,data_new));
-%                     catch
-%                         old2_datamatch =  isequaln(data_2old, data_new);
-%                     end
 
-                    if ~old_datamatch % && ~old2_datamatch
+                    if ~datamatch
                           data_changed = true;
                           EventID_nom
                           fields_compare{v}
@@ -361,6 +343,7 @@ for event_i = 1:size_import
         warning('off','MATLAB:table:RowsAddedExistingVars');
         
         % Add change log record
+        database_out = dbChangeLog(database_out,'New Event', EventID_nom, datasource, datatype, 
         ChangeLog_idx = ChangeLog_idx + 1;
         database_out.ChangeLog.DatetimeUTC(ChangeLog_idx) = nowtime;
         database_out.ChangeLog.ChangeType(ChangeLog_idx) = {'New Event'};

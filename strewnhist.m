@@ -18,8 +18,7 @@ filter_darkflight = darkflight_elevation - error_elevation;
 %filter_darkflight = -999;
 
 % Wind variation
-%error_windmin = weather_minsigma; error_windmax = weather_maxsigma;
-error_windmin = -0.9; error_windmax = 0;
+error_windmin = weather_minsigma; error_windmax = weather_maxsigma;
 
 % Lookup the mass filtered indices
 filter = (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= error_windmin) & (strewndata.error_wind <= error_windmax);

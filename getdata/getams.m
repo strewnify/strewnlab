@@ -1,6 +1,7 @@
-function [ AMS_data ] = getams(startyear, endyear, min_reports)
+function [ AMS_data ] = getams(startyear, endyear, min_reports, min_duration)
 % AMS_DATA = GETAMS( MINREPORTS )    Download the American Meteor Society database.  
 % MINREPORTS - only events with more than this number of reports will be returned
+% Solar elevation is calculated and daytime events are always reported, regardless of duration
 
 % Load settings
 strewnconfig
@@ -75,6 +76,8 @@ AMS_data(AMS_data.num_reports_for_options <= 0,:) = [];  % Delete records with n
 AMS_data.Datetime = AMS_data.avg_date_utc;
 AMS_data.LAT = round(AMS_data.end_lat,4);
 AMS_data.LONG = round(AMS_data.end_long,4);
+AMS_data.SolarElev = solarelevation(AMS_data.LAT,AMS_data.LONG,AMS_data.Datetime); % Calculate solar elevation
+AMS_data(AMS_data.SolarElev < 0 & AMS_data.avg_duration < min_duration,:) = [];  % Delete night events below min duration
 AMS_data.Altitude = round(AMS_data.end_alt./1000,3);
 [temp_distance_meters, temp_bearing] = distance(AMS_data.start_lat,AMS_data.start_long,AMS_data.end_lat,AMS_data.end_long,planet.ellipsoid_m);
 AMS_data.CurveDist = temp_distance_meters ./ 1000; % convert meters to kilometers
@@ -92,7 +95,7 @@ AMS_data.event_id = [];
 
 % Assign EventID
 AMS_data.EventID = arrayfun(@eventidcalc,AMS_data.LAT,AMS_data.LONG,AMS_data.Datetime,'UniformOutput',false);
-    
+
 % Add Hyperlinks
 for row = 1:size(AMS_data,1)
     AMS_data.Hyperlink1(row) = strcat('https://fireball.amsmeteors.org/members/imo_view/',{regexprep(AMS_data.AMS_event_id{row},'(?:_)','/')});

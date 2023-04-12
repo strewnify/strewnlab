@@ -6,7 +6,7 @@ strewnconfig
 % Start logging
 diary([logfolder 'strewnlab_log.txt'])        
 diary on 
-logformat('Strewnify Meteor Event Notification service started.')
+logformat('New meteor event analysis initialized.')
 
 % Load the event database
 load_database
@@ -18,6 +18,10 @@ waitfor(EventPicker_UI,'success')
 % Get output data from UI before closing
 SelectedEvent = extractBefore(EventPicker_UI.SelectedEvent,' - ');
 success = EventPicker_UI.success;
+CONFIDENTIAL = EventPicker_UI.CONFIDENTIAL;
+
+% temp - old database - lookup index
+select_i = find(strcmp(sdb_Events.EventID,SelectedEvent),1,'last');
 
 % Close the Event Picker UI
 EventPicker_UI.delete
@@ -30,11 +34,11 @@ end
 
 % Lookup nearby localities and suggest event names
 CustomName = {'< Use a Custom Event Name >'};
-[suggestions, radii] = suggest_eventnames(sdb_Events.LAT,sdb_Events.LONG,9);
+[suggestions, radii] = suggest_eventnames(sdb_Events.LAT(select_i),sdb_Events.LONG(select_i),9);
 if isempty(suggestions)
-    suggestionsfound = true;
+    suggestionsfound = false;    
 else
-    suggestionsfound = false;
+    suggestionsfound = true;
     SuggestionList = strcat('~', num2str(radii), {'km | '},suggestions);
     SuggestionList = [CustomName; SuggestionList];
 end
@@ -50,15 +54,57 @@ while ~usersuccess
     end
     
     if selection_idx == 1
-        UserEventName = inputdlg('Enter a preliminary name for this event:','Custom Event Name',1,{'< Custom Name >'});        
+        SimulationName = inputdlg('Enter a preliminary name for this event:','Custom Event Name',1,{'< Custom Name >'}); 
+        SimulationName = SimulationName{1};
     else
-        UserEventName = SuggestionList(selection_idx);
+        SimulationName = suggestions{selection_idx-1};
     end
     
-    logformat(sprintf('User selected "%s" as Event Name',UserEventName{1}),'USER')
+    logformat(sprintf('User selected "%s" as Event Name',SimulationName),'USER')
 end
 clear usersuccess
 clear selection_idx
+
+% Create folders
+if SelectedEvent(1) == 'S'
+    SimEventID = ['Y' SelectedEvent(2:end)];
+else
+    SimEventID = SelectedEvent;
+end
+syncevent
+
+% Print trajectory data
+reportevents(sdb_Events(select_i,:))
+
+% Find nearby sensors
+NearbySensors = nearbysensors(sdb_Events.LAT(select_i),sdb_Events.LONG(select_i),sdb_Events.end_alt(select_i)/1000,sdb_Sensors);
+NearbySensors(NearbySensors.Type ~= "Seismic",:)
+
+% Open browser to event pages
+if ~isempty(sdb_Events.Hyperlink1{select_i})
+    system(['start ' sdb_Events.Hyperlink1{select_i}]);
+end
+if ~isempty(sdb_Events.Hyperlink2{select_i})
+    system(['start ' sdb_Events.Hyperlink2{select_i}]);
+end
+
+%Open Google Earth, if not open
+[~,temp_result] = system('tasklist /FI "imagename eq googleearh.exe" /fo table /nh'); % check if program is running
+if strcmp(temp_result(1:4),'INFO') % if program is not running
+    system([GoogleEarth_path ' &']); % open Google Earth
+    system('TASKKILL -f -im "cmd.exe" > NUL'); % kill the random command window from previous system command
+end
+
+%Open WCT, if not open
+[~,temp_result] = system('tasklist /FI "imagename eq wct.exe" /fo table /nh'); % check if program is running
+if strcmp(temp_result(1:4),'INFO') % if program is not running
+    system([WCT_path ' &']); % open Google Earth    
+end
+
+system('TASKKILL -f -im "cmd.exe" > NUL'); % kill random command windows from previous system commands
+
+% clear temp variables
+clear temp_*
 
 % Stop logging
 diary off

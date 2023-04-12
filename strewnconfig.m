@@ -60,6 +60,10 @@ end
 % Add working directory and subfolders to search path
 addpath(genpath(mainfolder)) 
 
+% Program locations
+GoogleEarth_path = 'C:\Program Files\Google\Google Earth Pro\client\googleearth.exe';
+WCT_path = 'C:\Program Files\wct-4.6.1\wct.exe';
+
 % Load private keys
 loadprivate
 

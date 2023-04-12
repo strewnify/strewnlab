@@ -16,3 +16,4 @@ data/*
 *_backup*
 matlab.mat
 diary
+traj_summary_yesterday.txt
