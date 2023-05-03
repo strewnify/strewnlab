@@ -7,12 +7,17 @@ colwidth = 45;
 formatspec = ['%-' num2str(colwidth) 's']; % format = '%18s' 
 numevents = size(eventdata,1);
 
+% Calculate extra data for reporting
+[eventdata.when_description,eventdata.when_sentence,~] = solartime(eventdata.LAT,eventdata.LONG,eventdata.Datetime);
 
-Labels = [{'Location:'} {'Date:'} {'Time:'} {'Latitude:'} {'Longitude:'} {'Speed'} {'Bearing:'} {'Slope:'} {'Altitude:'} {'Mass:'} {'Report count:'} {'Hyperlink 1:'} {'Hyperlink 2:'} {'Map Link:'}];
-idx = [{'Location'} {'Datetime'} {'LAT'} {'LONG'} {'Bearing'} {'Incidence'} {'Altitude'} {'Hyperlink1'} {'Hyperlink2'} {'HyperMap'}];
+Labels = [{'Location:'} {'Date:'} {'Time:'} {'Local Time*:'} {'Time of Day:'} {'Duration:'} {'Latitude:'} {'Longitude:'} {'Speed'} {'Bearing:'} {'Slope:'} {'Altitude:'} {'Mass:'} {'Report count:'} {'Hyperlink 1:'} {'Hyperlink 2:'} {'Map Link:'}];
+% idx = [{'Location'} {'Datetime'} {'LAT'} {'LONG'} {'Bearing'} {'Incidence'} {'Altitude'} {'Hyperlink1'} {'Hyperlink2'} {'HyperMap'}];
 dataformat = [{'eventdata.Location{event}(max(1,end-colwidth+3):end)'}...
     {'datestr(eventdata.Datetime(event),''mm/dd/yyyy'')'}...
     {'datestr(eventdata.Datetime(event),''HH:MM:ss UTC'')'}...
+    {'datestr(eventdata.Datetime(event) - hours(timezonefix(eventdata.LONG(event))),''HH:MM:ss AM'')'}...
+    {'eventdata.when_description{event}'}...
+    {'[num2str(round(eventdata.avg_duration(event),1)) '' seconds'']'}...
     {'sprintf(''%1.4f'', eventdata.LAT(event))'}...
     {'sprintf(''%1.4f'', eventdata.LONG(event))'}...
     {'[num2str(round(eventdata.Speed(event),2)) '' km/s'']'}...
@@ -37,7 +42,8 @@ eventreport = [eventreport newline newline];
 for event = 1:numevents
     
     EventID = eventdata.EventID{event};
-    EventID = ['Y' EventID(2:end)];
+    EventID = ['Y' EventID(2:end)]; % temporary
+        
     eventreport = [eventreport '(' num2str(event) ') ' eventdata.DataSource{event} ' Meteor Event - ' EventID newline];
         
     for n = 1:numel(dataformat)
@@ -61,5 +67,7 @@ if numevents > 0
 end
 
 eventreport = [eventreport 'This is an automated message, contact Jim Goodall (james.a.goodall@gmail.com) with any questions.' newline newline];
+eventreport = [eventreport '*Local time zone is estimated based on longitude.' newline];
+
 eventreport = [eventreport 'More info and strewn field maps at: www.strewnify.com' newline];
 eventreport = [eventreport 'Join the discussion on Discord at: https://discord.gg/hXj37dbgPx' newline];

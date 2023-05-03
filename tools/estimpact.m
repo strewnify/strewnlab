@@ -18,7 +18,7 @@ end
 Energy_kt = (exp((rho_air - b)./a))./cosd(angle);
 
 if Energy_kt > 1000000
-    Energy_kt = 1000;
+    Energy_kt = NaN;
     warning('irrational altitude')
 
 end

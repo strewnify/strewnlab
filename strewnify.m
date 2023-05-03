@@ -832,8 +832,22 @@ while inflightcount > 0
             figure(handle_speedplot)
             VMAX = max([projectile.v0]);
     %         %axis([XMIN XMAX 0 VMAX]);
+    
+            % data collection
+            data_idx = data_idx + 1;
+            data_t(data_idx) = t(current);       
+            data_ang(data_idx) = angledeg;
+            data_rho(data_idx) = projectile(projectile_i).rho(current);                       
+            data_dist(data_idx) = projectile(projectile_i).flightdist(current);
+            data_matdens_kg(data_idx) = projectile(projectile_i).density(current);
+            data_m_kg(data_idx) = projectile(projectile_i).mass(current);
+            data_entry_v_kps(data_idx) = entryspeed/1000;
 
-            scatter(projectile(projectile_i).speed(current)/1000, projectile(projectile_i).position(current,3)/1000,dot_mark)
+            data_v_kps(data_idx) = projectile(projectile_i).speed(current)/1000;
+            data_z_km(data_idx) = projectile(projectile_i).position(current,3)/1000;
+            
+            % plot data
+            %scatter(projectile(projectile_i).speed(current)/1000, projectile(projectile_i).position(current,3)/1000,dot_mark)
         end
         % Optional plot
         if timeplot

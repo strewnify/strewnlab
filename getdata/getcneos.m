@@ -66,6 +66,7 @@ end
 CNEOS_data(1,:) = []; % delete initialization row
 
 % Post processing
+CNEOS_data.SolarElev = solarelevation(CNEOS_data.LAT,CNEOS_data.LONG,CNEOS_data.Datetime); % Calculate solar elevation
 CNEOS_data.Mass = round(Ev2mass(CNEOS_data.ImpactEnergy,CNEOS_data.Speed.*1000),0);
 [CNEOS_data.vNorth,CNEOS_data.vEast,CNEOS_data.vDown] = ecef2nedv(CNEOS_data.vx,CNEOS_data.vy,CNEOS_data.vz,CNEOS_data.LAT,CNEOS_data.LONG);
 CNEOS_data.Bearing = round(wrapTo360(90 - atan2d(CNEOS_data.vNorth,CNEOS_data.vEast)),3); % bearing angle (heading azimuth)

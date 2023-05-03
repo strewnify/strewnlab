@@ -343,7 +343,7 @@ for event_i = 1:size_import
         warning('off','MATLAB:table:RowsAddedExistingVars');
         
         % Add change log record
-        database_out = dbChangeLog(database_out,'New Event', EventID_nom, datasource, datatype, 
+        %database_out = dbChangeLog(database_out,'New Event', EventID_nom, datasource, datatype, ... add function?
         ChangeLog_idx = ChangeLog_idx + 1;
         database_out.ChangeLog.DatetimeUTC(ChangeLog_idx) = nowtime;
         database_out.ChangeLog.ChangeType(ChangeLog_idx) = {'New Event'};

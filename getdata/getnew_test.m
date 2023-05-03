@@ -13,8 +13,8 @@ logformat('Getting new events.')
 % Disable table row assignment warning
 warning('off','MATLAB:table:RowsAddedExistingVars');
 
-dayhistory = 15000;
-%dayhistory = 30;
+%dayhistory = 15000;
+dayhistory = 30;
 
 %Load the database
 load_database_test
@@ -55,7 +55,7 @@ for source_i = 1:numel(getsources)
     startdate_eff = max([startdate_utc, (nowtime_utc - days(dayhistory_max)), startdate_min_utc]);
         
     % set to false, to skip import and re-process old data
-    getnewdata_config = false;
+    getnewdata_config = true;
     standardize_config = true;
     db_import_config = true;
     

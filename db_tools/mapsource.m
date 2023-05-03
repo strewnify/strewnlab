@@ -11,15 +11,38 @@ numvar = numel(import_var);
 
 % get import data types
 for var_i = 1:numvar
-    import_type{var_i,1} = class(example_record.(import_var{var_i}));    
+    test = example_record.(import_var{var_i});
+    if iscell(test) && numel(test) == 1
+        test = test{1};
+    end
+    
+    if isempty(test)
+        test = ''; % default empty data to char type
+    else
+        % Try to convert the text to a number
+        testconvert = str2num(test);
+        if ~isempty(testconvert) && numel(testconvert) == 1
+            test = testconvert;
+        end
+    end
+
+    % Identify class of variable
+    typesfound{var_i,1} = class(test);
+
 end
+
+% store types as a categorical array, for user modification
+import_type = categorical(typesfound);
 
 % preallocate conversion cell string
 conversion(1:numvar,1) = {''};
 
 % database variables will be stored as a categorical array, for user selection
 db_var = repmat(categorical({'<KEEP>'}),numvar,1);
-db_var = addcats(db_var,[{'<DISCARD>'};db_Variables.var_name]);
+
+if nargin > 1
+    db_var = addcats(db_var,[{'<DISCARD>'};db_Variables.var_name]);
+end
 
 % Create a table from the existing table variables
 column_headers =     {'import_var' 'import_type' 'db_var' 'conversion'};

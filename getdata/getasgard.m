@@ -131,9 +131,12 @@ if readpages == 0
     error('ASGARD data not found.  Server may be down.')
 end
 
+% Calculate solar elevation
+ASGARD_raw.SolarElev = solarelevation(ASGARD_raw.LAT,ASGARD_raw.LONG,ASGARD_raw.Datetime); % Calculate solar elevation
+
 % Filter out small events
 if contains('end_alt',ASGARD_raw.Properties.VariableNames) && contains('Speed',ASGARD_raw.Properties.VariableNames)
-    alt_filter = find((ASGARD_raw.Speed < slowmeteor_min_kps) | ((ASGARD_raw.end_alt < end_alt_max_km) & (ASGARD_raw.Speed < Speed_max_kps)));
+    alt_filter = find((ASGARD_raw.SolarElev > 0) | (ASGARD_raw.Speed < slowmeteor_min_kps) | ((ASGARD_raw.end_alt < end_alt_max_km) & (ASGARD_raw.Speed < Speed_max_kps)));
 else
     error('ASGARD data read error. Unexpected data format.')
 end

@@ -100,7 +100,7 @@ CNEOS_data.peak_vEast_kps = [];
 CNEOS_data.peak_vDown_kps = [];
 
 CNEOS_data.ImpactEnergyEst_kt = CNEOS_data.ImpactEnergy_kt;
-CNEOS_data.Hyperlink1 = repmat({'https://cneos.jpl.nasa.gov/fireballs/'},[CNEOS_numrecords 1]);
+CNEOS_data.Hyperlink1 = repmat({'https://cneos.jpl.nasa.gov/fireballs/'},[size(CNEOS_data,1) 1]);
 
 % Assign EventID
 CNEOS_data.EventID_nom = arrayfun(@eventid,CNEOS_data.peak_Lat,CNEOS_data.peak_Long,CNEOS_data.DatetimeUTC,'UniformOutput',false);

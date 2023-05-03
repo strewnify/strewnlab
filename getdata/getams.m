@@ -88,7 +88,7 @@ AMS_data.Incidence = round(atand(1000.*AMS_data.CurveDist./(AMS_data.start_alt-A
 AMS_data.NumReports = AMS_data.num_reports_for_options;
 
 % Impact Energy rough estimate
-AMS_data.ImpactEnergy_Est = AMS_data.NumReports ./ 10000;
+AMS_data.ImpactEnergy_Est = AMS_data.NumReports ./ 100000;
 
 % trash "event_id" from AMS
 AMS_data.event_id = [];

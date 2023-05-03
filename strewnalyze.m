@@ -56,6 +56,7 @@ while ~usersuccess
     if selection_idx == 1
         SimulationName = inputdlg('Enter a preliminary name for this event:','Custom Event Name',1,{'< Custom Name >'}); 
         SimulationName = SimulationName{1};
+        usersuccess = true;
     else
         SimulationName = suggestions{selection_idx-1};
     end

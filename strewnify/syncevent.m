@@ -20,6 +20,7 @@ if ~exist('Permissions','var') || exporting
             querydatapermissions
         elseif CONFIDENTIAL
             Permissions = "CONFIDENTIAL";
+            DataPermissionsTitle = 'CONFIDENTIAL';
         else
             if exist('EventData_Finds','var')
                 permission_filter = true(size(EventData_Finds,1),1); % all indices public

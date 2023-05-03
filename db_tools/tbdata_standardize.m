@@ -110,8 +110,17 @@ if nnz(calcAng) > 0
     trajectoryerror(std_tb.entry_Lat(calcAng), std_tb.entry_Long(calcAng), std_tb.entry_Height_km(calcAng).*1000, std_tb.end_Lat(calcAng), std_tb.end_Long(calcAng), std_tb.end_Height_km(calcAng).*1000,std_tb.err_entry_Lat(calcAng), std_tb.err_entry_Long(calcAng), std_tb.err_entry_Height_km(calcAng).*1000, std_tb.err_end_Lat(calcAng), std_tb.err_end_Long(calcAng), std_tb.err_end_Height_km(calcAng).*1000, samplesize);
 end
 
+% % Calculate speed from reference point speed
+calcSpeed = ~datapresent(std_tb,{'entry_Speed_kps'}) & datapresent(std_tb,{'ref_Speed_kps' 'err_ref_Speed_kps' 'ref_Height_km'});
+if nnz(calcSpeed) > 0 
+    
+    % Calculate 
+    % DEBUG, need to test and add altitude error
+    [std_tb.entry_Speed_kps(calcSpeed), std_tb.err_entry_Speed_kps(calcSpeed)] = ref2entryspeed(std_tb.ref_Speed_kps(calcSpeed), std_tb.err_ref_Speed_kps, std_tb.ref_Height_km(calcSpeed), 'average');
+end
+
 % Calculate speed from duration
-calcSpeed = ~datapresent(std_tb,{'entry_Speed_kps'}) & datapresent(std_tb,{'duration_s' 'err_duration_s' 'PathLength_km' 'err_PathLength_km'});
+calcSpeed = ~datapresent(std_tb,{'entry_Speed_kps'}) & datapresent(std_tb,{'duration_s' 'err_duration_s' 'PathLength_km' 'err_PathLength_km' 'end_Height_km'});
 if nnz(calcSpeed) > 0 
     
     % Calculate average speed, from observed path length and duration
@@ -120,9 +129,8 @@ if nnz(calcSpeed) > 0
     % Calculate error in the speed, using the uncertainty of the path length and duration
     err_avg_speed_kps = sqrt(std_tb.err_PathLength_km(calcSpeed).^2 + (std_tb.PathLength_km(calcSpeed).*std_tb.err_duration_s(calcSpeed)./std_tb.duration_s(calcSpeed)).^2) ./ std_tb.err_duration_s(calcSpeed);
     
-    % DEBUG - need average speed to entry speed conversion
-    std_tb.entry_Speed_kps(calcSpeed) = avg_speed_kps;
-    std_tb.err_entry_Speed_kps(calcSpeed) = err_avg_speed_kps;
+    % DEBUG - need to test and add height error
+    [std_tb.entry_Speed_kps(calcSpeed), std_tb.err_entry_Speed_kps(calcSpeed)] = ref2entryspeed(avg_speed_kps, err_avg_speed_kps, std_tb.end_Height_km(calcSpeed), 'average');
 end
 
 % Calculate nominal point, if input data is available

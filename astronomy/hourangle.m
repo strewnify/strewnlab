@@ -3,8 +3,9 @@ function [HRA] = hourangle(LON,DateTime)
 % Inputs are the longitude and time zone offset of the location and the day
 % of the year.
 
+% if no time zone given, assume UTC
 if isempty(DateTime.TimeZone)
-    logformat('No time zone provided, UTC assumed.','WARN')
+    logformat('Timezone not provided, UTC assumed','WARN')
     DateTime.TimeZone = 'UTC';
 end
 
