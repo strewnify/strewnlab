@@ -70,10 +70,11 @@ switch lower(material_sim)
 end
 
 % Estimate strewn field statistics
-predicted_TKW_max = eststrewnmass(nom_mass, nom_speed, ablationheat, HTC);
+predicted_TKW_max_kg = eststrewnmass(nom_mass, nom_speed, ablationheat, HTC);
+nominal_strewnmass_g = predicted_TKW_max_kg*1000; % 1/10 of the max, in grams
 mass_filt = filter & strewndata.mass > 0.010 & strewndata.mass < 1;  % 10 grams to 1 kg
 [vertices_lat, vertices_lon, strewn_area_km2] = polyarea(strewndata.Latitude(mass_filt),strewndata.Longitude(mass_filt));
-grams_per_km2 = predicted_TKW_max / strewn_area_km2;
+grams_per_km2 =  nominal_strewnmass_g / strewn_area_km2;
 
 % Summarize input data
 SimTrajectoryData = [SimTrajectoryData newline newline newline '*** Trajectory Data ***'];
@@ -102,7 +103,7 @@ SimTrajectoryData = [SimTrajectoryData newline 'Simulation End:      ' datestr(S
 SimTrajectoryData = [SimTrajectoryData newline sprintf('Scenarios Simulated: %i', SimMonitor.sim_scenario(end))];
 SimTrajectoryData = [SimTrajectoryData newline sprintf('Average fragments:   %.0f', mean(SimMonitor.strewn_count(valid)))];
 %SimTrajectoryData = [SimTrajectoryData newline sprintf('Average strewn mass: %.1f kg', mean(SimMonitor.strewn_mass(valid)))];
-SimTrajectoryData = [SimTrajectoryData newline sprintf('Est. Strewn Mass:     < %.1f kg', predicted_TKW_max)];
+SimTrajectoryData = [SimTrajectoryData newline sprintf('Est. Strewn Mass:     < %.1f kg', predicted_TKW_max_kg)];
 SimTrajectoryData = [SimTrajectoryData newline sprintf('Est. Main Mass:       < %.1f kg', strewndata_maxmass)];
 SimTrajectoryData = [SimTrajectoryData newline sprintf('Nominal Search Area:  < %.1f km^2', strewn_area_km2)];
 SimTrajectoryData = [SimTrajectoryData newline sprintf('Mass per km^2:        < %.1f grams/km^2', grams_per_km2)];

@@ -5,29 +5,13 @@ if exist('SimulationName_OLD','var') == 0
     SimulationName_OLD = {};
 end
 
+% Assign data permissions, if exporting
+%if ~exist('Permissions','var') || exporting
+    querydatapermissions
+%end
+
 % Create a default filename, without special characters
 SimFilename = matlab.lang.makeValidName(SimulationName,'ReplacementStyle','delete');
-
-
-% Assign data permissions, if exporting
-if ~exist('Permissions','var') || exporting
-        clear permission_filter
-        clear Permissions
-        clear DataPermissionsTitle
-        clear DataPermissionsFilename
-        clear DataPermissions
-        if exist('EventData_Finds','var') && any(EventData_Finds.CONFIDENTIAL)
-            querydatapermissions
-        elseif CONFIDENTIAL
-            Permissions = "CONFIDENTIAL";
-            DataPermissionsTitle = 'CONFIDENTIAL';
-        else
-            if exist('EventData_Finds','var')
-                permission_filter = true(size(EventData_Finds,1),1); % all indices public
-            end
-            Permissions = "None";
-        end
-end
 
 % Check if the event is CONFIDENTIAL
 if CONFIDENTIAL
@@ -57,7 +41,7 @@ switch size(dir([eventfolder '\' SimEventID '*']),1)
     
     % if multiple folders exist for the Event ID, exit with error
     otherwise
-        error(['In directory, ' eventfolder ', duplicate subfolders exist with the name ' SimEventID '*.  Resolve invalid folder structure before restarting.']); 
+        logformat(['In directory, ' eventfolder ', duplicate subfolders exist with the name ' SimEventID '*.  Resolve invalid folder structure before restarting.'],'ERROR'); 
 end
 
 % Get a version number from the user

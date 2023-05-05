@@ -11,8 +11,8 @@ plotmargin = [5 5 5 5];
 plot_material = 'all';
 
 % Wind bins
-wnd_min = -0.8;
-wnd_max = 0.5;
+wnd_min = -1.5;
+wnd_max = 1.5;
 wnd_step = (wnd_max - wnd_min)/3; 
 wnd_bins = wnd_min:wnd_step:wnd_max;
 wind_bins_lower_edges = wnd_bins(1:3);
@@ -37,37 +37,24 @@ upper_edges = [0.05 0.25 0.5 1 5];
 figure
 hold on
 plot_idx = 0;
-numplots = numel(lower_edges);
+numbins = numel(lower_edges);
 
+% setup static axes for all the find data under analysis
+filter = (strewndata.mass >= lower_edges(1)) & (strewndata.mass <= upper_edges(end)) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= wnd_min) & (strewndata.error_wind <= wnd_max);
+if ~strcmp(plot_material,'all')
+    filter = filter & strcmp(strewndata.material, plot_material);
+end
+plot_limit_values = setplotlimits([strewndata.Longitude(filter);EventData_Finds.Longitude], [strewndata.Latitude(filter);EventData_Finds.Latitude], plotmargin);
+
+% For each wind bin
 for wind_idx = 1:numel(wind_bins_lower_edges)
 
     % Wind variation bin
     error_windmin = wind_bins_lower_edges(wind_idx);
     error_windmax = wind_bins_upper_edges(wind_idx);
-    
-   
-    numcolumns = nnz(bin_counts>0);
-%     if numplots > 4
-%         numrows = 2;
-%         numcolumns = ceil(numplots/2);
-%     else
-%         numrows = 1;
-%         numcolumns = numplots;
-%     end
-
-
-    % setup static axes for all the find data under analysis
-    filter = (strewndata.mass >= lower_edges(1)) & (strewndata.mass <= upper_edges(end)) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= error_windmin) & (strewndata.error_wind <= error_windmax);
-    if ~strcmp(plot_material,'all')
-        filter = filter & strcmp(strewndata.material, plot_material);
-    end
-    plot_limit_values = setplotlimits([strewndata.Longitude(filter);EventData_Finds.Longitude], [strewndata.Latitude(filter);EventData_Finds.Latitude], plotmargin);
-
-
-   
-    
-    % Plot each find
-    for idx = 1:numplots
+        
+    % Plot each mass bin
+    for idx = 1:numbins
 
         plot_minmass = lower_edges(idx);
         plot_maxmass = upper_edges(idx);
@@ -93,7 +80,7 @@ for wind_idx = 1:numel(wind_bins_lower_edges)
 
         % Create a new plot
         plot_idx = plot_idx + 1;
-        subplot(numel(wind_bins_lower_edges),numcolumns,plot_idx)
+        subplot(numel(wind_bins_lower_edges),numel(lower_edges),plot_idx)
         hold on
         
         % Create Plot Title

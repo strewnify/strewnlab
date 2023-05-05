@@ -9,8 +9,7 @@ plotmargin = [20 20 20 20];
 
 % mass filter, in kilograms
 plot_materials = {'all'};
-plot_minmass = 3.1; plot_maxmass = 4.1;
-%plot_minmass = 0.001; plot_maxmass = inf;
+plot_minmass = 0.001; plot_maxmass = inf;
 
 % Filter masses that continued ablation in darkflight
 % Feature untested, requires calibration and simulation using ablation_thresh
@@ -18,7 +17,8 @@ filter_darkflight = darkflight_elevation - error_elevation;
 %filter_darkflight = -999;
 
 % Wind variation
-error_windmin = weather_minsigma; error_windmax = weather_maxsigma;
+%error_windmin = weather_minsigma; error_windmax = weather_maxsigma;
+error_windmin = -0.5; error_windmax = 0.5;
 
 % Lookup the mass filtered indices
 filter = (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= error_windmin) & (strewndata.error_wind <= error_windmax);
@@ -32,10 +32,10 @@ if meas_density ~= 0
 end
 
 % remove percentage of searched polygons
-if exist('EventData_searched','var')
-    for area_idx = 1:size(EventData_searched,2)
-        searched_data = inpolygon(strewndata.Latitude,strewndata.Longitude,EventData_searched(area_idx).lat,EventData_searched(area_idx).lon);
-        searched = percentfilter(searched_data, EventData_searched(area_idx).efficiency);   
+if exist('EventData_Searched','var')
+    for area_idx = 1:size(EventData_Searched,2)
+        searched_data = inpolygon(strewndata.Latitude,strewndata.Longitude,EventData_Searched(area_idx).lat,EventData_Searched(area_idx).lon);
+        searched = percentfilter(searched_data, EventData_Searched(area_idx).efficiency);   
         filter = filter & ~searched;
 
     end
