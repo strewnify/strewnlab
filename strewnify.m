@@ -88,6 +88,7 @@ clear projectile % clear projectile data from previous simulation
 clear splits   
 
 % Update monitor
+warning('off','MATLAB:table:RowsAddedExistingVars')
 sim_index = sim_index + 1;
 sim_time = datetime('now','TimeZone','UTC');
 sim_scenario = sim_scenario + 1;

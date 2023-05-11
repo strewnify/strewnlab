@@ -30,8 +30,8 @@ bin_idx = 1:numel(bin_edges);
 plot_idx = find(bin_counts > 0);
 lower_edges = log_base.^bin_edges(plot_idx);
 upper_edges = log_base.^bin_edges(plot_idx + 1);
-lower_edges = [0.001 0.05 0.25 0.5 1];
-upper_edges = [0.05 0.25 0.5 1 5];
+% lower_edges = [0.001 0.05 0.25 0.5 1];
+% upper_edges = [0.05 0.25 0.5 1 5];
 
 % Setup plot
 figure

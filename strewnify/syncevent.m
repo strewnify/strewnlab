@@ -6,9 +6,9 @@ if exist('SimulationName_OLD','var') == 0
 end
 
 % Assign data permissions, if exporting
-%if ~exist('Permissions','var') || exporting
+if ~exist('Permissions','var') || exporting 
     querydatapermissions
-%end
+end
 
 % Create a default filename, without special characters
 SimFilename = matlab.lang.makeValidName(SimulationName,'ReplacementStyle','delete');

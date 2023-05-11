@@ -18,7 +18,7 @@ filter_darkflight = darkflight_elevation - error_elevation;
 
 % Wind variation
 %error_windmin = weather_minsigma; error_windmax = weather_maxsigma;
-error_windmin = -0.5; error_windmax = 0.5;
+error_windmin = -1; error_windmax = 1;
 
 % Lookup the mass filtered indices
 filter = (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= error_windmin) & (strewndata.error_wind <= error_windmax);
@@ -31,15 +31,34 @@ if meas_density ~= 0
     filter = filter & strewndata.density > (meas_density * (1-meas_density_err)) & strewndata.density < (meas_density * (1+meas_density_err));
 end
 
-% remove percentage of searched polygons
+% Adjust for polygons
 if exist('EventData_Searched','var')
-    for area_idx = 1:size(EventData_Searched,2)
-        searched_data = inpolygon(strewndata.Latitude,strewndata.Longitude,EventData_Searched(area_idx).lat,EventData_Searched(area_idx).lon);
-        searched = percentfilter(searched_data, EventData_Searched(area_idx).efficiency);   
-        filter = filter & ~searched;
-
+    % Ask for user input
+    if userpresent
+        user_quest = 'Adjust for Searched Areas?';
+        logformat(user_quest,'USER')
+        answer = questdlg(user_quest,'Searched Area Option','Yes','No','No');
+    else
+        answer = 'No';
+    end
+    % Handle response
+    switch answer
+        case 'Yes'
+            for area_idx = 1:size(EventData_Searched,2)
+                searched_data = inpolygon(strewndata.Latitude,strewndata.Longitude,EventData_Searched(area_idx).lat,EventData_Searched(area_idx).lon);
+                searched = percentfilter(searched_data, EventData_Searched(area_idx).efficiency);   
+                filter = filter & ~searched;
+            end
+                        
+        case 'No'
+            % Do nothing
+            
+        otherwise
+            logformat('Unexpected response','ERROR')        
     end
 end
+
+
 % Convert meters to degrees of latitude and longitude
 lat_gridsize = gridsize / lat_metersperdeg;
 long_gridsize = gridsize / long_metersperdeg;

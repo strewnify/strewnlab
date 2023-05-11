@@ -37,5 +37,9 @@ lats = lat1 + (X - 0).*((lat2 - lat1)./(x_max - 0));
 
 geoscatter(lats,lons)
 
+% Transpose for polygon feature use
+lats = lats';
+lons = lons';
+
 end
 
