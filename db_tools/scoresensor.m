@@ -6,7 +6,7 @@ defaultFOV = 180;
 % Input checking
 if nargin < 6
     logformat('First 6 inputs are required.','ERROR')
-elseif nargin == 6
+elseif nargin == 6 || isempty(locality)
     [ location_string, locality, state, country, water_string, land_string ] = getlocation(sensorLAT,sensorLONG)
     if isempty(locality) && ~isempty(water_string)
         locality = water_string;
@@ -36,32 +36,33 @@ logformat('Need to update to array function','DEBUG')
 planet = getPlanet();
 
 % Calculate vectors and field of view
-[PathCurveDist_m, PathBearingAZ] = distance(startLAT,startLONG,endLAT,endLONG,planet.ellipsoid_m)
-[startCurveDist_m, startObservedAZ] = distance(sensorLAT,sensorLONG,startLAT,startLONG,planet.ellipsoid_m)
-[endCurveDist_m, endObservedAZ] = distance(sensorLAT,sensorLONG,endLAT,endLONG,planet.ellipsoid_m)
+[PathCurveDist_m, PathBearingAZ] = distance(startLAT,startLONG,endLAT,endLONG,planet.ellipsoid_m);
+[startCurveDist_m, startObservedAZ] = distance(sensorLAT,sensorLONG,startLAT,startLONG,planet.ellipsoid_m);
+[endCurveDist_m, endObservedAZ] = distance(sensorLAT,sensorLONG,endLAT,endLONG,planet.ellipsoid_m);
 startCurveDist_km = startCurveDist_m ./ 1000;
 endCurveDist_km = endCurveDist_m ./ 1000;
-startAngle = wrapTo180(startObservedAZ - PathBearingAZ)
-endAngle = wrapTo180(endObservedAZ - PathBearingAZ)
+startAngle = wrapTo180(startObservedAZ - PathBearingAZ);
+endAngle = wrapTo180(endObservedAZ - PathBearingAZ);
 minAZ = wrapTo360(sensorAZ - horFOV./2);
 maxAZ = wrapTo360(sensorAZ + horFOV./2);
 startFOVposition_pct = pctFOV(minAZ, maxAZ, startObservedAZ)
 endFOVposition_pct = pctFOV(minAZ, maxAZ, endObservedAZ)
 
 % default position for missing FOV
-startFOVposition_pct(isnan(sensorAZ)) = 25;
-endFOVposition_pct(isnan(sensorAZ)) = 25;
-
+startFOVposition_pct(isnan(startFOVposition_pct)) = 25;
+endFOVposition_pct(isnan(endFOVposition_pct)) = 25;
 
 % Score sensor positioning for event
 startScore = 70*exp(-0.006*startCurveDist_km)
 endScore = 70*exp(-0.006*endCurveDist_km)
 startMult = 38.14/(abs(startFOVposition_pct-50)+19.07)
 endMult = 38.14/(abs(endFOVposition_pct-50)+19.07)
+startMult(isnan(startMult)) = 1;
+endMult(isnan(endMult)) = 1;
 startAngMult = 1 + abs(cosd(2*startAngle))
 endAngMult = 1 + abs(cosd(2*endAngle))
 score = startScore*startMult*startAngMult + endScore*endMult*endAngMult
-score_string = sprintf('%03.0f',score)
+score_string = ['x' sprintf('%03.0f',score)]
 
 % Create a MATLAB-friendly lat/long string suffix
 formatting = '%0.8g';

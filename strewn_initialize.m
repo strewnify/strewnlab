@@ -26,7 +26,7 @@ if ~initialized
     planet_data.ellipsoid_m = referenceEllipsoid('earth',ellipsoid_unit);  % reference ellipsoid used by mapping/aerospace tools, DO NOT CHANGE units
 
     % Log output
-    logformat('Planet initialized to Earth.  Ellipsoid units are in ' ellipsoid_unit '.'],'INFO')
+    logformat(['Planet initialized to Earth.  Ellipsoid units are in ' ellipsoid_unit '.'],'INFO')
     logformat('StrewnLAB initialization complete.','INFO')
     
     % Set initialization complete

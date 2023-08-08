@@ -28,6 +28,9 @@ filt = left_delta > FOV & left_delta > right_delta;
 position_pct(filt) = -wrapTo360(minAZ(filt) - testAZ(filt))./FOV(filt);
 
 position_pct = position_pct.*100;
+
+% Default infinite values to NaN
+position_pct(isinf(position_pct)) = NaN;
     
 end
 

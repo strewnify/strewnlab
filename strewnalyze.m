@@ -80,18 +80,26 @@ syncevent
 reportevents(sdb_Events(select_i,:))
 
 % Find nearby sensors
-startSensors = nearbysensors(sdb_Events.start_lat(select_i),sdb_Events.start_long(select_i),sdb_Events.start_alt(select_i)/1000,sdb_Sensors)
-endSensors = nearbysensors(sdb_Events.end_lat(select_i),sdb_Events.end_long(select_i),sdb_Events.end_alt(select_i)/1000,sdb_Sensors)
+startSensors = nearbysensors(sdb_Events.start_lat(select_i),sdb_Events.start_long(select_i),sdb_Events.start_alt(select_i)/1000,sdb_Sensors);
+endSensors = nearbysensors(sdb_Events.end_lat(select_i),sdb_Events.end_long(select_i),sdb_Events.end_alt(select_i)/1000,sdb_Sensors);
 
-% % merge start and end tables
-% 
-% 
-% % Calculate score for each sensor
-% for sensor_i = 1:size(data_tb,1)
-%     
-%     % IMPORTANT: Locality must be provided to prevent excessive Google queries
-%     [score, data_name] = scoresensor( data_tb.sensorLAT(sensor_i), data_tb.sensorLONG(sensor_i), LAT, startLONG, endLAT, endLONG, locality, event_id, station_id, sensorAZ, horFOV)
-% end
+% merge start and end tables
+SensorSummary = [endSensors; startSensors];
+[C,IA,IC] = unique(SensorSummary.StationID,'first');
+SensorSummary = SensorSummary(IA,:);
+
+% Replace missing data
+SensorSummary.City(ismissing(SensorSummary.City)) = "";
+
+% Calculate score for each sensor
+for sensor_i = 1:size(SensorSummary,1)
+    
+    % IMPORTANT: Locality must be provided to prevent excessive Google queries
+    [SensorSummary.score(sensor_i), SensorSummary.data_name{sensor_i}] = scoresensor( SensorSummary.LAT(sensor_i), SensorSummary.LONG(sensor_i), sdb_Events.start_lat(select_i), sdb_Events.start_long(select_i), sdb_Events.end_lat(select_i), sdb_Events.end_long(select_i), convertStringsToChars(SensorSummary.City{sensor_i}), SimEventID, convertStringsToChars(SensorSummary.StationID{sensor_i}), SensorSummary.sensorAZ(sensor_i), SensorSummary.sensor_hor_FOV(sensor_i));
+end
+
+% Sort the data, ascending by sensor range, then by type
+SensorSummary = sortrows(SensorSummary,["Type","score"],'ascend')
 
 % Open browser to event pages
 if ~isempty(sdb_Events.Hyperlink1{select_i})
