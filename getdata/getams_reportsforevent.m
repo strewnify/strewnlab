@@ -1,4 +1,4 @@
-function [AMS_reports] = getams_reportsforevent(AMS_EventID)
+function [AMS_json] = getams_reportsforevent(AMS_EventID)
 %UNTITLED4 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -19,6 +19,6 @@ end
 AMS_json = webread([URL_AMS_API_eventreports '?year=' year '&event_id=' event_id '&format=json&api_key=' AMS_APIkey],webread_options);
 
 % Convert to table
-AMS_reports = json2table(AMS_json.result);
+%AMS_reports = json2table(AMS_json.result);
 
 

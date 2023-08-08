@@ -40,7 +40,7 @@ else
     IGRA_Radius_km = 1500; 
 end
 
-IGRA_StationTarget = 4; % Target minimum number of weather stations
+IGRA_StationTarget = 3; % Target minimum number of weather stations
 if strcmp(SimulationName,'Hamburg')
         warning('Hamburg weather data analysis')
         IGRA_StationTarget = 1

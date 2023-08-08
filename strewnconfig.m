@@ -117,7 +117,7 @@ if ~exist('exporting','var')
     exporting = false;
 end
 nom_startaltitude = 80000; % nominal path start altitude for visualization
-max_pathlength3D_m = 100000; % For very horizontal paths, it is necessary to clip the path length to prevent very long path lengths and simulation times
+max_pathlength3D_m = 150000; % For very horizontal paths, it is necessary to clip the path length to prevent very long path lengths and simulation times
 
 % Graphing options
 useplot = false;

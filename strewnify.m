@@ -142,9 +142,10 @@ density_model = EventData_DENSITY_MODEL;
 % Material selection
 % If random is selected, select a random material based on fall
 % distribution of specific materials
-% stony - 90%, iron - 4%, carbonaceous - 5%, stony-iron - 1%
+% stony - 90%, iron - 4%, carbonaceous - 5%, stony-iron - 1% 
+% undiscovered materials also included
 if strcmpi(material_sim,'random')
-    possible_materials = [repmat({'stony'},1,90) repmat({'iron'},1,4) repmat({'carbonaceous'},1,5) repmat({'stony-iron'},1,1)];
+    possible_materials = [repmat({'stony'},1,90) repmat({'iron'},1,4) repmat({'carbonaceous'},1,5) repmat({'stony-iron'},1,1) repmat({'undiscovered-LD'},1,1) repmat({'undiscovered-HD'},1,1)];
     meteoroid_material = possible_materials{randi(size(possible_materials,2),1)};
 % otherwise, use input material
 else
@@ -157,7 +158,7 @@ end
 % Example: [ 1 1 1 2; 24344 24344 21000 21000; 0.103 0.050 0.010 0.0003];
 predefinedsplits = true;
 lognrndmultlow = 0.001; % typically 0.001
-lognrndmulthigh = 0.5; % typically 0.1
+lognrndmulthigh = 0.1; % typically 0.1
 count1 = randbetween(2,100); % number of fragments
 
 for i = 1:count1

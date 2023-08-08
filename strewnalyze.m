@@ -19,6 +19,8 @@ waitfor(EventPicker_UI,'success')
 SelectedEvent = extractBefore(EventPicker_UI.SelectedEvent,' - ');
 success = EventPicker_UI.success;
 CONFIDENTIAL = EventPicker_UI.CONFIDENTIAL;
+WCT = EventPicker_UI.WCT;
+GE = EventPicker_UI.GE;
 
 % temp - old database - lookup index
 select_i = find(strcmp(sdb_Events.EventID,SelectedEvent),1,'last');
@@ -78,8 +80,18 @@ syncevent
 reportevents(sdb_Events(select_i,:))
 
 % Find nearby sensors
-NearbySensors = nearbysensors(sdb_Events.LAT(select_i),sdb_Events.LONG(select_i),sdb_Events.end_alt(select_i)/1000,sdb_Sensors);
-NearbySensors(NearbySensors.Type ~= "Seismic",:)
+startSensors = nearbysensors(sdb_Events.start_lat(select_i),sdb_Events.start_long(select_i),sdb_Events.start_alt(select_i)/1000,sdb_Sensors)
+endSensors = nearbysensors(sdb_Events.end_lat(select_i),sdb_Events.end_long(select_i),sdb_Events.end_alt(select_i)/1000,sdb_Sensors)
+
+% % merge start and end tables
+% 
+% 
+% % Calculate score for each sensor
+% for sensor_i = 1:size(data_tb,1)
+%     
+%     % IMPORTANT: Locality must be provided to prevent excessive Google queries
+%     [score, data_name] = scoresensor( data_tb.sensorLAT(sensor_i), data_tb.sensorLONG(sensor_i), LAT, startLONG, endLAT, endLONG, locality, event_id, station_id, sensorAZ, horFOV)
+% end
 
 % Open browser to event pages
 if ~isempty(sdb_Events.Hyperlink1{select_i})
@@ -91,14 +103,14 @@ end
 
 %Open Google Earth, if not open
 [~,temp_result] = system('tasklist /FI "imagename eq googleearh.exe" /fo table /nh'); % check if program is running
-if strcmp(temp_result(1:4),'INFO') % if program is not running
+if GE && strcmp(temp_result(1:4),'INFO') % if program is not running
     system([GoogleEarth_path ' &']); % open Google Earth
     system('TASKKILL -f -im "cmd.exe" > NUL'); % kill the random command window from previous system command
 end
 
 %Open WCT, if not open
 [~,temp_result] = system('tasklist /FI "imagename eq wct.exe" /fo table /nh'); % check if program is running
-if strcmp(temp_result(1:4),'INFO') % if program is not running
+if WCT && strcmp(temp_result(1:4),'INFO') % if program is not running
     system([WCT_path ' &']); % open Google Earth    
 end
 

@@ -65,6 +65,13 @@ switch lower(material_sim)
         nom_density = 3400;
         error_density = 300;
         HTC = 0.1; 
+        ablationheat = 7980000; 
+    case 'comet'
+        nom_density = 900;
+        error_density = 300;
+        HTC = 0.1; % unknown
+        ablationheat = 7980000; % unknown 
+        warning('Cometary experiment - unknown ablation properties')
     otherwise
         error('Invalid meteoroid material')
 end

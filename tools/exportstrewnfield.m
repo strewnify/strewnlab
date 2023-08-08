@@ -54,6 +54,9 @@ end
 % Generate weather data plot
 plotweather
 
+% Export air density data (for Gucsik Bence)
+export_rho
+
 % Generate strewn mass zones
 zoneplot
 

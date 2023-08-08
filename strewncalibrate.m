@@ -11,8 +11,8 @@ plotmargin = [5 5 5 5];
 plot_material = 'all';
 
 % Wind bins
-wnd_min = -1.5;
-wnd_max = 1.5;
+wnd_min = 0;
+wnd_max = 0.85;
 wnd_step = (wnd_max - wnd_min)/3; 
 wnd_bins = wnd_min:wnd_step:wnd_max;
 wind_bins_lower_edges = wnd_bins(1:3);

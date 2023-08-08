@@ -41,11 +41,17 @@ switch lower(meteoroid_material)
         HTC = 0.1; 
         ablationheat = 7980000; 
         dot_mark = 'b.';
-    case 'comet'
-        nom_density = 900;
-        error_density = 300;
+    case 'undiscovered-ld'
+        nom_density = 1620;
+        error_density = 600;
         HTC = 0.1; % unknown
         ablationheat = 7980000; % unknown 
+        dot_mark = 'b.';
+    case 'undiscovered-hd'
+        nom_density = 15000;
+        error_density = 7500;
+        HTC = 0.1; % unknown
+        ablationheat = 8010000; % unknown 
         dot_mark = 'b.';
     otherwise
         error('Invalid meteoroid material')
