@@ -25,6 +25,11 @@ for year_index = startyear:endyear
         % Query online database
         AMS_json = webread([URL_AMS_API 'year=' num2str(year_index) '&min_reports=' num2str(min_reports) '&format=json&api_key=' AMS_APIkey],webread_options);
         
+   catch
+        logformat(['AMS data not found for ' num2str(year_index) '!  No reports exist or internet connection.'],'WARN')
+   end
+        
+   try
         % start new year
         startrow = startrow + row;
         clear AMS_raw
@@ -40,32 +45,33 @@ for year_index = startyear:endyear
 
         % Convert data to table format
         for row = 1:numrows
+            try
+                 % Update waitbar
+                 waitbar(row/numrows,handleAMS,['Downloading ' num2str(year_index) ' AMS reports']);
 
-             % Update waitbar
-             waitbar(row/numrows,handleAMS,['Downloading ' num2str(year_index) ' AMS reports']);
+                 % Get AMS page ID
+                 AMS_data.AMS_event_id(startrow + row) = AMS_raw_pageid(row);
 
-             % Get AMS page ID
-             AMS_data.AMS_event_id(startrow + row) = AMS_raw_pageid(row);
-             
-            for column = 1:numel(Variables)
-                if (column == 21) || (column == 25)
-                    eval(['AMS_data.' Variables{column} '(' num2str(startrow + row) ',' num2str(1) ') = {AMS_raw{' num2str(row) '}.' Variables{column} '};']);
-                elseif (column == 23) || (column == 24)
-                    try
-                        eval(['AMS_data.' Variables{column} '(' num2str(startrow + row) ',' num2str(1) ') = datetime(AMS_raw{' num2str(row) '}.' Variables{column} ');']);
-                    catch
-                        eval(['AMS_data.' Variables{column} '(' num2str(startrow + row) ',' num2str(1) ') = datetime(' year_index ',1,1);']); % invalid dates default to noon on January 1
-                    end
-                else
-                    eval(['AMS_data.' Variables{column} '(' num2str(startrow + row) ',' num2str(1) ') = str2double(AMS_raw{' num2str(row) '}.' Variables{column} ');']);
+                for column = 1:numel(Variables)
+                    if (column == 21) || (column == 25)
+                        eval(['AMS_data.' Variables{column} '(' num2str(startrow + row) ',' num2str(1) ') = {AMS_raw{' num2str(row) '}.' Variables{column} '};']);
+                    elseif (column == 23) || (column == 24)
+                        try
+                            eval(['AMS_data.' Variables{column} '(' num2str(startrow + row) ',' num2str(1) ') = datetime(AMS_raw{' num2str(row) '}.' Variables{column} ');']);
+                        catch
+                            eval(['AMS_data.' Variables{column} '(' num2str(startrow + row) ',' num2str(1) ') = datetime(' year_index ',1,1);']); % invalid dates default to noon on January 1
+                        end
+                    else
+                        eval(['AMS_data.' Variables{column} '(' num2str(startrow + row) ',' num2str(1) ') = str2double(AMS_raw{' num2str(row) '}.' Variables{column} ');']);
+                    end                
                 end
+            catch
+                logformat(['AMS data processing error for record ' num2str(row) ', ' Variables{column} ' not found.' ],'WARN')
             end
         end
-        
-    catch
-        warning(['AMS data not found for ' num2str(year_index) '!  No reports exist or internet connection.'])
-    end
-    
+   catch
+        logformat(['Unknown AMS data processing error for ' num2str(year_index) '!'],'DEBUG')
+   end
 end
 
 % Sort table by event ID
