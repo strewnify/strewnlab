@@ -1,8 +1,8 @@
 % STREWNCONFIG load strewn field configuration file
 
-% Initialize
-strewn_initialize
+% **** Warning:  custom function calls must be after addpath ****
 
+% Set workstation location
 user_TimeZone = 'America/Detroit'; 
 user_LAT =  42.664841;
 user_LONG = -83.687051;
@@ -59,6 +59,11 @@ end
 
 % Add working directory and subfolders to search path
 addpath(genpath(mainfolder)) 
+
+% **** No custom function calls before this point *****
+
+% Initialize globals
+strewn_initialize
 
 % Program locations
 GoogleEarth_path = 'C:\Program Files\Google\Google Earth Pro\client\googleearth.exe';
