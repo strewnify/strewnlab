@@ -127,7 +127,7 @@ if nnz(calcSpeed) > 0
     avg_speed_kps =  std_tb.PathLength_km(calcSpeed) ./ std_tb.duration_s(calcSpeed);
     
     % Calculate error in the speed, using the uncertainty of the path length and duration
-    err_avg_speed_kps = sqrt(std_tb.err_PathLength_km(calcSpeed).^2 + (std_tb.PathLength_km(calcSpeed).*std_tb.err_duration_s(calcSpeed)./std_tb.duration_s(calcSpeed)).^2) ./ std_tb.err_duration_s(calcSpeed);
+    err_avg_speed_kps = sqrt(std_tb.err_PathLength_km(calcSpeed).^2 + (std_tb.PathLength_km(calcSpeed).*std_tb.err_duration_s(calcSpeed)./std_tb.duration_s(calcSpeed)).^2) ./ std_tb.duration_s(calcSpeed);
     
     % DEBUG - need to test and add height error
     [std_tb.entry_Speed_kps(calcSpeed), std_tb.err_entry_Speed_kps(calcSpeed)] = ref2entryspeed(avg_speed_kps, err_avg_speed_kps, std_tb.end_Height_km(calcSpeed), 'average');
