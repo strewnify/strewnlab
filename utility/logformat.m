@@ -33,7 +33,7 @@ if strcmp(get(0,'Diary'),'on') || ~exist('logging','var') || logging || iserror
     nowstring = datestr(datetime('now','TimeZone','UTC'),'yyyy-mm-ddTHH:MM:ssZ');
 
     % Check log entry type
-    validTypes = [{'ERROR'} {'WARN'} {'DEBUG'} {'EMAIL'} {'USER'} {'DATABASE'} {'DATA'} {'INFO'}];
+    validTypes = [{'ERROR'} {'WARN'} {'DEBUG'} {'EMAIL'} {'USER'} {'DATABASE'} {'DATA'} {'INFO'} {'SYSTEM'}];
     rank = find(matches(validTypes,type,'IgnoreCase',true));
 
     % Add debug log for unknown log type

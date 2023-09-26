@@ -9,7 +9,7 @@ plotmargin = [20 20 20 20];
 
 % mass filter, in kilograms
 plot_materials = {'all'};
-plot_minmass = 0.005; plot_maxmass = 0.075;
+plot_minmass = 0.001; plot_maxmass = inf;
 
 % Filter masses that continued ablation in darkflight
 % Feature untested, requires calibration and simulation using ablation_thresh
@@ -18,7 +18,7 @@ filter_darkflight = darkflight_elevation - error_elevation;
 
 % Wind variation
 %error_windmin = weather_minsigma; error_windmax = weather_maxsigma;
-error_windmin = 0; error_windmax = 0.85;
+error_windmin = -1; error_windmax = 1;
 
 % Lookup the mass filtered indices
 filter = (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= error_windmin) & (strewndata.error_wind <= error_windmax);

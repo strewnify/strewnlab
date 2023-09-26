@@ -21,4 +21,22 @@ AMS_json = webread([URL_AMS_API_eventreports '?year=' year '&event_id=' event_id
 % Convert to table
 %AMS_reports = json2table(AMS_json.result);
 
+reports = fieldnames(AMS_json.result);
+numreports = numel(reports);
 
+for report_i = 1:numreports
+    
+    name = [AMS_json.result.(reports{report_i}).first_name ' ' AMS_json.result.(reports{report_i}).last_name];
+    
+    % general remarks
+    remarks = AMS_json.result.(reports{report_i}).general_remarks;
+    if ~isempty(remarks)
+        disp(sprintf('%s: %s', name, remarks))
+    end
+    
+    % terminal flash
+    remarks = AMS_json.result.(reports{report_i}).terminal_flash_remarks;
+    if ~isempty(remarks)
+        disp(sprintf('%s: %s', name, remarks))
+    end
+end

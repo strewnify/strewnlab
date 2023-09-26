@@ -13,6 +13,10 @@ end
 
 %disp([newline 'lat/lon = ' num2str(lat) ', ' num2str(lon)])
 
+if length(lat) > 1 || length(lon) > 1
+    error('Vector input unsupported, single location only')
+end
+
 try
     location_raw = webread(['https://maps.googleapis.com/maps/api/geocode/json?latlng=' num2str(lat) ',' num2str(lon) '&key=' GoogleMapsAPIkey]);
 catch

@@ -35,8 +35,8 @@ angular_vel_rps = [0 0 planet.angular_vel_rps]; % need to size same as input...
 
 % Calculate and sum fictitious forces
 % (The Euler force is not included, because planetary rotation is constant)
-coriolis_force_N = -2 .* object_mass_kg .* cross(angular_vel_rps, velocity_mps)
-centrifugal_force_N = -cross(object_mass_kg .* angular_vel_rps, cross(angular_vel_rps, position_m))
+coriolis_force_N = -2 .* object_mass_kg .* cross(angular_vel_rps, velocity_mps);
+centrifugal_force_N = -cross(object_mass_kg .* angular_vel_rps, cross(angular_vel_rps, position_m));
 force_N = coriolis_force_N + centrifugal_force_N;
 
 end

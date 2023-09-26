@@ -1,6 +1,5 @@
 function [valid] = datapresent(input_data,req_var)
-%CHECKMISSING Returns the table rows that are missing any of the required
-%variables
+% DATAPRESENT Return rows with the required data
 
 % check input data
 if istable(input_data) || isstruct(input_data)

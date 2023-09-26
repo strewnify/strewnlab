@@ -6,8 +6,7 @@ function geoplot_sensor(LAT0,LON0,RADIUS,AZ,PLANET,label,color)
 
 % Calculate a circle or arc
 [LATs,LONs] = scircle1(LAT0,LON0,RADIUS,AZ,PLANET);
-LONs
-LONs = unwrapLON(LONs)
+LONs = unwrapLON(LONs);
 
 % Additional points for arcs, to create a filled polygon
 if ~isempty(AZ)
@@ -22,7 +21,7 @@ if ~isempty(AZ)
 end
 
 % Plot the figure
-geoplot(LATs,LONs,color);
+geoplot(LATs,LONs,'Color',color);
 
 % Display text label
 text(mean([min(LATs) max(LATs)]),mean([min(LONs) max(LONs)]),label,'Color',color,'HorizontalAlignment','center')

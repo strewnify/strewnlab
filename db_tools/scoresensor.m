@@ -7,7 +7,7 @@ defaultFOV = 180;
 if nargin < 6
     logformat('First 6 inputs are required.','ERROR')
 elseif nargin == 6 || isempty(locality)
-    [ location_string, locality, state, country, water_string, land_string ] = getlocation(sensorLAT,sensorLONG)
+    [ location_string, locality, state, country, water_string, land_string ] = getlocation(sensorLAT,sensorLONG);
     if isempty(locality) && ~isempty(water_string)
         locality = water_string;
     end
@@ -19,7 +19,7 @@ if nargin <= 7
 end
 if nargin <= 8
        logformat(sprintf('Unknown station reporting from %s.',locality),'INFO')
-       station_id = ['SCX' encodelocation(sensorLAT,sensorLONG,3,3)];
+       station_id = ['SCX' encodelocation(sensorLAT,sensorLONG)];
 end
 if nargin <= 9
     logformat('Unknown sensor azimuth.','INFO')
@@ -45,24 +45,24 @@ startAngle = wrapTo180(startObservedAZ - PathBearingAZ);
 endAngle = wrapTo180(endObservedAZ - PathBearingAZ);
 minAZ = wrapTo360(sensorAZ - horFOV./2);
 maxAZ = wrapTo360(sensorAZ + horFOV./2);
-startFOVposition_pct = pctFOV(minAZ, maxAZ, startObservedAZ)
-endFOVposition_pct = pctFOV(minAZ, maxAZ, endObservedAZ)
+startFOVposition_pct = pctFOV(minAZ, maxAZ, startObservedAZ);
+endFOVposition_pct = pctFOV(minAZ, maxAZ, endObservedAZ);
 
 % default position for missing FOV
 startFOVposition_pct(isnan(startFOVposition_pct)) = 25;
 endFOVposition_pct(isnan(endFOVposition_pct)) = 25;
 
 % Score sensor positioning for event
-startScore = 70*exp(-0.006*startCurveDist_km)
-endScore = 70*exp(-0.006*endCurveDist_km)
-startMult = 38.14/(abs(startFOVposition_pct-50)+19.07)
-endMult = 38.14/(abs(endFOVposition_pct-50)+19.07)
+startScore = 70*exp(-0.006*startCurveDist_km);
+endScore = 70*exp(-0.006*endCurveDist_km);
+startMult = 38.14/(abs(startFOVposition_pct-50)+19.07);
+endMult = 38.14/(abs(endFOVposition_pct-50)+19.07);
 startMult(isnan(startMult)) = 1;
 endMult(isnan(endMult)) = 1;
-startAngMult = 1 + abs(cosd(2*startAngle))
-endAngMult = 1 + abs(cosd(2*endAngle))
-score = startScore*startMult*startAngMult + endScore*endMult*endAngMult
-score_string = ['x' sprintf('%03.0f',score)]
+startAngMult = 1 + abs(cosd(2*startAngle));
+endAngMult = 1 + abs(cosd(2*endAngle));
+score = startScore*startMult*startAngMult + endScore*endMult*endAngMult;
+score_string = ['x' sprintf('%03.0f',score)];
 
 % Create a MATLAB-friendly lat/long string suffix
 formatting = '%0.8g';

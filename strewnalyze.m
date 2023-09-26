@@ -79,6 +79,12 @@ syncevent
 % Print trajectory data
 reportevents(sdb_Events(select_i,:))
 
+if strcmp(sdb_Events(select_i,:).DataSource{1},'AMS')
+    AMS_EventID = sdb_Events(select_i,:).AMS_event_id{1};
+    AMS_EventID = [AMS_EventID(12:end) '-' AMS_EventID(7:10)];
+    AMS_reports_json = getams_reportsforevent(AMS_EventID);
+end
+
 % Find nearby sensors
 startSensors = nearbysensors(sdb_Events.start_lat(select_i),sdb_Events.start_long(select_i),sdb_Events.start_alt(select_i)/1000,sdb_Sensors);
 endSensors = nearbysensors(sdb_Events.end_lat(select_i),sdb_Events.end_long(select_i),sdb_Events.end_alt(select_i)/1000,sdb_Sensors);
@@ -99,7 +105,7 @@ for sensor_i = 1:size(SensorSummary,1)
 end
 
 % Sort the data, ascending by sensor range, then by type
-SensorSummary = sortrows(SensorSummary,["Type","score"],'ascend')
+SensorSummary = sortrows(SensorSummary,["Type","score"],'descend')
 
 % Open browser to event pages
 if ~isempty(sdb_Events.Hyperlink1{select_i})

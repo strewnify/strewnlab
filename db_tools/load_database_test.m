@@ -2,7 +2,11 @@
 
 % BEFORE INTEGRATING INTO SCHEDULED SCRIPT, REMOVE USER INPUT DIALOGS
 
-% DO NOT RUN STREWNCONFIG IN THIS FILE, IT CAN OVERWRITE DEVELOPMENT DATABASE NAMES
+strewnconfig
+
+if exist('sdb_Events','var')
+    error('Production database already loaded, clear and re-run.')
+end
 
 % if strewnconfig has not been called, error
 if ~exist('check_configloaded','var') || ~check_configloaded
