@@ -6,8 +6,6 @@
 
 diary off
 
-devwarning('Coriolis STREWNIFY')
-
 % Load config file
 if ~exist('check_configloaded','var') || ~check_configloaded
     strewnconfig
@@ -550,21 +548,21 @@ while inflightcount > 0
             projectile(n).v_terminal(current) = sqrt((2*projectile(n).mass*g)/(projectile(n).rho(current)*projectile(n).frontalarea*projectile(n).CD(current)));
             projectile(n).force(current,1) = projectile(n).DragForce(current,1) + projectile(n).MagnusForce(current,1); % drag force in the x direction
             
-            % **** CORIOLIS ADDED - TEMPORARY TEST for France
-            % This calculation will not work for other trajectories
+%             % **** CORIOLIS ADDED - TEMPORARY TEST for France
+%             % This calculation will not work for other trajectories
+%             
+%             if projectile(n).position(current,3) < darkflight_elevation
+%                 [X, Y, Z] = geodetic2ecef(planet.ellipsoid_m, 47.359449, 2.279083, projectile(n).position(current,3));
+%                 vectorspeed = 0.707.*projectile(n).velocity(current,3);
+%                 fict_vector = fict_forces(projectile(n).mass,[X Y Z],[vectorspeed vectorspeed 0]);
+%                 FICTITIOUS = fict_vector(2);
+%             else
+%                FICTITIOUS = 0; 
+%             end
+%                         
+%             % *** CORIOLIS ADDED *****  see line 565
             
-            if projectile(n).position(current,3) < darkflight_elevation
-                [X, Y, Z] = geodetic2ecef(planet.ellipsoid_m, 47.359449, 2.279083, projectile(n).position(current,3));
-                vectorspeed = 0.707.*projectile(n).velocity(current,3);
-                fict_vector = fict_forces(projectile(n).mass,[X Y Z],[vectorspeed vectorspeed 0]);
-                FICTITIOUS = fict_vector(2);
-            else
-               FICTITIOUS = 0; 
-            end
-                        
-            % *** CORIOLIS ADDED *****  see line 563
-            
-            projectile(n).force(current,2) = projectile(n).DragForce(current,2) + projectile(n).MagnusForce(current,2) - FICTITIOUS; % drag force in the y direction
+            projectile(n).force(current,2) = projectile(n).DragForce(current,2) + projectile(n).MagnusForce(current,2); %- FICTITIOUS; % drag force in the y direction
             projectile(n).force(current,3) = projectile(n).DragForce(current,3) + projectile(n).MagnusForce(current,3) - G_constant*planet.mass_kg*projectile(n).mass/(planet.ellipsoid_m.MeanRadius + projectile(n).position(current,3))^2; % gravity applied down
 
             % Shift data to previous

@@ -82,6 +82,7 @@ AMS_data(AMS_data.num_reports_for_options <= 0,:) = [];  % Delete records with n
 AMS_data.Datetime = AMS_data.avg_date_utc;
 AMS_data.LAT = round(AMS_data.end_lat,4);
 AMS_data.LONG = round(AMS_data.end_long,4);
+AMS_data((AMS_data.LAT == 0 & AMS_data.LONG == 0) ,:) = [];  % Delete records with 0,0 location
 AMS_data.SolarElev = solarelevation(AMS_data.LAT,AMS_data.LONG,AMS_data.Datetime); % Calculate solar elevation
 AMS_data(AMS_data.SolarElev < 0 & AMS_data.avg_duration < min_duration,:) = [];  % Delete night events below min duration
 AMS_data.Altitude = round(AMS_data.end_alt./1000,3);

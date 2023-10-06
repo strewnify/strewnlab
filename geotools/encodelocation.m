@@ -1,17 +1,31 @@
-function [ encoded_location ] = encodelocation( LAT, LONG, precision, cipher_length)
+function [ encoded_location ] = encodelocation(LAT, LONG)
 % [ ENCODED_TEXT ] = ENCODE( LAT, LONG, CIPHER_LENGTH ) Encode location
 
 % Supported characters
-supported_char = '1234567890abcdefghijklmnopqrstuvwxyz';
+supported_char = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
+lat_cipher_length = 2;
+lon_cipher_length = 3;
+
+% Encode LAT 
 % Generate key from seed
-wrapLAT = wrapTo180(round(LAT,precision)); % round to 3 decimal places
-wrapLONG = wrapTo360(round(LONG,precision)); % round to 3 decimal places
-seed = (wrapTo180(LAT)+wrapTo360(LONG)).*10^precision;
+seed = (LAT + 90).*10^7;
 stream = RandStream('twister','Seed',seed);
-key = randi(stream,numel(supported_char),[1 cipher_length]);
+key = randi(stream,numel(supported_char),[1 lat_cipher_length]);
 
 % Encoding Algorithm
-for text_i = 1:cipher_length
-    encoded_location(text_i) = supported_char(key(text_i));         
+for text_i = 1:lat_cipher_length
+    encoded_lat(text_i) = supported_char(key(text_i));         
 end
+
+% Encode LON
+seed = (LONG + 180).*10^7;
+stream = RandStream('twister','Seed',seed);
+key = randi(stream,numel(supported_char),[1 lon_cipher_length]);
+
+% Encoding Algorithm
+for text_i = 1:lon_cipher_length
+    encoded_lon(text_i) = supported_char(key(text_i));         
+end
+
+encoded_location = [encoded_lat encoded_lon];

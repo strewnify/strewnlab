@@ -11,12 +11,23 @@ logformat('New meteor event analysis initialized.')
 % Load the event database
 load_database
 
+% Choose event database
+answer = questdlg("Choose a Database","Database Choice","New","Old","Cancel","Cancel");
+switch answer
+    case 'Old'
+        Events_db = sdb_Events;
+    case 'New'
+        error('not supported')
+    otherwise
+        logformat('User cancelled data analysis.','ERROR')
+end
+
 % Run the Event Picker
-EventPicker_UI = EventPicker(sdb_Events);
+EventPicker_UI = EventPicker(Events_db);
 waitfor(EventPicker_UI,'success')
 
 % Get output data from UI before closing
-SelectedEvent = extractBefore(EventPicker_UI.SelectedEvent,' - ');
+SelectedEvent = extractBefore(EventPicker_UI.SelectedEvent,' - ')
 success = EventPicker_UI.success;
 CONFIDENTIAL = EventPicker_UI.CONFIDENTIAL;
 WCT = EventPicker_UI.WCT;
@@ -103,6 +114,12 @@ for sensor_i = 1:size(SensorSummary,1)
     % IMPORTANT: Locality must be provided to prevent excessive Google queries
     [SensorSummary.score(sensor_i), SensorSummary.data_name{sensor_i}] = scoresensor( SensorSummary.LAT(sensor_i), SensorSummary.LONG(sensor_i), sdb_Events.start_lat(select_i), sdb_Events.start_long(select_i), sdb_Events.end_lat(select_i), sdb_Events.end_long(select_i), convertStringsToChars(SensorSummary.City{sensor_i}), SimEventID, convertStringsToChars(SensorSummary.StationID{sensor_i}), SensorSummary.sensorAZ(sensor_i), SensorSummary.sensor_hor_FOV(sensor_i));
 end
+
+% Add a hyperlink in the command window
+SensorSummary.Link1 = strcat('<a href="', SensorSummary.Hyperlink1, '">Link1</a>');
+SensorSummary = movevars(SensorSummary, 'Link1', 'Before', 'Type');
+SensorSummary.Link2 = strcat('<a href="', SensorSummary.Hyperlink2, '">Link2</a>');
+SensorSummary = movevars(SensorSummary, 'Link2', 'Before', 'Type');
 
 % Sort the data, ascending by sensor range, then by type
 SensorSummary = sortrows(SensorSummary,["Type","score"],'descend')

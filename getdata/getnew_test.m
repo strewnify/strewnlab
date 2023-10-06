@@ -17,7 +17,7 @@ warning('off','MATLAB:table:RowsAddedExistingVars');
 dayhistory = 30;
 
 %Load the database
-load_database_test
+load_database
 
 % Query user for databases
 SourceList = fieldnames(sdb_ImportData);

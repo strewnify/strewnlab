@@ -1,12 +1,6 @@
 %LOAD_DATABASE Backup the database and load it into the workspace
 
-% BEFORE INTEGRATING INTO SCHEDULED SCRIPT, REMOVE USER INPUT DIALOGS
-
 strewnconfig
-
-if exist('sdb_MeteorData','var')
-    error('test database already loaded, clear and re-run.')
-end
 
 % if strewnconfig has not been called, error
 if ~exist('check_configloaded','var') || ~check_configloaded
