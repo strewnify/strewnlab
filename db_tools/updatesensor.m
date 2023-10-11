@@ -9,7 +9,8 @@ logformat(sprintf('User requested data update for %s.',StationID),'USER')
 % Copy the database to output
 db_Sensors_out = db_Sensors_in;
 
-updt_i = find(contains(db_Sensors_out.StationID,StationID));
+% updt_i = find(contains(db_Sensors_out.StationID,StationID));
+updt_i = find(strcmp(db_Sensors_out.StationID,StationID));
 
 if isempty(updt_i)
     logformat(sprintf('%s not found.',StationID),'ERROR')

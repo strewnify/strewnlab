@@ -6,13 +6,16 @@ strewnconfig
 % Start logging
 diary([logfolder 'strewnlab_log.txt'])        
 diary on 
-logformat('New meteor event analysis initialized.')
+logformat('New meteor event analysis initialized.','INFO')
+
+% Choose event database
+answer = questdlg("Choose a Database","Database Choice","New","Old","Cancel","Cancel");
+logformat('User prompted to choose old or new database','USER')
 
 % Load the event database
 load_database
 
-% Choose event database
-answer = questdlg("Choose a Database","Database Choice","New","Old","Cancel","Cancel");
+% Arbitrate database
 switch answer
     case 'Old'
         Events_db = sdb_Events;

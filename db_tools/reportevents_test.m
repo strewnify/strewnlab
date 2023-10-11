@@ -7,7 +7,10 @@ strewnconfig
 email = false;
 % eventdatabase = MeteorData;
 % %EventIDs = [{'Y20200228_09Z_33T'} {'Y20200210_23Z_43R'} {'Y20191105_11Z_07L'}];
-%EventIDs = fields(MeteorData)';
+
+if nargin == 1
+    EventIDs = fieldnames(eventdatabase)';
+end
 Sources = [{'CNEOS'} {'AMS'} {'Goodall'} {'MetBull'} {'NEOB'} {'ASGARD'} {'GMN'}];
 Records = [1 2 3 4 5];
 
@@ -64,7 +67,7 @@ else
 end
     
 % Text Report
-for event_i = 1:num_events
+for event_i = 3:num_events
     if isfield(eventdatabase, EventIDs{event_i}) % if the event exists
         
         % Start building the header
@@ -169,7 +172,7 @@ end
 % Disable table row assignment warning
 warning('off','MATLAB:table:RowsAddedExistingVars');
 
-for event_i = 1:num_events
+for event_i = 3:num_events
     if isfield(eventdatabase, EventIDs{event_i}) % if the event exists
 
         % Report each desired source
