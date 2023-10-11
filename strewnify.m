@@ -189,9 +189,9 @@ ref_position = [0 0 geometric_ref_elevation];
 startseg = norm(startposition - ref_position); % length of the start segment in meters
 endseg = norm(endposition - ref_position); % length of the end segment in meters
 if (endseg + startseg) > max_pathlength3D_m
-    startaltitude = geometric_ref_elevation + ((max_pathlength3D_m/2)/startseg)*(startaltitude - geometric_ref_elevation);
-    warning(['Extreme entry angle, start altitude adjusted to ' num2str(startaltitude/1000) 'km'])
-    startposition = [(startaltitude - geometric_ref_elevation) / slope 0 startaltitude];       
+    startaltitude_adj = geometric_ref_elevation + ((max_pathlength3D_m/2)/startseg)*(startaltitude - geometric_ref_elevation);
+    warning(['Extreme entry angle, start altitude adjusted to ' num2str(startaltitude_adj/1000) 'km'])
+    startposition = [(startaltitude_adj - geometric_ref_elevation) / slope 0 startaltitude_adj];       
 end
 
 % Calculation start and end locations
@@ -207,10 +207,10 @@ ref_flightdist = norm(startposition - ref_position);
 
 % Set elevation limits for graphing
 ZMIN = ground;
-ZMAX = startaltitude;
+ZMAX = startaltitude_adj;
 
 % find the size of the ground plot area
-pathheight = startaltitude - ground;
+pathheight = startaltitude_adj - ground;
 dlat_meters = abs(startlocation(1)-endlocation(1))*111200;
 dlong_meters = abs(startlocation(2)-endlocation(2))*long_metersperdeg;
 plotradius = max([pathheight dlat_meters dlong_meters])/2;
@@ -365,7 +365,7 @@ projectile(n).unitvector(current,:) = vector/norm(vector);
     
 projectile(n).x0 = startposition(1);
 projectile(n).y0 = 0;
-projectile(n).z0 = startaltitude;
+projectile(n).z0 = startaltitude_adj;
 projectile(n).v0 = entryspeed;
 
 % Progress Bar
@@ -906,7 +906,7 @@ strewn_mass = 0;
 strewn_count = 0;
 strewn_mainmass = 0;
 strewn_mainmass_n = 0;
-darkflight = startaltitude;
+darkflight = startaltitude_adj;
 for n = 1:rockcount
     if projectile(n).mass < 0.001
         graphtext = cellstr(num2str(roundn(projectile(n).mass,-4)*1000));
