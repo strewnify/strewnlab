@@ -26,17 +26,18 @@ numreports = numel(reports);
 
 for report_i = 1:numreports
     
+    reportid = extractAfter(reports{report_i},'_');
     name = [AMS_json.result.(reports{report_i}).first_name ' ' AMS_json.result.(reports{report_i}).last_name];
     
     % general remarks
     remarks = AMS_json.result.(reports{report_i}).general_remarks;
     if ~isempty(remarks)
-        disp(sprintf('%s: %s', name, remarks))
+        disp(sprintf('%s (%s): %s',reportid, name, remarks))
     end
     
     % terminal flash
     remarks = AMS_json.result.(reports{report_i}).terminal_flash_remarks;
     if ~isempty(remarks)
-        disp(sprintf('%s: %s', name, remarks))
+        disp(sprintf('%s (%s): %s', reportid, name, remarks))
     end
 end

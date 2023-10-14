@@ -24,9 +24,6 @@ end
 
 % Store output
 planet = planet_data;
-
-% Calculate additional parameters from raw planet data
-planet.angular_vel_rps = 2 * pi / planet.sidereal_period_s;
         
 end
 

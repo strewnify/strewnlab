@@ -165,7 +165,7 @@ else
     elseif new_LONG ~= old_LONG
         db_Sensors_out.LONG(updt_i) = new_LONG;
         precision = countprecision(db_Sensors_out.LONG(updt_i));
-        db_Sensors_out.error_LONG(updt_i) = 5*10^-(precision);
+        db_Sensors_out.error_Long(updt_i) = 5*10^-(precision);
         logformat(sprintf('LONG updated from %0.7g to %0.7g.',old_LONG, db_Sensors_out.LONG(updt_i)),'INFO')
         logformat(sprintf('LONG error updated from %0.8g to %0.8g.',db_Sensors_in.error_Long(updt_i), db_Sensors_out.error_Long(updt_i)),'INFO')
 

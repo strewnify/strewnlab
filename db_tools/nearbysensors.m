@@ -5,7 +5,7 @@ function [data_disp] = nearbysensors(LAT,LONG,Height_km,data_tb)
 if ~isempty(find(data_tb.sensor_hor_FOV < 0,1)) || ~isempty(find(data_tb.sensor_hor_FOV > 360,1)) ||...
         ~isempty(find(data_tb.sensor_vert_FOV < 0,1)) || ~isempty(find(data_tb.sensor_vert_FOV > 360,1)) ||...
         ~isempty(find(data_tb.sensorAZ < 0,1)) || ~isempty(find(data_tb.sensorAZ > 360,1)) ||...
-        ~isempty(find(data_tb.sensorELEV < 0,1)) || ~isempty(find(data_tb.sensorELEV > 360,1))
+        ~isempty(find(data_tb.sensorELEV < -90,1)) || ~isempty(find(data_tb.sensorELEV > 90,1))
     logformat('Invalid FOV data in database','ERROR')
 end
 
@@ -38,7 +38,7 @@ data_tb.eff_maxAZ = wrapTo360(sensorAZ + eff_hor_FOV./2);
 % Calculate the position of the event in the horizontal FOV of each camera
 data_tb.pct_horFOV = pctFOV(data_tb.eff_minAZ,data_tb.eff_maxAZ,data_tb.observed_AZ);
 data_tb.pct_horFOV(data_tb.sensor_hor_FOV == 360) = NaN; % 360 degree sensors, like NEXRAD
-data_tb.pct_horFOV(data_tb.Type == "AllSky") = NaN;
+data_tb.pct_horFOV(data_tb.sensorELEV == 90) = NaN;
 
 % filter cameras pointing in the correct direction
 data_tb = data_tb(isnan(data_tb.pct_horFOV) | (data_tb.pct_horFOV > -5 & data_tb.pct_horFOV < 105),:);

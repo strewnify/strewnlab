@@ -97,7 +97,7 @@ end
 
 % Constants
 planet = getPlanet();
-G_constant = 6.674*10^-11; % gravitational constant in m^3 kg^-1 s^-2
+ref = getRef();  % gravitational constant in m^3 kg^-1 s^-2
 
 % Data filters
 slowmeteor_min_kps = 0; % meteors below this speed will be reported from ASGARD, regardless of altitude

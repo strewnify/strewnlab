@@ -10,6 +10,7 @@ numevents = size(eventdata,1);
 % Calculate extra data for reporting
 [eventdata.when_description,eventdata.when_sentence,~] = solartime(eventdata.LAT,eventdata.LONG,eventdata.Datetime);
 
+
 Labels = [{'Location:'} {'Date:'} {'Time:'} {'Local Time*:'} {'Time of Day:'} {'Duration:'} {'Latitude:'} {'Longitude:'} {'Speed'} {'Bearing:'} {'Slope:'} {'Altitude:'} {'Mass:'} {'Report count:'} {'Hyperlink 1:'} {'Hyperlink 2:'} {'Map Link:'}];
 % idx = [{'Location'} {'Datetime'} {'LAT'} {'LONG'} {'Bearing'} {'Incidence'} {'Altitude'} {'Hyperlink1'} {'Hyperlink2'} {'HyperMap'}];
 dataformat = [{'eventdata.Location{event}(max(1,end-colwidth+3):end)'}...
