@@ -9,14 +9,14 @@ diary on
 logformat('New meteor event analysis initialized.','INFO')
 
 % Choose event database
-answer = questdlg("Choose a Database","Database Choice","New","Old","Cancel","Cancel");
+analyze_answer = questdlg("Choose a Database","Database Choice","New","Old","Cancel","Cancel");
 logformat('User prompted to choose old or new database','USER')
 
 % Load the event database
 load_database
 
 % Arbitrate database
-switch answer
+switch analyze_answer
     case 'Old'
         Events_db = sdb_Events;
     case 'New'
