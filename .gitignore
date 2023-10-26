@@ -3,7 +3,6 @@
 credentials/*
 scheduled/*
 logs/*
-goodall/*
 radiosonde/*
 zoneplots/*
 DatabaseMerge/*

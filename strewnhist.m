@@ -125,7 +125,7 @@ daspect([1/long_metersperdeg 1/lat_metersperdeg 1])
 axis(setplotlimits(strewndata.Longitude(filter), strewndata.Latitude(filter), plotmargin))
 
 % Plot a bivariate histogram of the Monte Carlo results
-histogram2(strewndata.Longitude(filter),strewndata.Latitude(filter),Long_edges, Lat_edges,'DisplayStyle','tile','EdgeColor',edge_type,'Normalization','probability')
+strewnhist_vals = histogram2(strewndata.Longitude(filter),strewndata.Latitude(filter),Long_edges, Lat_edges,'DisplayStyle','tile','EdgeColor',edge_type,'Normalization','probability')
 % cb = colorbar();
 % cb.Label.String = 'Find Probability';
 % cb.Label.FontSize = 12;

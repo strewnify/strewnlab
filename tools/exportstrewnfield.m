@@ -12,13 +12,13 @@ pngfilestring = [SimulationName '_StrewnField_' datestr(nowtime,'yyyymmdd_HHMMSS
 % Backup the workspace
 strewnbackup
 
-% change directory
-cd(exportfolder)
-
 try
+    % change directory
+    cd(exportfolder)
+
     % Save the current image to file
     saveas(gcf,pngfilestring);
-
+    
     % Set color white to transparent
     img = imread(pngfilestring);   % an rgb image
     imwrite(img, pngfilestring, 'Transparency', [1 1 1]);
@@ -36,8 +36,21 @@ try
 catch
     % return to main folder
     cd(mainfolder)
-    error('Error in strewn field export!');
+    logformat('Error in strewn field image export!','ERROR');
 end
+
+% MAKEKMZ needs a lot of work
+% try
+%     % change directory
+%     cd(exportfolder)
+%     
+%     % export KMZ file
+%     makekmz(strewnhist_vals.Values, Lat_edges, Long_edges)
+% catch
+%      % return to main folder
+%     cd(mainfolder)
+%     logformat('Error in strewn field KMZ export!','ERROR');
+% end
 
 % Export strewnfield alignment pins
 exportpins(exportfolder, [SimulationName '_StrewnField_' datestr(nowtime,'yyyymmdd_HHMMSS') '_AlignmentPins'],'Alignment Pins', align_lats, align_lons, 0, [{'NW'} {'SW'} {'SE'}]);

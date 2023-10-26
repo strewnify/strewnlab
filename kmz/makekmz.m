@@ -538,35 +538,35 @@ if exist('segment','var')==0 | (exist('segment','var')==1 & max(size(val))<= max
   fname=sprintf('%s%c%s%c%s.png',tmp,filesep(),imname,filesep(),imname);
   
   % scale the input array to [0..255]
-  out1=floor(256*(val-minout)/(maxout-minout));
+  out1=floor(256*(val-minout)./(maxout-minout));
   out1(out1<0)=0; out1(out1>255)=255;
 
   % create 8 bit PNG file with desired options
   if exist('cmap','var')==1
     if exist('alphaa','var')==1
       if 1 % note: imwrite does not support alpha channel AND cmap at the
-           % same time for 8-bit png, so use transparency where the first
-           % value of the colormap is set to the transparent color 
-	   % based on the alpha channel information with the bottom 
-	   % color of the image moved to the second colormap index
-	out1(out1==0)=1;   % bottom color of image changed
-	out1(alphaa==0)=0; % location of transparency
-	%disp('write with colormap and transparency')
-	imwrite(uint8(out1'),cmap,fname, 'png','transparency',cmap(1,:),'BitDepth',8,copyright,copyrightowner,'Comment',comment );
+        % same time for 8-bit png, so use transparency where the first
+        % value of the colormap is set to the transparent color 
+        % based on the alpha channel information with the bottom 
+        % color of the image moved to the second colormap index
+        out1(out1==0)=1;   % bottom color of image changed
+        out1(alphaa==0)=0; % location of transparency
+        %disp('write with colormap and transparency')
+        imwrite(uint8(flip(out1')),cmap,fname, 'png','transparency',cmap(1,:),'BitDepth',8,'copyright',copyrightowner,'Comment',comment );
       else % what we really want, but is not supported...
-	imwrite(uint8(out1'),cmap,fname,'png','Alpha', alphaa','BitDepth',8,copyright,copyrightowner,'Comment',comment );
+        imwrite(uint8(flip(out1')),cmap,fname,'png','Alpha', alphaa','BitDepth',8,'copyright',copyrightowner,'Comment',comment );
       end
     else
       %disp('write with colormap but no alpha channel')
-      imwrite(uint8(out1'),cmap,fname,'png',copyright,copyrightowner,'Comment',comment);
+      imwrite(uint8(out1'),cmap,fname,'png','copyright',copyrightowner,'Comment',comment);
     end
   else
     if exist('alphaa','var')==1
       %disp('write with alpha channel but no colormap')
-      imwrite(uint8(out1'),fname,'png','Alpha', alphaa','BitDepth',8,copyright,copyrightowner,'Comment',comment);
+      imwrite(uint8(out1'),fname,'png','Alpha', alphaa','BitDepth',8,'copyright',copyrightowner,'Comment',comment);
     else
       %disp('write without colormap or alpha channel')
-      imwrite(uint8(out1'),fname,'png',copyright,copyrightowner,'Comment',comment);
+      imwrite(uint8(out1'),fname,'png','copyright',copyrightowner,'Comment',comment);
     end
   end
 
