@@ -92,6 +92,10 @@ end
 if exist('img')~=1 || exist('lat')~=1 || exist('lon')~=1 
   error('*** at least three arguments are required for makekmz');
 end
+background = 0;
+cmap = colormap;
+alphaa = 0;
+maxsize = 10000;
 
 today=date();    % get today's date
 copyright=sprintf('Copyright %s',today(8:11));
@@ -554,7 +558,15 @@ if exist('segment','var')==0 | (exist('segment','var')==1 & max(size(val))<= max
         %disp('write with colormap and transparency')
         imwrite(uint8(flip(out1')),cmap,fname, 'png','transparency',cmap(1,:),'BitDepth',8,'copyright',copyrightowner,'Comment',comment );
       else % what we really want, but is not supported...
-        imwrite(uint8(flip(out1')),cmap,fname,'png','Alpha', alphaa','BitDepth',8,'copyright',copyrightowner,'Comment',comment );
+	imwrite(uint8(flip(out1')),cmap,fname,'png','Alpha', alphaa','BitDepth',8,'copyright',copyrightowner,'Comment',comment );
+        % same time for 8-bit png, so use transparency where the first
+        % value of the colormap is set to the transparent color 
+        % based on the alpha channel information with the bottom 
+        % color of the image moved to the second colormap index
+        out1(out1==0)=1;   % bottom color of image changed
+        out1(alphaa==0)=0; % location of transparency
+        %disp('write with colormap and transparency')
+        imwrite(uint8(flip(out1')),cmap,fname, 'png','transparency',cmap(1,:),'BitDepth',8,'copyright',copyrightowner,'Comment',comment );
       end
     else
       %disp('write with colormap but no alpha channel')
