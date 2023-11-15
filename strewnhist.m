@@ -12,7 +12,7 @@ plot_materials = {'all'};
 plot_minmass = 0.001; plot_maxmass = inf;
 
 % Filter masses that continued ablation in darkflight
-% Feature untested, requires calibration and simulation using ablation_thresh
+% Feature needs further testing, requires calibration and simulation using ablation_thresh
 filter_darkflight = darkflight_elevation - error_elevation;
 %filter_darkflight = -999;
 
