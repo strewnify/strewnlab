@@ -45,8 +45,8 @@ startAngle = wrapTo180(startObservedAZ - PathBearingAZ);
 endAngle = wrapTo180(endObservedAZ - PathBearingAZ);
 minAZ = wrapTo360(sensorAZ - horFOV./2);
 maxAZ = wrapTo360(sensorAZ + horFOV./2);
-startFOVposition_pct = pctFOV(minAZ, maxAZ, startObservedAZ);
-endFOVposition_pct = pctFOV(minAZ, maxAZ, endObservedAZ);
+startFOVposition_pct = pctHorFOV(minAZ, maxAZ, startObservedAZ);
+endFOVposition_pct = pctHorFOV(minAZ, maxAZ, endObservedAZ);
 
 % default position for missing FOV
 startFOVposition_pct(isnan(startFOVposition_pct)) = 25;

@@ -40,7 +40,7 @@ else
     IGRA_Radius_km = 1500; 
 end
 
-IGRA_StationTarget = 4; % Target minimum number of weather stations
+IGRA_StationTarget = 3; % Target minimum number of weather stations
 if strcmp(SimulationName,'Hamburg')
         warning('Hamburg weather data analysis')
         IGRA_StationTarget = 1
@@ -205,7 +205,8 @@ while weatherdatamissing
     IGRA_DatasetIndex = 0;
 
     % If less than the target and progress is being made, continue
-    while (stationprogress < IGRA_StationTarget) && (stationprogress/station > 0.2 || station < 4)
+     while (stationprogress < IGRA_StationTarget) && (stationprogress/station > 0.2 || station < 4)
+
 
         % There seem to be two different filename formats...
         ZipFileName = [EventData_IGRA_Nearby.StationID{station} '-data.txt.zip'];

@@ -37,7 +37,7 @@ WCT = EventPicker_UI.WCT;
 GE = EventPicker_UI.GE;
 
 % temp - old database - lookup index
-select_i = find(strcmp(sdb_Events.EventID,SelectedEvent),1,'last');
+select_i = find(strcmp(sdb_Events.EventID,SelectedEvent),1,'first');
 
 % Close the Event Picker UI
 EventPicker_UI.delete

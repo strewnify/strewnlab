@@ -49,7 +49,7 @@ try
 catch
      % return to main folder
     cd(mainfolder)
-    logformat('Error in strewn field KMZ export!','ERROR');
+    logformat('Error in strewn field KMZ export!','WARN');
 end
 
 % Export strewnfield alignment pins

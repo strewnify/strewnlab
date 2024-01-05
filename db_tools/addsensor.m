@@ -1,14 +1,13 @@
 function db_Sensors_out = addsensor(db_Sensors_in, userpresent, inputdata)
 %ADDSENSOR Add a new sensor to the database
 
-loadprivate % load Google Maps API key
+% Load config for default FOV
+strewnconfig
 
 % Initialize variables
 planet = getPlanet();
 prefix = ''; % Station ID prefix
 default_BaseScore = 5;
-default_hor_FOV = 140;
-default_aspectratio = 1.3;
 new_sensor_type = '';
 
 % Error checking

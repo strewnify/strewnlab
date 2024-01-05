@@ -190,7 +190,11 @@ startseg = norm(startposition - ref_position); % length of the start segment in 
 endseg = norm(endposition - ref_position); % length of the end segment in meters
 if (endseg + startseg) > max_pathlength3D_m
     eff_startaltitude = geometric_ref_elevation + ((max_pathlength3D_m/2)/startseg)*(startaltitude - geometric_ref_elevation);
-    warning(['Extreme entry angle, start altitude adjusted to ' num2str(eff_startaltitude/1000) 'km'])
+    if angledeg < 70 && geometric_ref_elevation > 50000
+        warning(['Extreme path height, start altitude adjusted to ' num2str(eff_startaltitude/1000) 'km'])
+    else
+        warning(['Extreme entry angle, start altitude adjusted to ' num2str(eff_startaltitude/1000) 'km'])
+    end
     startposition = [(eff_startaltitude - geometric_ref_elevation) / slope 0 eff_startaltitude];       
 else
     eff_startaltitude = startaltitude;
