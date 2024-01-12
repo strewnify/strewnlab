@@ -46,7 +46,7 @@ data_tb.eff_maxAZ = wrapTo360(sensorAZ + eff_hor_FOV./2);
 % Calculate the position of the event in the horizontal FOV of each camera
 data_tb.pct_horFOV = pctHorFOV(data_tb.eff_minAZ,data_tb.eff_maxAZ,data_tb.observed_AZ);
 data_tb.pct_horFOV(data_tb.sensor_hor_FOV == 360) = NaN; % 360 degree sensors, like NEXRAD
-data_tb.pct_horFOV(data_tb.sensorELEV == 90) = NaN;
+%data_tb.pct_horFOV(data_tb.sensorELEV == 90) = NaN;
 
 % calculate effective vertical field of view, with defaulting for missing data
 eff_vert_FOV = data_tb.sensor_vert_FOV;  % copy database FOV
@@ -56,10 +56,10 @@ data_tb.eff_maxELEV = wrapTo180(data_tb.sensorELEV + eff_vert_FOV./2);
 
 % Calculate the position of the event in the vertical FOV of each camera
 data_tb.pct_vertFOV = pctVertFOV(data_tb.eff_minELEV,data_tb.eff_maxELEV,data_tb.observed_ELEV);
-data_tb.pct_vertFOV(data_tb.sensorELEV == 90) = NaN;
+%data_tb.pct_vertFOV(data_tb.sensorELEV == 90) = NaN;
 
 % filter cameras pointing in the correct direction
-data_tb = data_tb(isnan(data_tb.pct_horFOV) | (data_tb.pct_horFOV > -5 & data_tb.pct_horFOV < 105),:);
+%data_tb = data_tb(isnan(data_tb.pct_horFOV) | (data_tb.pct_horFOV > -5 & data_tb.pct_horFOV < 105),:);
 
 % Sort the data, ascending by sensor range, then by type
 data_disp = sortrows(data_tb,["Type","PctSensorRange"],'ascend');

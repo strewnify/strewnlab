@@ -21,7 +21,7 @@ devmode = false;
 numdays = 14;
 webmaster = 'james.a.goodall@gmail.com'; 
 major_energythresh = 0.01; % estimated energy threshold in kilotons
-earth = referenceEllipsoid('earth','km'); % all contacts currently live on Earth
+earth_km = referenceEllipsoid('earth','km'); % all contacts currently live on Earth
 
 % Dev mode selection
 switch devmode
@@ -76,7 +76,7 @@ if numevents > 0
             % Calculate distance from home for user
             for n = 1:numevents
                 eventlocation = [NewEvents.LAT(n) NewEvents.LONG(n)];
-                [NewEvents.distance(n),NewEvents.azimuth(n)] = distance(homelocation,eventlocation,earth);
+                [NewEvents.distance(n),NewEvents.azimuth(n)] = distance(homelocation,eventlocation,earth_km);
             end
 
             % Sort and get filters

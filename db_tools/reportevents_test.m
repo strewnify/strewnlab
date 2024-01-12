@@ -8,6 +8,9 @@ email = false;
 % eventdatabase = MeteorData;
 % %EventIDs = [{'Y20200228_09Z_33T'} {'Y20200210_23Z_43R'} {'Y20191105_11Z_07L'}];
 
+% Support for underscore or hyphen event IDs
+EventIDs = strrep(EventIDs,'-','_');
+
 if nargin == 1
     EventIDs = fieldnames(eventdatabase)';
 end
@@ -67,7 +70,7 @@ else
 end
     
 % Text Report
-for event_i = 3:num_events
+for event_i = 1:num_events
     if isfield(eventdatabase, EventIDs{event_i}) % if the event exists
         
         % Start building the header

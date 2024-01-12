@@ -1,25 +1,44 @@
-function [response] = addmailchimp(firstname,lastname,email)
-%[RESPONSE] = ADDMAILCHIMP(FIRSTNAME, LASTNAME, EMAIL) Summary of this function goes here
-%   Detailed explanation goes here
+function response = addmailchimp(firstname, lastname, email)
+    % Load API key
+    loadprivate
 
-% Load API key
-loadprivate
+    % Set Mailchimp API configuration
+    serverPrefix = 'us4';  % Replace with your Mailchimp server prefix
 
-MailchimpURL = 'https://us4.api.mailchimp.com/2.0/lists/subscribe';
+    listId = 'd65ba3c975';  % Replace with your Mailchimp list ID
 
-try
-    response = webwrite(MailchimpURL,'apikey',Mailchimp_APIkey,...
-        'id','d65ba3c975','email[email]',email,'merge_vars[FNAME]',...
-        firstname,'merge_vars[LNAME]',lastname,'double_optin','false');
-    logformat(sprintf('%s %s - %s added to Mailchimp mailing list',firstname, lastname, email),'EMAIL')
-catch
-    response = -1;
-    logformat(sprintf('Failed to add %s %s - %s to Mailchimp mailing list',firstname, lastname, email),'DEBUG')
-end
+    % Add StrewnNotify tag to the request
+    % Mailchimp has bad documentation on tags, it must be an array within an array
+    tags = {{'StrewnNotify'}};
     
-% Developer note:  all attempts to add tags via API have failed.  Tried 
-% json and csv array format susing weboptions and variouds char and string
-% cell arrays and nested cell array.  Struct data format could potentially
-% work, but the '['  characters are not allowed by matlab as struct 
-% variable names
+    
+    MailchimpURL = ['https://' serverPrefix '.api.mailchimp.com/3.0/lists/' listId '/members'];
 
+    % Set up webwrite options
+    authHeader = ['apikey ' Mailchimp_APIkey];
+    webwriteOptions = weboptions('HeaderFields', {'Authorization', authHeader}, 'RequestMethod', 'post', 'ContentType', 'json');
+
+    % Prepare data
+    requestData = struct(...
+        'email_address', email, ...
+        'status', 'subscribed', ...
+        'merge_fields', struct('FNAME', firstname, 'LNAME', lastname),...
+        'tags', tags...
+    );
+
+    % Convert data to JSON
+    jsonData = jsonencode(requestData);
+
+    % Troubleshooting info
+%     disp('Request Headers:');
+%     disp(webwriteOptions.HeaderFields);
+    
+    % Make API request
+%     try
+        response = webwrite(MailchimpURL, jsonData, webwriteOptions);
+        logformat(sprintf('%s %s - %s added to Mailchimp mailing list', firstname, lastname, email), 'EMAIL')
+%     catch
+%         response = -1;
+%         logformat(sprintf('Failed to add %s %s - %s to Mailchimp mailing list',firstname, lastname, email),'DEBUG')
+%     end
+end

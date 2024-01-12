@@ -138,7 +138,7 @@ else
     end
     
     % Remind user to manually tag Mailchimp records
-    logformat('ACTION REQUIRED: Manually tag new records as ''StrewnNotify'': <a href = "https://www.mailchimp.com">Go to Mailchimp</a>','USER')
+    logformat('ACTION SUGGESTED: Verify new records are tagged as ''StrewnNotify'': <a href = "https://www.mailchimp.com">Go to Mailchimp</a>','USER')
 
 end
 

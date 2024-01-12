@@ -1,11 +1,11 @@
 function [lats lons] = inputpoints(center_lat,center_lon)
 
-earth = referenceEllipsoid('earth','km');
+earth_km = referenceEllipsoid('earth','km');
 radius_km = 3;
 
 % Calculate map limits from radius
-nw_corner = reckon(center_lat,center_lon,radius_km./2,315,earth); 
-se_corner = reckon(center_lat,center_lon,radius_km./2,135,earth);
+nw_corner = reckon(center_lat,center_lon,radius_km./2,315,earth_km); 
+se_corner = reckon(center_lat,center_lon,radius_km./2,135,earth_km);
 lat_range = [se_corner(1,1) nw_corner(1,1)];
 lon_range = [nw_corner(1,2) se_corner(1,2)];
 

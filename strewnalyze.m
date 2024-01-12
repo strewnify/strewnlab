@@ -115,7 +115,7 @@ SensorSummary.City(ismissing(SensorSummary.City)) = "";
 for sensor_i = 1:size(SensorSummary,1)
     
     % IMPORTANT: Locality must be provided to prevent excessive Google queries
-    [SensorSummary.score(sensor_i), SensorSummary.data_name{sensor_i}] = scoresensor( SensorSummary.LAT(sensor_i), SensorSummary.LONG(sensor_i), sdb_Events.start_lat(select_i), sdb_Events.start_long(select_i), sdb_Events.end_lat(select_i), sdb_Events.end_long(select_i), convertStringsToChars(SensorSummary.City{sensor_i}), SimEventID, convertStringsToChars(SensorSummary.StationID{sensor_i}), SensorSummary.sensorAZ(sensor_i), SensorSummary.sensor_hor_FOV(sensor_i));
+    [SensorSummary.score(sensor_i), SensorSummary.data_name{sensor_i}] = scoresensor( SensorSummary.LAT(sensor_i), SensorSummary.LONG(sensor_i), SensorSummary.Altitude_m(sensor_i), sdb_Events.start_lat(select_i), sdb_Events.start_long(select_i), sdb_Events.start_alt(select_i), sdb_Events.end_lat(select_i), sdb_Events.end_long(select_i), sdb_Events.start_alt(select_i), convertStringsToChars(SensorSummary.City{sensor_i}), SimEventID, convertStringsToChars(SensorSummary.StationID{sensor_i}), SensorSummary.sensorAZ(sensor_i), SensorSummary.sensor_hor_FOV(sensor_i), SensorSummary.sensorELEV(sensor_i), SensorSummary.sensor_vert_FOV(sensor_i));
 end
 
 % Add a hyperlink in the command window
