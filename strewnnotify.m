@@ -5,9 +5,11 @@
 % Program Script: "C:\Program Files\MATLAB\R2020a\bin\matlab.exe"
 % Add arguments: -r cd('C:\Users\james\Documents\GitHub\strewnlab'),strewnnotify,exit -logfile c:\logfile
 
+userpresent = false; % scheduled function, user not present at console
+
 % Load settings
 strewnconfig
-userpresent = false; % scheduled function, user not present at console
+
 diary([logfolder 'strewnnotify_log.txt'])        
 diary on 
 logformat('Strewnify Meteor Event Notification service started.')

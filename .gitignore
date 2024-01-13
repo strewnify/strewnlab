@@ -3,7 +3,7 @@
 credentials/*
 scheduled/*
 logs/*
-radiosonde/*
+local_data/*
 zoneplots/*
 DatabaseMerge/*
 backup/*

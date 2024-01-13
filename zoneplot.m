@@ -4,6 +4,10 @@ clear latitudes
 clear longitudes
 clear binindices
 clear bin
+clear filtered_strewndata
+
+filtered_strewndata = strewndata(filter,:);
+
 
 % Create a zoneplot folder, if it doesn't exist
 if exist([exportfolder '\zoneplots'])~=7
@@ -30,7 +34,7 @@ zoneplot_i = 0;
 
 for i = 1:numbins
     try
-        [longitudes, latitudes] = strewnzone(strewndata,bin(i),bin(i+1),11);
+        [longitudes, latitudes] = strewnzone(filtered_strewndata,bin(i),bin(i+1),11);
         fill(longitudes,latitudes,color{i})
         if bin(i) >= 1000
             temp_bin1 = [num2str(bin(i)/1000) 'tonne'];

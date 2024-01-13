@@ -30,11 +30,11 @@ end
 logfolder = [mainprefix '\Documents\GitHub\strewnlab\logs\'];
 
 % Remote data folders
-weatherfolder = [mainfolder '\radiosonde'];
+weatherfolder = [mainfolder '\local_data\radiosonde'];
 if ~(exist(weatherfolder,'dir')==7)
     mkdir(weatherfolder) % create folder
 end
-remotefolder = [mainfolder '\remote'];
+remotefolder = [mainfolder '\local_data\remote'];
 if ~(exist(remotefolder,'dir')==7)
     mkdir(remotefolder) % create folder
 end
@@ -71,7 +71,7 @@ strewn_initialize
 
 % Program locations
 GoogleEarth_path = 'C:\Program Files\Google\Google Earth Pro\client\googleearth.exe';
-WCT_path = 'C:\Program Files\wct-4.8.1\wct.exe';
+WCT_path = 'C:\Program Files (x86)\wct-4.8.1\wct.exe';
 
 % Load private keys
 loadprivate
