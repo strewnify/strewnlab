@@ -1,10 +1,10 @@
-function [ref_out] = getRef(group,varname)
-%GETREF Get reference data, as defined at initialization
+function [cfg_value] = getConfig(group, varname)
+%GETREF Get config data, as defined at initialization
 % The reference data is stored in a global struct, from the
 % STREWN_INITIALIZE function.
 
 global initialized
-global ref_data
+global ref_config
 
 % Initialize, if necessary
 if isempty(initialized) || ~initialized
@@ -12,14 +12,14 @@ if isempty(initialized) || ~initialized
     logformat('Unexpected StrewnLAB initialization.','DEBUG')
     
 % Check for unknown initialization error
-elseif isempty(ref_data) || ~isfield(ref_data,'physical')        
-    logformat('Unexpected missing ref data.','ERROR')    
+elseif isempty(ref_config) || ~isfield(ref_config,'simulation')        
+    logformat('Unexpected missing config data.','ERROR')    
 end
 
 % Store output
 if nargin == 0
-    ref_out = ref_data;
+    cfg_value = ref_config;
 else
-    ref_out = ref_data.(group).(varname);
+    cfg_value = ref_data.(group).(varname);
 end
 

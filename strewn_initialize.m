@@ -8,25 +8,28 @@ if isempty(initialized)
     initialized = false;
 end
 
-ellipsoid_unit = 'meters';
-
 % Only initialize, if not done this session
 if ~initialized
+    
+    logformat('StrewnLAB initializing...','INFO')
+    
+    ellipsoid_unit = 'meters';
 
     % Initialize settings
     datetime.setDefaultFormats('defaultdate','yyyy-MM-dd HH:mm:ss');
           
     % Initialize globals
-    global ref_data
-    global planet_data
-    
     % Load reference data
+    global ref_data
+    global ref_planet
+    global ref_config
     ref_data = load('ref_data.mat');
-    planet_data = load('earth_data.mat');
+    ref_planet = load('earth_data.mat');
+    ref_config = load('ref_config.mat');
     
     % Calculate derived planet data
-    planet_data.ellipsoid_m = referenceEllipsoid('earth',ellipsoid_unit);  % reference ellipsoid used by mapping/aerospace tools, DO NOT CHANGE units
-    planet_data.angular_vel_rps = 2 * pi / planet_data.sidereal_period_s;
+    ref_planet.ellipsoid_m = referenceEllipsoid('earth',ellipsoid_unit);  % reference ellipsoid used by mapping/aerospace tools, DO NOT CHANGE units
+    ref_planet.angular_vel_rps = 2 * pi / ref_planet.sidereal_period_s;
     logformat(['Planet initialized to Earth.  Ellipsoid units are in ' ellipsoid_unit '.'],'INFO')
 
     % If user is not present
@@ -49,10 +52,13 @@ if ~initialized
     % preferences file called strewnlab_private, which is typically
     % located in this folder:
     % C:\Users\<username>\AppData\Roaming\MathWorks\MATLAB\R20xxx\
-    
   
+    % load private preferences
+    pref_private = 'strewnlab_private';
+    strewnlab_private = getpref(pref_private);
+    
     % If no credentials found, query user
-    if ~ispref('strewnlab_private')
+    if isempty(strewnlab_private) || isempty(fieldnames(strewnlab_private))
         get_creds = true;
         
         % Setup credential query, based on user role
@@ -72,32 +78,34 @@ if ~initialized
         % Query user for credentials
         if get_creds
            for cred_i = 1:numel(creds)
-               [~,success] = getPrivate('strewnlab_private',creds{cred_i}); % save value, do not log
-               if success
-                   logformat([creds{cred_i} 'saved to ' prefdir '\strewnblab_private.mat.'],'INFO')
-               else
-                   logformat('Error saving user credentials.', 'ERROR')
-               end
+               [~,success] = getPrivate(pref_private,creds{cred_i}); % save value, do not log
            end
+        
+        % Sace the new preferences
+        strewnlab_private = getpref(pref_private);
+        
         else
            success = false;
            logformat([user_role ' user skipped credential setup.'],'USER')
        end
     end
-
-    % Save preference file variables to environment variables
-    strewnlab_private = getpref('strewnlab_private');
-    private_var = fieldnames(strewnlab_private);
-
-    % Set environment variables
-    for private_i = 1:numel(private_var)
-        var_name = private_var{private_i};            
-        var_value = strewnlab_private.(private_var{private_i}){1};
-        setenv(var_name,var_value);        
-        logformat([var_name 'loaded from ' prefdir '\strewnlab_private.mat.'],'INFO')
-    end
-    clear private_pref
     
+    % Save preference file variables to environment variables
+    if isempty(strewnlab_private)
+        logformat(['No credentials found at ' prefdir '\matlabprefs.mat.'],'WARN');
+    else
+        private_var = fieldnames(strewnlab_private);
+
+        % Set environment variables
+        for private_i = 1:numel(private_var)
+            var_name = private_var{private_i};            
+            var_value = strewnlab_private.(private_var{private_i}){1};
+            setenv(var_name,var_value);        
+            logformat([var_name 'loaded from ' prefdir '\matlabprefs.mat.'],'INFO')
+        end
+        clear private_pref
+    end
+
     % *** Credentials Loading Complete ***
         
     logformat('StrewnLAB initialization complete.','INFO')
