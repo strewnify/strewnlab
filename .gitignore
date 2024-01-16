@@ -1,6 +1,5 @@
 *.kmz*
 *.kml*
-credentials/*
 scheduled/*
 logs/*
 local_data/*
@@ -8,7 +7,6 @@ zoneplots/*
 DatabaseMerge/*
 backup/*
 temp/*
-data/*
 *.png*
 *RecentEventData.xls*
 ~$AllEventData.xlsx
