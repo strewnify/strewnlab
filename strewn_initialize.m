@@ -78,10 +78,10 @@ if ~initialized
         % Query user for credentials
         if get_creds
            for cred_i = 1:numel(creds)
-               [~,success] = getPrivate(pref_private,creds{cred_i}); % save value, do not log
+               [~] = getPrivate(pref_private,creds{cred_i}); % save value, do not log
            end
         
-        % Sace the new preferences
+        % Load the new preferences
         strewnlab_private = getpref(pref_private);
         
         else
@@ -101,10 +101,13 @@ if ~initialized
             var_name = private_var{private_i};            
             var_value = strewnlab_private.(private_var{private_i}){1};
             setenv(var_name,var_value);        
-            logformat([var_name 'loaded from ' prefdir '\matlabprefs.mat.'],'INFO')
-        end
-        clear private_pref
+            logformat([var_name ' loaded from ' prefdir '\matlabprefs.mat.'],'INFO')
+        end        
     end
+    
+    % clear private preferences from workspace
+    % (still loaded in system env variables)
+    clear(pref_private)
 
     % *** Credentials Loading Complete ***
         
