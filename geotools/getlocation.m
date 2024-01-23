@@ -20,7 +20,7 @@ end
 try
     location_raw = webread(['https://maps.googleapis.com/maps/api/geocode/json?latlng=' num2str(lat) ',' num2str(lon) '&key=' GoogleMapsAPIkey]);
 catch
-    error('Google Maps reverse geocoding failed, check internet connection and try again.')
+    logformat('Google Maps reverse geocoding failed, check internet connection and try again.','ERROR')
 end
 
 search_params = {'country' 'locality' 'administrative_area_level_1' 'administrative_area_level_2' 'administrative_area_level_3' 'administrative_area_level_4'};

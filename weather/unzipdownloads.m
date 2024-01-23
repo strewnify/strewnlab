@@ -21,3 +21,5 @@ end
 
 % return to working directory
 cd(mainfolder); 
+
+clear effective_entrytime

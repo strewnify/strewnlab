@@ -1,0 +1,7 @@
+Configuration Variable,Value,Comment
+DatabaseFilename ,StrewnifyDatabase ,.mat database filename
+Database_prefix ,sdb_*,"all variables in the database must have this prefix, to be saved properly"
+Database_EventData_varname ,sdb_Events,"database integrity check, if this variable is not found, error"
+column_width ,25,column width for reports and location string length.  WARNING: Database rebuild required to update old events.
+default_hor_FOV ,140,default horizontal field of view for imported sensors/cameras with missing horizontal FOV data
+default_aspectratio ,1.3,"default aspect ratio for imported sensors/cameras, used to calculate missing vertical FOV data"

@@ -22,7 +22,7 @@ try
     PATHNAME = [mainprefix '\Downloads\'];
     FILENAME = ['strewn_contacts' datetimestring '.csv'];
     options = weboptions('MediaType', 'application/json', 'ArrayFormat', 'csv');
-    websave(FILENAME,'https://docs.google.com/spreadsheet/ccc?key=1kpPam0VAOk20qKL1hMavZXuMTP12l0B7_ojw_LcGgUU&output=csv&pref=1',weboptions);
+    websave(FILENAME,['https://docs.google.com/spreadsheet/ccc?key=' getPrivate(pref_private,'GoogleFormsCam_key') '&output=csv&pref=1'],weboptions);
     dateFormat = 'MM/dd/yyyy h:mm:SS aa';
     cd(mainfolder)
     logformat(sprintf('%s retrieved from Google Drive',FILENAME),'INFO')

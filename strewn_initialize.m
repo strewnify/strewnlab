@@ -10,6 +10,9 @@ end
 
 % Only initialize, if not done this session
 if ~initialized
+
+    pref_private = 'strewnlab_private';
+    pref_uigetpref = 'strewnlab_uigetpref';
     
     logformat('StrewnLAB initializing...','INFO')
     
@@ -42,7 +45,9 @@ if ~initialized
             'Advanced - Extra choices for users with understanding of physics and statistics' newline ...
             'Developer - Does not enhance simulation results, additional credentials required for website administration' newline newline];
         roles = ["Standard","Advanced","Developer"];
-        [user_role,~] = uigetpref('strewnlab','role_pref','Choose User Role',quest,roles);
+        
+        % Get user role, saving preferences to matlab preferences
+        [user_role,~] = uigetpref(pref_uigetpref,'role_pref','Choose User Role',quest,roles);
     end
     
     % *** Credential Loading ***
@@ -64,12 +69,8 @@ if ~initialized
         % Setup credential query, based on user role
         switch user_role
             case 'developer'
-                quest = ["User credentials have not been set up.  Would you like to enter them now?"];
-                user_cred = ["Enter Credentials","Skip"];
-                creds = {'GoogleMapsAPIkey' 'AMS_APIkey' 'Mailchimp_APIkey' 'Strewnify_APIkey' 'strewnlab_emailpassword' 'GoogleDrive_NotifyResponses' 'Timezone_API_token'};
+                creds = {'GoogleMapsAPIkey' 'AMS_APIkey' 'Mailchimp_APIkey' 'Strewnify_APIkey' 'strewnlab_emailpassword' 'GoogleDrive_NotifyResponses' 'GoogleDrive_Cameras' 'Timezone_API_token'};
             case 'advanced'
-                quest = ["Advanced users are recommended to setup API credentials.  Proceed?"];
-                user_cred = ["Proceed","Skip"];
                 creds = {'GoogleMapsAPIkey'};
             otherwise
                 get_creds = false;
@@ -85,7 +86,6 @@ if ~initialized
         strewnlab_private = getpref(pref_private);
         
         else
-           success = false;
            logformat([user_role ' user skipped credential setup.'],'USER')
        end
     end

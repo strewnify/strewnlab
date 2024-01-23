@@ -4,6 +4,7 @@
 exporting = true;
 
 % Update file and folder names and query data permissions, if needed
+clear 'SimVersion' % reset version
 syncevent
 
 nowtime = datetime('now','TimeZone','UTC');

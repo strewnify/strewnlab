@@ -23,6 +23,27 @@ if ~exist('check_eventdataloaded','var') || ~check_eventdataloaded
     error('Event data not loaded!')
 end
 
+% Initialize points for lookup
+numsteps = 100; % number of points = numsteps + 1
+A = [endlocation(1) endlocation(2) endposition(3)];
+B = [startlocation(1) startlocation(2) startposition(3)];
+AB  = B - A;
+nAB = AB ./ sqrt(sum(AB .^ 2, 2));   % Normalize
+stepsize = norm(AB)/numsteps;
+
+clear EventData_latitudes
+clear EventData_longitudes
+clear EventData_altitudes
+point = A;
+for step = 1:(numsteps + 1)
+    EventData_latitudes(step,1) = point(1);
+    EventData_longitudes(step,1) = point(2);
+    EventData_altitudes(step,1) = point(3);
+    point = point + stepsize * nAB;
+end
+EventData_altitudes_km = EventData_altitudes/1000; % km axis for plotting
+
+
 % Check for previous failure
 if ~exist('weatherdatamissing','var')
     weatherdatamissing = true;
@@ -40,11 +61,6 @@ else
     IGRA_Radius_km = 1500; 
 end
 
-IGRA_StationTarget = 3; % Target minimum number of weather stations
-if strcmp(SimulationName,'Hamburg')
-        warning('Hamburg weather data analysis')
-        IGRA_StationTarget = 1
-end
 weatherdatadelay = days(4); % maximum time that weather data availability can be delayed
 
 % Convert units
@@ -96,13 +112,14 @@ while weatherdatamissing
     end
     
     if exist('weathergeneric','var') && weathergeneric == true
-        effective_entrytime = entrytime - days(2);
-        StartDate = datetime(year(effective_entrytime),month(effective_entrytime),day(effective_entrytime),12,0,0,'TimeZone','UTC') - days(1);
-        EndDate = datetime(year(effective_entrytime),month(effective_entrytime),day(effective_entrytime),12,0,0,'TimeZone','UTC') + days(1);
+        effective_entrytime = entrytime - days(5);
+        StartDate = datetime(year(effective_entrytime),month(effective_entrytime),day(effective_entrytime),12,0,0,'TimeZone','UTC') - days(2);
+        EndDate = datetime(year(effective_entrytime),month(effective_entrytime),day(effective_entrytime),12,0,0,'TimeZone','UTC') + days(2);
         devwarning('GETWEATHER');
     end
     
 
+    
     % if this is the first run, get station inventory
     if ~exist('IGRA_Nearby','var')
         % Check for up-to-date station inventory list
@@ -177,16 +194,59 @@ while weatherdatamissing
         IGRA_Filtered = IGRA_SItable(IGRA_SItable.EndYear >= year(StartDate),:);
         IGRA_Filtered = IGRA_Filtered(IGRA_Filtered.StartYear <= year(EndDate),:);
         EventData_IGRA_Nearby = IGRA_Filtered(IGRA_Filtered.Distance <= IGRA_Radius,:);
-        numstations = size(EventData_IGRA_Nearby,1);
-
+        
         % Sort list by distance and store nearby station ID's and their distances
         EventData_IGRA_Nearby = sortrows(EventData_IGRA_Nearby,'Distance');
+        
+        % Limit number of stations to 20
+        EventData_IGRA_Nearby = EventData_IGRA_Nearby(1:min(size(EventData_IGRA_Nearby,1),20),:);
+        numstations = size(EventData_IGRA_Nearby,1);
+
         IGRA_nomdistance_km = EventData_IGRA_Nearby.Distance(1:numstations)/1000;
         
         % Display 
         disp(EventData_IGRA_Nearby.StationID(1:8))
     end
 
+    % Create a map figure
+    station_fig = figure;
+    set(station_fig, 'WindowState', 'maximized');
+    gx = geoaxes;
+    hold on
+
+    % Plot Weather Stations
+    geoscatter(EventData_IGRA_Nearby.LAT, EventData_IGRA_Nearby.LONG,'filled','b')
+    text(EventData_IGRA_Nearby.LAT, EventData_IGRA_Nearby.LONG, EventData_IGRA_Nearby.StationID)
+
+    % Plot trajectory
+    geoplot(EventData_latitudes,EventData_longitudes,'k','LineWidth',4)
+
+    % Plot reference point
+    geoscatter(nom_lat,nom_long,'filled','r')
+    
+    % Allow user to select desired stations
+    [selection_idx,usersuccess] = listdlg('ListString',EventData_IGRA_Nearby.StationID,'SelectionMode','multiple','Name','Radiosonde Station Selection', 'OKString','OK','PromptString','Select desired weather stations:','ListSize',[300,300]);
+    IGRA_StationTarget = numel(selection_idx); % Target minimum number of weather stations
+    
+    % close the selection map
+    close(station_fig)
+    
+    % Log selection
+    logformat(['User selected ' num2str(IGRA_StationTarget) ' stations: ' strjoin(EventData_IGRA_Nearby.StationID(selection_idx), ', ')],'USER')
+    if usersuccess && ~isempty(selection_idx)
+        switch numel(selection_idx)
+            case 1
+                logformat('Single radiosonde station not supported.','ERROR')
+            case 2 
+                logformat('Two radiosonde stations not supported.  Unable to interpolate','ERROR')                                     
+        end
+    else
+        logformat('User failed to select a radiosonde station.','ERROR')
+    end
+    
+    % Sort the selected stations to the top of the list
+    EventData_IGRA_Nearby = EventData_IGRA_Nearby([selection_idx setdiff(1:size(EventData_IGRA_Nearby,1),selection_idx)],:);
+    
     clear ZipFileName
     clear TextFileName
 
@@ -364,8 +424,8 @@ while weatherdatamissing
         % Recalculate filters and station count
         filt_t1 = EventData_ProcessedIGRA.RELTIME <= effective_entrytime;
         filt_t2 = EventData_ProcessedIGRA.RELTIME > effective_entrytime;
-        numstations_t1 = numel(unique(EventData_ProcessedIGRA.DatasetIndex(filt_t1)));
-        numstations_t2 = numel(unique(EventData_ProcessedIGRA.DatasetIndex(filt_t2)));
+        numstations_t1 = numel(unique(EventData_ProcessedIGRA.StationID(filt_t1)));
+        numstations_t2 = numel(unique(EventData_ProcessedIGRA.StationID(filt_t2)));
         stationprogress = min([numstations_t1,numstations_t2]);
 
         % Update station data
@@ -380,6 +440,7 @@ while weatherdatamissing
 
     if stationprogress <= 0
         weatherdatamissing = true;
+        weathergeneric = true;
         warning('No weather data found at event time, defaulting to data from a previous date.');
         effective_entrytime = effective_entrytime - days(1);        
     else
@@ -540,26 +601,6 @@ end
 
 % Generate gridded lookup for weather data
 waitbar(0,WaitbarHandle,'Reticulating Splines');
-
-% Initialize points for lookup
-numsteps = 100; % number of points = numsteps + 1
-A = [endlocation(1) endlocation(2) endposition(3)];
-B = [startlocation(1) startlocation(2) startposition(3)];
-AB  = B - A;
-nAB = AB ./ sqrt(sum(AB .^ 2, 2));   % Normalize
-stepsize = norm(AB)/numsteps;
-
-clear EventData_latitudes
-clear EventData_longitudes
-clear EventData_altitudes
-point = A;
-for step = 1:(numsteps + 1)
-    EventData_latitudes(step,1) = point(1);
-    EventData_longitudes(step,1) = point(2);
-    EventData_altitudes(step,1) = point(3);
-    point = point + stepsize * nAB;
-end
-EventData_altitudes_km = EventData_altitudes/1000; % km axis for plotting
 
 % Calculate times for interpolation
 filt_t1 = EventData_ProcessedIGRA.RELTIME <= effective_entrytime;

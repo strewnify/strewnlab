@@ -56,7 +56,7 @@ if ~(exist(backupfolder,'dir')==7)
 end
 
 % Data folder
-datafolder = [mainfolder '\data'];
+datafolder = [mainfolder '\local_data'];
 if ~(exist(datafolder,'dir')==7)
     mkdir(datafolder) % create folder
 end

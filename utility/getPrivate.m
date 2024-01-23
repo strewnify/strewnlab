@@ -125,7 +125,7 @@ if ~ispref(group, varname) || isempty(getpref(group, varname))
                 'Would you like to set it up now?'];
             pbtns = {'Enter Credentials','Skip'};
             
-            getData_URL = 'https://www.strewnify.com/';
+            getData_URL = '';
             getData_linkmsg = [varname 'Credential'];
             getData_msg = ['to retrieve your ' varname ' credential'];
             help_msg = ['Please visit <a href = "' getData_URL '">' getData_linkmsg '</a> ' getData_msg '.'];
