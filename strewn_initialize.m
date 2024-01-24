@@ -1,5 +1,5 @@
 function strewn_initialize
-% Initialize the  workspace
+% Initialize the workspace
 
 global initialized 
 
