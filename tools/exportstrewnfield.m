@@ -61,7 +61,7 @@ if exist('EventData_Finds','var') && any(permission_filter)
     if numel(Permissions) == 1 && (Permissions == "Public" || Permissions == "None") % if public
         exportpins(exportfolder, [SimulationName '_Finds_' datestr(nowtime,'yyyymmdd_HHMMSS')],'Finds', EventData_Finds.Latitude(permission_filter)', EventData_Finds.Longitude(permission_filter)', 0, stringmass(EventData_Finds.mass_grams(permission_filter)./1000));
     else % confidential data exists
-        exportpins([secreteventsfolder '\' SimEventID '_' SimFilename], [SimulationName '_Finds_' datestr(nowtime,'yyyymmdd_HHMMSS') '_' DataPermissionsFilename],'Finds', EventData_Finds.Latitude(permission_filter)', EventData_Finds.Longitude(permission_filter)', 0, stringmass(EventData_Finds.mass_grams(permission_filter)./1000));
+        exportpins([secreteventsfolder '\' SimEventID '_' SimFilename '_CONFIDENTIAL'], [SimulationName '_Finds_' datestr(nowtime,'yyyymmdd_HHMMSS') '_' DataPermissionsFilename],'Finds', EventData_Finds.Latitude(permission_filter)', EventData_Finds.Longitude(permission_filter)', 0, stringmass(EventData_Finds.mass_grams(permission_filter)./1000));
     end
 end
 

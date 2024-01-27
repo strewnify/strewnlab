@@ -7,7 +7,10 @@ user_TimeZone = 'America/Detroit';
 user_LAT =  42.664841;
 user_LONG = -83.687051;
 webread_timeout = 60;
-userpresent = true; % default value, modified in scheduled functions
+
+if ~exist('userpresent','var')
+    userpresent = true; % default value, modified in scheduled functions
+end
 
 % temporary utc time offset, bug fix needed
 utc_offset = hours(-5);
@@ -101,7 +104,6 @@ end
 
 % Constants
 planet = getPlanet();
-ref = getRef();  % gravitational constant in m^3 kg^-1 s^-2
 
 % Data filters
 slowmeteor_min_kps = 0; % meteors below this speed will be reported from ASGARD, regardless of altitude

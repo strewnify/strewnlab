@@ -1,4 +1,4 @@
-function [private_data] = getPrivate(group, varname)
+function [private_data] = getPrivate(varname)
 %GETPRIVATE Get user private data, like credentials, from saved 
 % preferences.  If the requested variable has not been saved, the user
 % will be queried to enter the information.  Private data is saved in the 
@@ -6,14 +6,8 @@ function [private_data] = getPrivate(group, varname)
 % C:\Users\<username>\AppData\Roaming\MathWorks\MATLAB\R20xxx\
 % To locate the preferences file, enter 'prefdir' in the command window
 
-if nargin ~= 2
-    logformat('Private data access requires group and variable name','ERROR')
-end
-
-% Check that private preferences are stored separately
-if ~contains(group,'private','IgnoreCase',true)
-    logformat('Private data inproperly stored. Debug code.','ERROR')
-end
+% preferences group defined in strewn_initialize.m
+group = 'strewn_private';
 
 % default value is false
 success = false;

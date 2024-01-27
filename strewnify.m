@@ -6,6 +6,9 @@
 
 diary off
 
+% Import reference data
+import_ref_data
+
 % Load config file
 if ~exist('check_configloaded','var') || ~check_configloaded
     strewnconfig
@@ -405,12 +408,12 @@ projectile(n).Mach(current) = projectile(n).airspeed(current)/projectile(n).spee
 projectile(n).CD(current) = dragcoef(projectile(n).Mach(current), projectile(n).cubicity);
 airvelocityunitvector = projectile(n).airvelocity(current,:)/norm(projectile(n).airvelocity(current,:));
 projectile(n).DragForce(current,:) = airvelocityunitvector(current,:).*dragforce(projectile(n).airspeed(current), projectile(n).rho(current), projectile(n).CD(current), projectile(n).frontalarea);
-g = getRef('physical','G_constant')*planet.mass_kg/(planet.ellipsoid_m.MeanRadius + projectile(n).position(current,3))^2;
+g = getConstant('G_constant')*planet.mass_kg/(planet.ellipsoid_m.MeanRadius + projectile(n).position(current,3))^2;
 projectile(n).v_terminal(current) = sqrt((2*projectile(n).mass*g)/(projectile(n).rho(current)*projectile(n).frontalarea*projectile(n).CD(current)));
 projectile(n).MagnusForce(current,:) = MagnusMult * 8/3 * pi * projectile(n).radius^3 * projectile(n).rho(current) * projectile(n).CD(current) * cross(projectile(n).airvelocity(current,:), projectile(n).spin(current,:));
 projectile(n).force(current,1) = projectile(n).DragForce(current,1); % drag force in the x direction
 projectile(n).force(current,2) = projectile(n).DragForce(current,2); % drag force in the y direction
-projectile(n).force(current,3) = projectile(n).DragForce(current,3)-getRef('physical','G_constant')*planet.mass_kg*projectile(n).mass/(planet.ellipsoid_m.MeanRadius + projectile(n).position(current,3))^2; % z drag force and gravity applied down
+projectile(n).force(current,3) = projectile(n).DragForce(current,3)-getConstant('G_constant')*planet.mass_kg*projectile(n).mass/(planet.ellipsoid_m.MeanRadius + projectile(n).position(current,3))^2; % z drag force and gravity applied down
 projectile(n).acceleration(current,:) = projectile(n).force(current,:)./ projectile(n).mass;
 projectile(n).maxtimestep = 99999;
 
@@ -551,7 +554,7 @@ while inflightcount > 0
             airvelocityunitvector = projectile(n).airvelocity(current,:)/norm(projectile(n).airvelocity(current,:));
             projectile(n).DragForce(current,:) = airvelocityunitvector(current,:).*dragforce(projectile(n).airspeed(current), projectile(n).rho(current), projectile(n).CD(current), projectile(n).frontalarea);
             projectile(n).MagnusForce(current,:) = MagnusMult * 8 * pi / 3 * projectile(n).radius * projectile(n).rho(current) * projectile(n).CD(current) * cross(projectile(n).velocity(current,:), projectile(n).spin(current,:));
-            g = getRef('physical','G_constant')*planet.mass_kg/(planet.ellipsoid_m.MeanRadius + projectile(n).position(current,3))^2;
+            g = getConstant('G_constant')*planet.mass_kg/(planet.ellipsoid_m.MeanRadius + projectile(n).position(current,3))^2;
             projectile(n).v_terminal(current) = sqrt((2*projectile(n).mass*g)/(projectile(n).rho(current)*projectile(n).frontalarea*projectile(n).CD(current)));
             projectile(n).force(current,1) = projectile(n).DragForce(current,1) + projectile(n).MagnusForce(current,1); % drag force in the x direction
             
@@ -570,7 +573,7 @@ while inflightcount > 0
 %             % *** CORIOLIS ADDED *****  see line 565
             
             projectile(n).force(current,2) = projectile(n).DragForce(current,2) + projectile(n).MagnusForce(current,2); %- FICTITIOUS; % drag force in the y direction
-            projectile(n).force(current,3) = projectile(n).DragForce(current,3) + projectile(n).MagnusForce(current,3) - getRef('physical','G_constant')*planet.mass_kg*projectile(n).mass/(planet.ellipsoid_m.MeanRadius + projectile(n).position(current,3))^2; % gravity applied down
+            projectile(n).force(current,3) = projectile(n).DragForce(current,3) + projectile(n).MagnusForce(current,3) - getConstant('G_constant')*planet.mass_kg*projectile(n).mass/(planet.ellipsoid_m.MeanRadius + projectile(n).position(current,3))^2; % gravity applied down
 
             % Shift data to previous
             for i = history:-1:2
@@ -778,12 +781,12 @@ while inflightcount > 0
                 projectile(rockcount).CD(current) = dragcoef(projectile(rockcount).Mach(current), projectile(rockcount).cubicity);
                 airvelocityunitvector = projectile(rockcount).airvelocity(current,:)/norm(projectile(rockcount).airvelocity(current,:));
                 projectile(rockcount).DragForce(current,:) = airvelocityunitvector(current,:).*dragforce(projectile(rockcount).airspeed(current), projectile(rockcount).rho(current), projectile(rockcount).CD(current), projectile(rockcount).frontalarea);
-                g = getRef('physical','G_constant')*planet.mass_kg/(planet.ellipsoid_m.MeanRadius + projectile(rockcount).position(current,3))^2;
+                g = getConstant('G_constant')*planet.mass_kg/(planet.ellipsoid_m.MeanRadius + projectile(rockcount).position(current,3))^2;
                 projectile(rockcount).v_terminal(current) = sqrt((2*projectile(rockcount).mass*g)/(projectile(rockcount).rho(current)*projectile(rockcount).frontalarea*projectile(rockcount).CD(current)));
                 projectile(rockcount).MagnusForce(current,:) = MagnusMult * 8 * pi / 3 * projectile(rockcount).radius * projectile(rockcount).rho(current) * projectile(rockcount).CD(current) * cross(projectile(rockcount).velocity(current,:), projectile(rockcount).spin(current,:));
                 projectile(rockcount).force(current,1) = projectile(rockcount).DragForce(current,1); % drag force in the x direction
                 projectile(rockcount).force(current,2) = projectile(rockcount).DragForce(current,2); % drag force in the y direction
-                projectile(rockcount).force(current,3) = projectile(rockcount).DragForce(current,3)-getRef('physical','G_constant')*planet.mass_kg*projectile(rockcount).mass/(planet.ellipsoid_m.MeanRadius + projectile(rockcount).position(current,3))^2; % gravity applied down
+                projectile(rockcount).force(current,3) = projectile(rockcount).DragForce(current,3)-getConstant('G_constant')*planet.mass_kg*projectile(rockcount).mass/(planet.ellipsoid_m.MeanRadius + projectile(rockcount).position(current,3))^2; % gravity applied down
                 projectile(rockcount).acceleration(current,:) = projectile(rockcount).force(current,:)./ projectile(rockcount).mass;
                 projectile(rockcount).maxtimestep = norm(projectile(rockcount).velocity(current,:))./norm(projectile(rockcount).acceleration(current,:))/2; % half the time for speed to reach zero
             end

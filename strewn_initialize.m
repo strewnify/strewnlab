@@ -1,7 +1,7 @@
 function strewn_initialize
 % Initialize the workspace
 
-global initialized 
+global initialized
 
 % if the variable is new, init to false
 if isempty(initialized)
@@ -11,7 +11,6 @@ end
 % Only initialize, if not done this session
 if ~initialized
 
-    pref_private = 'strewnlab_private';
     pref_uigetpref = 'strewnlab_uigetpref';
     
     logformat('StrewnLAB initializing...','INFO')
@@ -23,24 +22,13 @@ if ~initialized
           
     % Initialize globals
     % Load reference data
-    global ref_data
-    global ref_planet
-    global ref_config
-    ref_data = load('ref_data.mat');
-    ref_planet = load('earth_data.mat');
-    ref_config = load('ref_config.mat');
-    
-    % Calculate derived planet data
-    ref_planet.ellipsoid_m = referenceEllipsoid('earth',ellipsoid_unit);  % reference ellipsoid used by mapping/aerospace tools, DO NOT CHANGE units
-    ref_planet.angular_vel_rps = 2 * pi / ref_planet.sidereal_period_s;
-    logformat(['Planet initialized to Earth.  Ellipsoid units are in ' ellipsoid_unit '.'],'INFO')
+    import_ref_data
 
-    % If user is not present
-    if exist('userpresent') && ~userpresent
-        user_role = 'developer';
+    % Initialize session data
+    % Session data is generated for each new session
     
-    % otherwise, query the user
-    else
+    
+    if getSession('userpresent')
         quest = ['Please Select a User Role:' newline newline 'Standard - Effortless success with the usual settings' newline ...
             'Advanced - Extra choices for users with understanding of physics and statistics' newline ...
             'Developer - Does not enhance simulation results, additional credentials required for website administration' newline newline];
@@ -48,6 +36,10 @@ if ~initialized
         
         % Get user role, saving preferences to matlab preferences
         [user_role,~] = uigetpref(pref_uigetpref,'role_pref','Choose User Role',quest,roles);
+            
+    % otherwise, query the user
+    else
+        user_role = 'developer';
     end
     
     % *** Credential Loading ***
@@ -59,8 +51,7 @@ if ~initialized
     % C:\Users\<username>\AppData\Roaming\MathWorks\MATLAB\R20xxx\
   
     % load private preferences
-    pref_private = 'strewnlab_private';
-    strewnlab_private = getpref(pref_private);
+    strewnlab_private = getpref('strewnlab_private');
     
     % If no credentials found, query user
     if isempty(strewnlab_private) || isempty(fieldnames(strewnlab_private))
@@ -79,11 +70,11 @@ if ~initialized
         % Query user for credentials
         if get_creds
            for cred_i = 1:numel(creds)
-               [~] = getPrivate(pref_private,creds{cred_i}); % save value, do not log
+               [~] = getPrivate(creds{cred_i}); % save value, do not log
            end
         
         % Load the new preferences
-        strewnlab_private = getpref(pref_private);
+        strewnlab_private = getpref('strewnlab_private');
         
         else
            logformat([user_role ' user skipped credential setup.'],'USER')
@@ -107,7 +98,7 @@ if ~initialized
     
     % clear private preferences from workspace
     % (still loaded in system env variables)
-    clear(pref_private)
+    clear strewnlab_private
 
     % *** Credentials Loading Complete ***
         

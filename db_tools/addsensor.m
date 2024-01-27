@@ -1,4 +1,4 @@
-function db_Sensors_out = addsensor(db_Sensors_in, userpresent, inputdata)
+function db_Sensors_out = addsensor(db_Sensors_in, inputdata)
 %ADDSENSOR Add a new sensor to the database
 
 % Load config for default FOV
@@ -14,12 +14,12 @@ new_sensor_type = '';
 if nargin == 1 || nargin > 3
     logformat('ADDSENSOR requires 2 or 3 inputs.','ERROR')
 end
-if ~userpresent && nargin == 2
+if ~getSession('userpresent') && nargin == 2
     logformat('Input data required in scheduled function.','ERROR')
 end
 
 % Log request type
-if userpresent
+if getSession('userpresent')
     if nargin == 2
         logformat('User requested to add new sensor from manual input.','USER')
     elseif nargin == 3

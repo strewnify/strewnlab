@@ -32,7 +32,7 @@ usefile = true;
 if exist(Database_EventData_varname,'var')
     
     % Ask for user input
-    if userpresent
+    if getSession('userpresent')
         user_quest = 'There is a database already loaded in memory. Which would you like to use?  (Either way, a backup will be created and no data will be lost.)';
         logformat(user_quest,'USER')
         answer = questdlg(user_quest,'Warning: Database Already Loaded','Use Database From File','Use Already Loaded Database','Cancel','Use Database From File');

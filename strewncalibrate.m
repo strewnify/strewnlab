@@ -11,8 +11,8 @@ plotmargin = [5 5 5 5];
 plot_material = 'all';
 
 % Wind bins
-wnd_min = -1;
-wnd_max = 1;
+wnd_min = 0.1;
+wnd_max = 0.55;
 wnd_step = (wnd_max - wnd_min)/3; 
 wnd_bins = wnd_min:wnd_step:wnd_max;
 wind_bins_lower_edges = wnd_bins(1:3);
@@ -114,12 +114,15 @@ for wind_idx = 1:numel(wind_bins_lower_edges)
 
         if strcmp(temp_unit1,temp_unit2)
             % Display title contains capitalized material label and mass filters
-            strewnhist_title = [[upper(plot_material(1)) plot_material(2:end)] ' masses between ' temp_bin1 ' and ' temp_bin2 temp_unit2];
+            strewnhist_title = [plot_material ' masses between ' temp_bin1 ' and ' temp_bin2 temp_unit2];
         else
-            strewnhist_title = [[upper(plot_material(1)) plot_material(2:end)] ' masses between ' temp_bin1 temp_unit1 ' and ' temp_bin2 temp_unit2];
+            strewnhist_title = [plot_material ' masses between ' temp_bin1 temp_unit1 ' and ' temp_bin2 temp_unit2];
         end
         strewnhist_title = [strewnhist_title newline 'Wind sigma = ' num2str(wind_bins_lower_edges(wind_idx)) ' to ' num2str(wind_bins_upper_edges(wind_idx))];
 
+        % Capitalize the title
+        strewnhist_title = TitleCase(strewnhist_title);
+        
         title(strewnhist_title);
 
         % Fix plot aspect ratio

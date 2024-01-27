@@ -4,8 +4,8 @@
 % Action:
 % Program Script: "C:\Program Files\MATLAB\R2020a\bin\matlab.exe"
 % Add arguments: -r cd('C:\Users\james\Documents\GitHub\strewnlab'),strewnnotify,exit -logfile c:\logfile
-
-userpresent = false; % scheduled function, user not present at console
+import_ref_data
+setUserPresent(false)
 
 % Load settings
 strewnconfig
@@ -38,14 +38,14 @@ switch devmode
 end
 
 % Attempt to retrieve meteor events and report any error to developer
-try
+% try
     [NewEvents, attachment, numevents] = getnew(numdays);    
-catch
-    numevents = -1;
-    ErrorMsg = 'There was an error in GETNEW, check code.';
-    logformat(ErrorMsg,'ERROR');
-    strewnmail(ErrorMsg,webmaster)
-end
+% catch
+%     numevents = -1;
+%     ErrorMsg = 'There was an error in GETNEW, check code.';
+%     logformat(ErrorMsg,'ERROR');
+%     strewnmail(ErrorMsg,webmaster)
+% end
 
 
 

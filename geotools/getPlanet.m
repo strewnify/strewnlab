@@ -3,23 +3,11 @@ function [planet_data] = getPlanet(varname)
 % The planet data is stored in a global struct, from the
 % STREWN_INITIALIZE function.
 
-global initialized
 global ref_planet
 
-% Initialize, if necessary
-if isempty(initialized) || ~initialized
-    strewn_initialize
-    logformat('Unexpected StrewnLAB initialization.','DEBUG')
-    
-% Check for unknown initialization error
-elseif isempty(ref_planet) ||...
-        ~isfield(ref_planet,'mass_kg') ||...
-        ~isfield(ref_planet,'ellipsoid_m')
-    logformat('Unexpected missing planet data.','ERROR')    
-
-% Check units
-elseif ~strcmp(ref_planet.ellipsoid_m.LengthUnit,'meter')
-    logformat('Unexpected units in planet data.','ERROR')    
+% Check for missing initialization
+if isempty(ref_planet)      
+    logformat('Configuration not loaded, run IMPORT_REF_DATA.','ERROR')    
 end
 
 % Store output
