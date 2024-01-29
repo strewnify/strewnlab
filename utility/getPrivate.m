@@ -7,8 +7,7 @@ function [private_data] = getPrivate(varname)
 % To locate the preferences file, enter 'prefdir' in the command window
 
 % preferences group defined in strewn_initialize.m
-group = 'strewn_private';
-
+group = 'strewnlab_private';
 % default value is false
 success = false;
 dataavailable = false;

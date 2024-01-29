@@ -1,8 +1,6 @@
 function strewnmail(message,to_mail,attachment)
 % STREWNMAIL
 
-loadprivate
-
 % Convert strings to char
 to_mail = convertStringsToChars(to_mail);
 
@@ -10,7 +8,7 @@ from_mail ='autonotify@strewnlab.com';
 setpref('Internet','SMTP_Server','mail.strewnlab.com');
 setpref('Internet','E_mail',from_mail);
 setpref('Internet','SMTP_Username',from_mail);
-setpref('Internet','SMTP_Password',strewnlab_emailpassword);
+setpref('Internet','SMTP_Password',getPrivate('strewnlab_emailpassword'));
 setpref('Internet','E_mail_Charset','UTF-8');
 props = java.lang.System.getProperties;
 props.setProperty('mail.smtp.auth','true');
