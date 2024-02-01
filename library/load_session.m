@@ -12,20 +12,62 @@ logformat('Loading session and user environment data...','INFO')
 global ref_session
 ref_session = struct;
 
-% default user present
-ref_session.userpresent = true;
+% Get Windows username
+ref_session.user.winusername = getenv('USERNAME');
 
-% Get timezone
-try
-    URL = ['https://timezoneapi.io/api/ip/?token=' Timezone_API_token];
-    systeminfo_raw = webread(URL);
-    ref_session.env.location = systeminfo_raw.data;
-catch
-    ref_session.env.location.timezone.id = 'Etc/UTC';
+% default user present
+ref_session.user.userpresent = true;
+
+% Get the installation directory
+ref_session.folders.mainfolder = getinstallpath('strewnlab');
+
+% Get the main prefix for the drive, where Documents and Downloads would be found
+ref_session.folders.mainprefix = [extractBefore(ref_session.folders.mainfolder,ref_session.user.winusername) ref_session.user.winusername];
+
+% Add working directory and subfolders to search path and go to the folder
+addpath(genpath(ref_session.folders.mainfolder)) 
+cd(ref_session.folders.mainfolder)
+
+% Logging folder
+ref_session.folders.logfolder = [ref_session.folders.mainfolder '\logs'];
+
+% Remote data folders
+ref_session.folders.weatherfolder = [ref_session.folders.mainfolder '\local_data\radiosonde'];
+if ~(exist(ref_session.folders.weatherfolder,'dir')==7)
+    mkdir(ref_session.folders.weatherfolder) % create folder
+end
+ref_session.folders.remotefolder = [ref_session.folders.mainfolder '\local_data\remote'];
+if ~(exist(ref_session.folders.remotefolder,'dir')==7)
+    mkdir(ref_session.folders.remotefolder) % create folder
 end
 
+% Meteor events folder
+ref_session.folders.meteoreventsfolder = [ref_session.folders.mainprefix '\Documents\NextCloud\StrewnifySync\Meteor Events'];
+ref_session.folders.secreteventsfolder = [ref_session.folders.mainprefix '\Documents\NextCloud\StrewnifySync\Meteor Events CONFIDENTIAL'];
+
+% Automated event script folder
+ref_session.folders.scheduledfolder = [ref_session.folders.mainfolder '\scheduled'];
+if ~(exist(ref_session.folders.scheduledfolder,'dir')==7)
+    mkdir(ref_session.folders.scheduledfolder) % create folder
+end
+
+% Backup folder
+ref_session.folders.backupfolder = [ref_session.folders.mainfolder '\backup'];
+if ~(exist(ref_session.folders.backupfolder,'dir')==7)
+    mkdir(ref_session.folders.backupfolder) % create folder
+end
+
+% Data folder
+ref_session.folders.datafolder = [ref_session.folders.mainfolder '\local_data'];
+if ~(exist(ref_session.folders.datafolder,'dir')==7)
+    mkdir(ref_session.folders.datafolder) % create folder
+end
+
+% Get timezone
+ref_session.env.TimeZone = datetime.SystemTimeZone;
+
+% Get operating system
 try
-    % Get operating system
     ref_session.env.systeminfo.OS = getenv('OS');
 catch
     ref_session.env.systeminfo.OS = 'unknown';

@@ -6,7 +6,7 @@ strewnconfig
 nowtime_utc = datetime('now','TimeZone','UTC');
 
 % Data folder
-GMNfolder = [datafolder '\GMN'];
+GMNfolder = [getSession('folders','datafolder') '\GMN'];
 if ~(exist(GMNfolder,'dir')==7)
     mkdir(GMNfolder) % create folder
 end
@@ -94,7 +94,7 @@ for month_i = 1:nummonths
 end
 
 % Go back to main directory
-cd(mainfolder)
+cd(getSession('folders','mainfolder'))
 
 %Need to fix this
 %Warning: Column headers from the file were modified to make them valid MATLAB

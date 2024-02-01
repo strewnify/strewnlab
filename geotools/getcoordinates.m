@@ -11,7 +11,7 @@ LAT = NaN;
 LONG = NaN;
 
 try
-    response_raw = webread(['https://maps.googleapis.com/maps/api/geocode/json?address=' strrep(locality,' ','+') '&key=' GoogleMapsAPIkey]);    
+    response_raw = webread(['https://maps.googleapis.com/maps/api/geocode/json?address=' strrep(locality,' ','+') '&key=' getPrivate('GoogleMapsAPIkey')]);    
 catch
     logformat(['Google Maps geocoding failed for ' locality ', manual geocoding required.'],'WARN')
 end

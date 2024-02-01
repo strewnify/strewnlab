@@ -12,14 +12,14 @@ for station = 1:size(EventData_IGRA_Nearby,1)
      
      try
         cd([mainprefix '\Downloads']);
-        unzip(ZipFileName,weatherfolder); % unzip the file
+        unzip(ZipFileName,getSession('folders','weatherfolder'); % unzip the file
         delete(ZipFileName); % delete the zip
      catch
-         cd(mainfolder);
+         cd(getSession('folders','mainfolder'));
      end
 end
 
 % return to working directory
-cd(mainfolder); 
+cd(getSession('folders','mainfolder')); 
 
 clear effective_entrytime

@@ -86,9 +86,9 @@ try
     saveas(gcf,pngfilestring);
 
     % return to main folder
-    cd(mainfolder)
+    cd(getSession('folders','mainfolder'))
 catch
     % return to main folder
-    cd(mainfolder)    
+    cd(getSession('folders','mainfolder'))    
     warning('Weather plot save failed.');
 end

@@ -16,7 +16,7 @@ else
 end
 
 % Get AMS report data
-AMS_json = webread([URL_AMS_API_eventreports '?year=' year '&event_id=' event_id '&format=json&api_key=' AMS_APIkey],webread_options);
+AMS_json = webread([URL_AMS_API_eventreports '?year=' year '&event_id=' event_id '&format=json&api_key=' getPrivate('AMS_APIkey')],webread_options);
 
 % Convert to table
 %AMS_reports = json2table(AMS_json.result);

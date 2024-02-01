@@ -30,13 +30,13 @@ if exist('check_eventdataloaded','var')==1 && check_eventdataloaded
         %pngfilestring = [SimulationName '_StrewnField_' datestr(nowtime,'yyyymmdd_HHMMSS') '.png'];
 
         % return to main folder
-        cd(mainfolder)
+        cd(getSession('folders','mainfolder'))
         
         disp(['Workspace backed up to ' newline exportfolder])
      
      catch
         % return to main folder
-        cd(mainfolder)
+        cd(getSession('folders','mainfolder'))
         warning('Error in simulation data backup operation.');
      end
     
@@ -49,7 +49,7 @@ if exist('check_eventdataloaded','var')==1 && check_eventdataloaded
     else
         save(SimFilename,'EventData_*','-append')
     end
-    cd(mainfolder);
+    cd(getSession('folders','mainfolder'));
 
 else
     error('STREWNBACKUP called, but no simulation loaded')

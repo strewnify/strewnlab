@@ -23,7 +23,7 @@ for year_index = startyear:endyear
     
    try
         % Query online database
-        AMS_json = webread([URL_AMS_API 'year=' num2str(year_index) '&min_reports=' num2str(min_reports) '&format=json&api_key=' AMS_APIkey],webread_options);
+        AMS_json = webread([URL_AMS_API 'year=' num2str(year_index) '&min_reports=' num2str(min_reports) '&format=json&api_key=' getPrivate('AMS_APIkey')],webread_options);
         
    catch
         logformat(['AMS data not found for ' num2str(year_index) '!  No reports exist or internet connection.'],'WARN')

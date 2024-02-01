@@ -17,7 +17,7 @@ if nargin == 2
 
     for idx = 1:numel(lat)
         try
-            elevation_in_m(idx) = getElevations(lat(idx),lon(idx),'key', GoogleMapsAPIkey);
+            elevation_in_m(idx) = getElevations(lat(idx),lon(idx),'key', getPrivate('GoogleMapsAPIkey'));
         catch
             logformat('Google Maps API failure.  User queried for ground elevation.','WARN')
             usersuccess = false;

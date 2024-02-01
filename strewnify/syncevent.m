@@ -15,9 +15,9 @@ SimFilename = matlab.lang.makeValidName(SimulationName,'ReplacementStyle','delet
 
 % Check if the event is CONFIDENTIAL
 if CONFIDENTIAL
-    eventfolder = secreteventsfolder;
+    eventfolder = getSession('folders','secreteventsfolder');
 else
-    eventfolder = meteoreventsfolder;
+    eventfolder = getSession('folders','meteoreventsfolder');
 end
 
 % Check for existing folder
@@ -65,6 +65,6 @@ if ~(exist(exportfolder)==7)
 end
 
 % not a CONFIDENTIAL event, but secret finds exist, create a CONFIDENTIAL folder
-if ~CONFIDENTIAL && exist('EventData_Finds','var') && ~(numel(Permissions) == 1 && Permissions == "Public") && size(dir([secreteventsfolder '\' SimEventID '*']),1) == 0
-    mkdir([secreteventsfolder '\' SimEventID '_' SimFilename '_CONFIDENTIAL'])
+if ~CONFIDENTIAL && exist('EventData_Finds','var') && ~(numel(Permissions) == 1 && Permissions == "Public") && size(dir([getSession('folders','secreteventsfolder') '\' SimEventID '*']),1) == 0
+    mkdir([getSession('folders','secreteventsfolder') '\' SimEventID '_' SimFilename '_CONFIDENTIAL'])
 end

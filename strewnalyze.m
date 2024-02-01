@@ -4,7 +4,7 @@
 strewnconfig
 
 % Start logging
-diary([logfolder 'strewnlab_log.txt'])        
+diary([getSession('folders','logfolder') '\strewnlab_log.txt'])        
 diary on 
 logformat('New meteor event analysis initialized.','INFO')
 

@@ -14,12 +14,12 @@ new_sensor_type = '';
 if nargin == 1 || nargin > 3
     logformat('ADDSENSOR requires 2 or 3 inputs.','ERROR')
 end
-if ~getSession('userpresent') && nargin == 2
+if ~getSession('user','userpresent') && nargin == 2
     logformat('Input data required in scheduled function.','ERROR')
 end
 
 % Log request type
-if getSession('userpresent')
+if getSession('user','userpresent')
     if nargin == 2
         logformat('User requested to add new sensor from manual input.','USER')
     elseif nargin == 3
@@ -186,7 +186,7 @@ if addnew
     end
 
     % Lookup ground altitude data
-    db_Sensors_out.GroundAlt_m(add_i) = getElevations(db_Sensors_out.LAT(add_i),db_Sensors_out.LONG(add_i),'key', GoogleMapsAPIkey);
+    db_Sensors_out.GroundAlt_m(add_i) = getElevations(db_Sensors_out.LAT(add_i),db_Sensors_out.LONG(add_i),'key', getPrivate('GoogleMapsAPIkey'));
     logformat(sprintf('Google provided ground elevation of %0.4g meters.', db_Sensors_out.GroundAlt_m(add_i)),'INFO')
     
     % default height_m

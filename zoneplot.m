@@ -66,7 +66,7 @@ for i = 1:numbins
         kmlwritepolygon([zonename '.kml'],latitudes,longitudes,'Name',zonename,'FaceColor',color{i},'FaceAlpha',0.8)
         
         % return to main folder
-        cd(mainfolder)
+        cd(getSession('folders','mainfolder'))
         
         % save legend name
         zoneplot_i = zoneplot_i + 1;
@@ -74,7 +74,7 @@ for i = 1:numbins
         
     catch
         % return to main folder
-        cd(mainfolder)
+        cd(getSession('folders','mainfolder'))
         i = i+1;
     end
 end

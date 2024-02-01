@@ -7,7 +7,7 @@ loadprivate
 
 StrewnifyURL = 'https://www.strewnify.com/wp-json/wp/v2/posts';
 
-response = webwrite(StrewnifyURL,'login','autopost','password',Strewnify_APIkey,'title','test title 1','body','test body text 1','status','draft');
+response = webwrite(StrewnifyURL,'login','autopost','password',getPrivate('Strewnify_APIkey'),'title','test title 1','body','test body text 1','status','draft');
 %    logformat(sprintf('%s %s - %s added to Mailchimp mailing list',firstname, lastname, email),'EMAIL')
 % catch
 %     response = -1;

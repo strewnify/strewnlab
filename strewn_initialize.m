@@ -11,12 +11,8 @@ end
 % Only initialize, if not done this session
 if ~initialized
 
-    pref_uigetpref = 'strewnlab_uigetpref';
-    
     logformat('StrewnLAB initializing...','INFO')
     
-    ellipsoid_unit = 'meters';
-
     % Initialize settings
     datetime.setDefaultFormats('defaultdate','yyyy-MM-dd HH:mm:ss');
           
@@ -28,14 +24,14 @@ if ~initialized
     % Session data is generated for each new session
     
     
-    if getSession('userpresent')
+    if getSession('user','userpresent')
         quest = ['Please Select a User Role:' newline newline 'Standard - Effortless success with the usual settings' newline ...
             'Advanced - Extra choices for users with understanding of physics and statistics' newline ...
             'Developer - Does not enhance simulation results, additional credentials required for website administration' newline newline];
         roles = ["Standard","Advanced","Developer"];
         
         % Get user role, saving preferences to matlab preferences
-        [user_role,~] = uigetpref(pref_uigetpref,'role_pref','Choose User Role',quest,roles);
+        [user_role,~] = uigetpref('strewnlab_uigetpref','role_pref','Choose User Role',quest,roles);
             
     % otherwise, query the user
     else
@@ -60,7 +56,7 @@ if ~initialized
         % Setup credential query, based on user role
         switch user_role
             case 'developer'
-                creds = {'GoogleMapsAPIkey' 'AMS_APIkey' 'Mailchimp_APIkey' 'Strewnify_APIkey' 'strewnlab_emailpassword' 'GoogleDrive_NotifyResponses' 'GoogleDrive_Cameras' 'Timezone_API_token'};
+                creds = {'GoogleMapsAPIkey' 'AMS_APIkey' 'Mailchimp_APIkey' 'Strewnify_APIkey' 'strewnlab_emailpassword' 'GoogleDrive_NotifyResponses' 'GoogleDrive_Cameras'};
             case 'advanced'
                 creds = {'GoogleMapsAPIkey'};
             otherwise

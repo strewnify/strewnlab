@@ -24,11 +24,11 @@ try
     options = weboptions('MediaType', 'application/json', 'ArrayFormat', 'csv');
     websave(FILENAME,['https://docs.google.com/spreadsheet/ccc?key=' getPrivate('GoogleFormsCam_key') '&output=csv&pref=1'],weboptions);
     dateFormat = 'MM/dd/yyyy h:mm:SS aa';
-    cd(mainfolder)
+    cd(getSession('folders','mainfolder'))
     logformat(sprintf('%s retrieved from Google Drive',FILENAME),'INFO')
 
 catch
-    cd(mainfolder)
+    cd(getSession('folders','mainfolder'))
     logformat('Google Drive download failed, manually download file.','DEBUG')
     
     % Import the contact file
@@ -43,7 +43,7 @@ end
 [~,~,cameradata] = xlsread([PATHNAME FILENAME]);
 
 % Start logging
-diary([logfolder 'strewnnotify_log.txt'])        
+diary([getSession('folders','logfolder') '\strewnnotify_log.txt'])        
 diary on 
 logformat(sprintf('Importing camera registration data from %s',FILENAME),'INFO')
 

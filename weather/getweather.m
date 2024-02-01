@@ -83,7 +83,7 @@ if ~exist('user_weatherchoice','var') && weatherdatamissing && days(nowtime-entr
     end
 end
 
-cd(weatherfolder); % change working directory to weather folder
+cd(getSession('folders','weatherfolder')); % change working directory to weather folder
 
 % Keep looking for data until enough is found.
 while weatherdatamissing
@@ -126,7 +126,7 @@ while weatherdatamissing
         if exist(IGRA_stationinventoryfile, 'file') == 2
 
             file = dir(IGRA_stationinventoryfile);
-            file_updated = datetime(file.date,'TimeZone',user_TimeZone);
+            file_updated = datetime(file.date,'TimeZone',getSession('env','TimeZone'));
 
             % check if the file is up to date
             % weather data is not guaranteed to be posted until two a few days after it happens
@@ -281,7 +281,7 @@ while weatherdatamissing
             % weather data is not guaranteed to be posted until two days after 
             % it happens, so add 2 days to the entry time for validity
             file = dir(TextFileName{station});
-            file_updated = datetime(file.date,'TimeZone',user_TimeZone);
+            file_updated = datetime(file.date,'TimeZone',getSession('env','TimeZone'));
             % if it is within a few days of the event 
             % or the data has been updated in the last 4 hours
             %(and the user has not already chosen to use generic data)

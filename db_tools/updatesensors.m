@@ -20,13 +20,13 @@ webread_options = weboptions('Timeout',webread_timeout);
 % Get current time
 nowtime = datetime('now','TimeZone','UTC');
 
-cd(remotefolder); % change working directory to the remote data folder
+cd(getSession('folders','remotefolder'); % change working directory to the remote data folder
 
 outfilename = websave(seismic_inventoryfile,URL_seismic_stationinventory,webread_options); % save the file
 %outfilename = ftpsave(seismic_inventoryfile,URL_seismic_stationinventory); % save the file    
 
 % return to working directory
-cd(mainfolder); 
+cd(getSession('folders','mainfolder')); 
 
 %EventData_ProcessedIGRA(1,:) = []; % delete initialization row
 waitbar(1,WaitbarHandle,'Data Processing Complete.');

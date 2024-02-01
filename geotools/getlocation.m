@@ -30,7 +30,7 @@ if ~islat(lat) || ~islong(lon)
 % Geocode location
 else
     try
-        location_raw = webread(['https://maps.googleapis.com/maps/api/geocode/json?latlng=' num2str(lat) ',' num2str(lon) '&key=' GoogleMapsAPIkey]);
+        location_raw = webread(['https://maps.googleapis.com/maps/api/geocode/json?latlng=' num2str(lat) ',' num2str(lon) '&key=' getPrivate('GoogleMapsAPIkey')]);
     catch
         logformat('Google Maps reverse geocoding failed, check internet connection and try again.','ERROR')
     end

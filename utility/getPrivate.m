@@ -107,26 +107,27 @@ if ~ispref(group, varname) || isempty(getpref(group, varname))
             getData_msg = 'to retrieve your URL';
             help_msg = ['Please visit <a href = "' getData_URL '">' getData_linkmsg '</a> ' getData_msg '.'];
             prompt = 'Enter your Google Drive URL:';
-            dlgtitle = 'Email Setup';
+            dlgtitle = 'Strewn Notify Setup';
             dims = [1 100];
             definput = {'Enter Google Drive URL'};
             log_msg = 'Google Forms URL entered by user.';
-            
-        otherwise
-            dlg_title = [ varname ' Setup'];
-            warn_quest = [varname ' not found. Without setup, features may be unavailable.' newline ...
+        case 'GoogleFormsCam_key'
+            dlg_title = 'Camera Import Setup';
+            warn_quest = ['Google Forms Camera URL not found. Without setup, camera import will be unavailable.' newline ...
                 'Would you like to set it up now?'];
-            pbtns = {'Enter Credentials','Skip'};
+            pbtns = {'Enter URL','Skip'};
             
-            getData_URL = '';
-            getData_linkmsg = [varname 'Credential'];
-            getData_msg = ['to retrieve your ' varname ' credential'];
+            getData_URL = 'https://docs.google.com/forms/';
+            getData_linkmsg = 'Camera Import Setup';
+            getData_msg = 'to retrieve your URL';
             help_msg = ['Please visit <a href = "' getData_URL '">' getData_linkmsg '</a> ' getData_msg '.'];
-            prompt = ['Enter your ' varname ' credential:'];
-            dlgtitle = [varname ' Setup'];
-            dims = [1 43];
-            definput = {['Enter ' varname ' credential' ]};
-            log_msg = [ varname 'credential entered by user.'];
+            prompt = 'Enter your Google Drive URL:';
+            dlgtitle = 'Camera Import Setup';
+            dims = [1 100];
+            definput = {'Enter Google Drive URL'};
+            log_msg = 'Google Forms URL entered by user.';
+        otherwise
+            logformat(['Invalid credentials requested: ''' varname ''''],'ERROR')
             
     end
 

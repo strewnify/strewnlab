@@ -1,73 +1,7 @@
 % STREWNCONFIG load strewn field configuration file
 
-% **** Warning:  custom function calls must be after addpath ****
 
-% Set workstation location
-user_TimeZone = 'America/Detroit'; 
-user_LAT =  42.664841;
-user_LONG = -83.687051;
 webread_timeout = 60;
-
-if ~exist('userpresent','var')
-    userpresent = true; % default value, modified in scheduled functions
-end
-
-% temporary utc time offset, bug fix needed
-utc_offset = hours(-5);
-
-% Get windows username for folder structure
-winusername = getenv('USERNAME'); 
-
-% Set main folder and go to it
-try
-    mainprefix = ['C:\Users\' winusername]; 
-    mainfolder = [mainprefix '\Documents\strewnlab'];
-    cd(mainfolder)
-catch
-    mainprefix = ['C:\Users\' winusername]; 
-    mainfolder = [mainprefix '\Documents\GitHub\strewnlab'];
-    cd(mainfolder)
-end
-
-% Logging folder
-logfolder = [mainprefix '\Documents\GitHub\strewnlab\logs\'];
-
-% Remote data folders
-weatherfolder = [mainfolder '\local_data\radiosonde'];
-if ~(exist(weatherfolder,'dir')==7)
-    mkdir(weatherfolder) % create folder
-end
-remotefolder = [mainfolder '\local_data\remote'];
-if ~(exist(remotefolder,'dir')==7)
-    mkdir(remotefolder) % create folder
-end
-
-% Meteor events folder
-meteoreventsfolder = [mainprefix '\Documents\NextCloud\StrewnifySync\Meteor Events'];
-secreteventsfolder = [mainprefix '\Documents\NextCloud\StrewnifySync\Meteor Events CONFIDENTIAL'];
-
-% Automated event script folder
-scheduledfolder = [mainfolder '\scheduled'];
-if ~(exist(scheduledfolder,'dir')==7)
-    mkdir(scheduledfolder) % create folder
-end
-
-% Backup folder
-backupfolder = [mainfolder '\backup'];
-if ~(exist(backupfolder,'dir')==7)
-    mkdir(backupfolder) % create folder
-end
-
-% Data folder
-datafolder = [mainfolder '\local_data'];
-if ~(exist(datafolder,'dir')==7)
-    mkdir(datafolder) % create folder
-end
-
-% Add working directory and subfolders to search path
-addpath(genpath(mainfolder)) 
-
-% **** No custom function calls before this point *****
 
 % Initialize globals
 strewn_initialize

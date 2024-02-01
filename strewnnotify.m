@@ -4,13 +4,14 @@
 % Action:
 % Program Script: "C:\Program Files\MATLAB\R2020a\bin\matlab.exe"
 % Add arguments: -r cd('C:\Users\james\Documents\GitHub\strewnlab'),strewnnotify,exit -logfile c:\logfile
+
 import_ref_data
 setUserPresent(false)
 
 % Load settings
 strewnconfig
 
-diary([logfolder 'strewnnotify_log.txt'])        
+diary([getSession('folders','logfolder') '\strewnnotify_log.txt'])        
 diary on 
 logformat('Strewnify Meteor Event Notification service started.')
 %RAII.diary = onCleanup(@() diary('off')); % turn the diary off after an error
@@ -58,7 +59,7 @@ if numevents > 0
         if sdb_Contacts.notify(i)
 
             % Time for log file
-            nowstring = datestr(datetime('now','TimeZone',user_TimeZone),'yyyy/mm/dd HH:MM PM');
+            nowstring = datestr(datetime('now','TimeZone',getSession('env','TimeZone')),'yyyy/mm/dd HH:MM PM');
             
             % Clear previous results
             emailcontent = '';

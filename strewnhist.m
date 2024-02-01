@@ -34,7 +34,7 @@ end
 % Adjust for polygons
 if exist('EventData_Searched','var')
     % Ask for user input
-    if userpresent
+    if getSession('user','userpresent')
         user_quest = 'Adjust for Searched Areas?';
         logformat(user_quest,'USER')
         answer = questdlg(user_quest,'Searched Area Option','Yes','No','No');

@@ -98,7 +98,7 @@ if exist([SimFilename '.mat'], 'file') == 2
         check_weatherloaded = true;
     end
 end
-cd(mainfolder);
+cd(getSession('folders','mainfolder'));
 
 % Get event ground elevation data
 [body_of_water, ground] = identifywater(nom_lat, nom_long);

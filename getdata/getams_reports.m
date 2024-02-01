@@ -26,8 +26,8 @@
     startrow = 0;
 
     % Query online database
-    %AMS_json = webread(['https://www.amsmeteors.org/members/api/open_api/get_close_reports?start+date=' date_min '&end_date=' date_max '&format=json&api_key=' AMS_APIkey],webread_options);
-    %AMS_json = webread(['https://www.amsmeteors.org/members/api/open_api/get_close_reports?start+date=' date_min '&end_date=' date_max '&pending_only=1&format=json&api_key=' AMS_APIkey],webread_options);
+    %AMS_json = webread(['https://www.amsmeteors.org/members/api/open_api/get_close_reports?start+date=' date_min '&end_date=' date_max '&format=json&api_key=' getPrivate('AMS_APIkey')],webread_options);
+    %AMS_json = webread(['https://www.amsmeteors.org/members/api/open_api/get_close_reports?start+date=' date_min '&end_date=' date_max '&pending_only=1&format=json&api_key=' getPrivate('AMS_APIkey')],webread_options);
 
     % start new year
     startrow = startrow + row;
@@ -154,6 +154,6 @@ close(handleAMS)
 temporary = AMS_data;
 AMS_xlsdata = [temporary.Properties.VariableNames; table2cell(temporary)];
 output_filename = [datestr(now,'yyyymmddHHMM') '_AMS_PendingReports'];
-cd(scheduledfolder) % change directory
+cd(getSession('folders','scheduledfolder')) % change directory
 xlswrite(output_filename,AMS_xlsdata)
-cd(mainfolder) % return to main folder
+cd(getSession('folders','mainfolder')) % return to main folder

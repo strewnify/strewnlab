@@ -1,4 +1,4 @@
-function [data_out] = getSession(varname)
+function [data_out] = getSession(group,varname)
 %GETSESSION Get session data from global struct variable
 
 % Import reference data
@@ -13,6 +13,6 @@ else
     if nargin == 0
         data_out = ref_session;
     else
-        data_out = ref_session.(varname);
+        data_out = ref_session.(group).(varname);
     end
 end

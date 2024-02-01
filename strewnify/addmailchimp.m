@@ -15,7 +15,7 @@ function response = addmailchimp(firstname, lastname, email)
     MailchimpURL = ['https://' serverPrefix '.api.mailchimp.com/3.0/lists/' listId '/members'];
 
     % Set up webwrite options
-    authHeader = ['apikey ' Mailchimp_APIkey];
+    authHeader = ['apikey ' getPrivate('Mailchimp_APIkey')];
     webwriteOptions = weboptions('HeaderFields', {'Authorization', authHeader}, 'RequestMethod', 'post', 'ContentType', 'json');
 
     % Prepare data

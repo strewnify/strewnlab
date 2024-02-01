@@ -9,7 +9,8 @@ function [ NewEvents, output_filename, numnew ] = getnew( dayhistory )
 if ~exist('check_configloaded','var') || ~check_configloaded
     strewnconfig
 end
-nowtime_utc = datetime('now')-utc_offset; 
+
+nowtime_utc = datetime('now','TimeZone','UTC'); 
 datetimestring = datestr(now,'yyyymmddHHMM');
 startyear = year(nowtime_utc-days(dayhistory));
 endyear = year(nowtime_utc);
@@ -92,14 +93,14 @@ if numnew > 0
     temporary = NewEvents;
     temporary.Datetime = datestr(temporary.Datetime,'mm/dd/yyyy HH:MM:SS UTC');
     NewEvents_xlsdata = [temporary.Properties.VariableNames; table2cell(temporary)];
-    output_filename = [scheduledfolder '\' datetimestring '_NewEventData.csv'];
+    output_filename = [getSession('folders','scheduledfolder') '\' datetimestring '_NewEventData.csv'];
     
-    cd(scheduledfolder)
+    cd(getSession('folders','scheduledfolder'))
     writecell(NewEvents_xlsdata, output_filename)
     % xlswrite(output_filename_short,NewEvents_xlsdata)
     % open file in Excel
     % winopen(output_filename)
-    cd(mainfolder)
+    cd(getSession('folders','mainfolder'))
     
     % Save database
     logformat(sprintf('%0.0f new events imported into %s',numnew,DatabaseFilename),'DATA')

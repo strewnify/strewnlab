@@ -1,6 +1,9 @@
 function setUserPresent(value)
 %SETUSERPRESENT(VALUE) Set user presence to true or false
 
+% The struct group where userpresent is stored
+group = 'user';
+
 % Import reference data
 global ref_session
 
@@ -11,10 +14,10 @@ else
     switch value
         case true
             logformat('User is present at console.  Prompts may appear.','USER')
-            ref_session.userpresent = true;
+            ref_session.(group).userpresent = true;
         case false
             logformat('User not present at console.  Prompts will be suppressed.','USER')
-            ref_session.userpresent = false;
+            ref_session.(group).userpresent = false;
         otherwise
             logformat('User presence unknown.','ERROR')    
     end

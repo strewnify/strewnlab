@@ -9,8 +9,8 @@ end
     
 % Logging option
 if strcmp(get(0,'Diary'),'off')
-    if exist('logfolder','var')
-        diary([logfolder 'database_errorlog.txt'])
+    if exist(getSession('folders','logfolder'),'var')
+        diary([getSession('folders','logfolder') '\database_errorlog.txt'])
     else
         diary('database_errorlog.txt')
     end
@@ -32,7 +32,7 @@ usefile = true;
 if exist(Database_EventData_varname,'var')
     
     % Ask for user input
-    if getSession('userpresent')
+    if getSession('user','userpresent')
         user_quest = 'There is a database already loaded in memory. Which would you like to use?  (Either way, a backup will be created and no data will be lost.)';
         logformat(user_quest,'USER')
         answer = questdlg(user_quest,'Warning: Database Already Loaded','Use Database From File','Use Already Loaded Database','Cancel','Use Database From File');
@@ -47,11 +47,11 @@ if exist(Database_EventData_varname,'var')
             logformat('Selected to use database from file.','USER') 
                         
             % Backup the loaded database
-            cd(backupfolder)
+            cd(getSession('folders','backupfolder'))
             backup_filename = [DatabaseFilename '_BACKUPWS_' now_datestring];
             save(backup_filename,Database_prefix)
             logformat(sprintf('Workspace database backed up to %s.mat file.',backup_filename),'DATABASE');
-            cd(mainfolder)
+            cd(getSession('folders','mainfolder'))
             
             % clear the loaded database
             clear sdb_*
@@ -89,11 +89,11 @@ if usefile
 end
 
 % Backup the event database
-cd(backupfolder)
+cd(getSession('folders','backupfolder'))
 backup_filename = [DatabaseFilename '_BACKUP_' now_datestring];
 save(backup_filename,Database_prefix)
 logformat(sprintf('Database backed up to %s.mat file.',backup_filename),'DATABASE');
-cd(mainfolder)
+cd(getSession('folders','mainfolder'))
 
 % Generate a flag to confirm the database is backed up
 database_loaded_safe = true;

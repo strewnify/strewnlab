@@ -1,4 +1,4 @@
-%function [ NewEvents, output_filename, num_new, num_updated ] = getnew_test( dayhistory )
+function [ NewEvents, output_filename, num_new, num_updated ] = getnew_test( dayhistory )
 % [NEW_EVENTS] =  GETNEW (DAYHISTORY)   Download event data from
 % online sources, from the last x days (specified by DAYHISTORY), compare 
 % to the database, and add new events.
@@ -6,7 +6,7 @@
 % Load settings
 strewnconfig
 [~,codefilename,~] = fileparts(mfilename('fullpath'));
-diary([logfolder codefilename '_log.txt'])  
+diary([getSession('folders','logfolder') '\\' codefilename '_log.txt'])  
 diary on
 logformat('Getting new events.')
 
@@ -138,14 +138,14 @@ end
 %     temporary = NewEvents;
 %     temporary.Datetime = datestr(temporary.Datetime,'mm/dd/yyyy HH:MM:SS UTC');
 %     NewEvents_xlsdata = [temporary.Properties.VariableNames; table2cell(temporary)];
-%     output_filename = [scheduledfolder '\' now_datestring '_NewEventData.csv'];
+%     output_filename = [getSession('folders','scheduledfolder') '\' now_datestring '_NewEventData.csv'];
 %     
-%     cd(scheduledfolder)
+%     cd(getSession('folders','scheduledfolder'))
 %     writecell(NewEvents_xlsdata, output_filename)
 %     % xlswrite(output_filename_short,NewEvents_xlsdata)
 %     % open file in Excel
 %     % winopen(output_filename)
-%     cd(mainfolder)
+%     cd(getSession('folders','mainfolder'))
 %     
 %     
 % % otherwise, report no events

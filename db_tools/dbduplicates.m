@@ -29,9 +29,9 @@ handleDuplicates = waitbar(0,'Loading Data...');
 % end
 % 
 % % Backup the event database
-% cd(backupfolder)
+% cd(getSession('folders','backupfolder'))
 % save([DatabaseFilename '_BACKUP_' now_datestring],'MeteorData')
-% cd(mainfolder)
+% cd(getSession('folders','mainfolder'))
 devwarning('resolveduplicates')
 
 % Initialize counters

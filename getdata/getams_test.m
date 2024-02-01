@@ -44,7 +44,7 @@ for year_idx = 1:length(years)
     
    try
         % Query online database
-        download = webread([URL_AMS_API 'year=' num2str(years(year_idx)) '&min_reports=' num2str(min_reports) '&format=json&api_key=' AMS_APIkey],webread_options);
+        download = webread([URL_AMS_API 'year=' num2str(years(year_idx)) '&min_reports=' num2str(min_reports) '&format=json&api_key=' getPrivate('AMS_APIkey')],webread_options);
         download.year = years(year_idx); % assign year to struct
         AMS_json(year_idx) = download; % save year json to struct
         clear download        

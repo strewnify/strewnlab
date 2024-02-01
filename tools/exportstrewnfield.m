@@ -25,7 +25,7 @@ try
     imwrite(img, [export_filename '.png'], 'Transparency', [1 1 1]);
 
     % return to main folder
-    cd(mainfolder)
+    cd(getSession('folders','mainfolder'))
 
     % Get tick mark locations
     x_ticks = xticks;
@@ -36,7 +36,7 @@ try
 
 catch
     % return to main folder
-    cd(mainfolder)
+    cd(getSession('folders','mainfolder'))
     logformat('Error in strewn field image export!','ERROR');
 end
 
@@ -49,7 +49,7 @@ try
     makekmz(strewnhist_vals.Values, Lat_edges, Long_edges,'imname',export_filename)
 catch
      % return to main folder
-    cd(mainfolder)
+    cd(getSession('folders','mainfolder'))
     logformat('Error in strewn field KMZ export!','WARN');
 end
 
@@ -61,7 +61,7 @@ if exist('EventData_Finds','var') && any(permission_filter)
     if numel(Permissions) == 1 && (Permissions == "Public" || Permissions == "None") % if public
         exportpins(exportfolder, [SimulationName '_Finds_' datestr(nowtime,'yyyymmdd_HHMMSS')],'Finds', EventData_Finds.Latitude(permission_filter)', EventData_Finds.Longitude(permission_filter)', 0, stringmass(EventData_Finds.mass_grams(permission_filter)./1000));
     else % confidential data exists
-        exportpins([secreteventsfolder '\' SimEventID '_' SimFilename '_CONFIDENTIAL'], [SimulationName '_Finds_' datestr(nowtime,'yyyymmdd_HHMMSS') '_' DataPermissionsFilename],'Finds', EventData_Finds.Latitude(permission_filter)', EventData_Finds.Longitude(permission_filter)', 0, stringmass(EventData_Finds.mass_grams(permission_filter)./1000));
+        exportpins([getSession('folders','secreteventsfolder') '\' SimEventID '_' SimFilename '_CONFIDENTIAL'], [SimulationName '_Finds_' datestr(nowtime,'yyyymmdd_HHMMSS') '_' DataPermissionsFilename],'Finds', EventData_Finds.Latitude(permission_filter)', EventData_Finds.Longitude(permission_filter)', 0, stringmass(EventData_Finds.mass_grams(permission_filter)./1000));
     end
 end
 

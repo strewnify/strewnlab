@@ -84,7 +84,7 @@ switch filetype
 
         % Get event ground elevation data
         % try
-        %     ground = getElevations(nom_lat, nom_long, 'key', GoogleMapsAPIkey );
+        %     ground = getElevations(nom_lat, nom_long, 'key', getPrivate('GoogleMapsAPIkey') );
         %     if ground < 0
         %         error('Ground level is below sea level.')
         %     end

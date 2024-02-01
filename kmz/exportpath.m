@@ -95,4 +95,4 @@ fprintf(fid, kmltxt_path);
 fclose(fid);
 
 % return to main folder
-cd(mainfolder)
+cd(getSession('folders','mainfolder'))
