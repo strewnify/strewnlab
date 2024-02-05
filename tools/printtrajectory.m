@@ -80,6 +80,10 @@ end
 predicted_TKW_max_kg = eststrewnmass(nom_mass, nom_speed, ablationheat, HTC);
 nominal_strewnmass_g = predicted_TKW_max_kg*1000; % 1/10 of the max, in grams
 mass_filt = filter & strewndata.mass > 0.010 & strewndata.mass < 1;  % 10 grams to 1 kg
+if nnz(mass_filt) == 0
+    mass_filt = filter;
+    logformat('No meteorites predicted >10 grams.  Strewn field area set to all masses.','DEBUG')
+end
 [vertices_lat, vertices_lon, strewn_area_km2] = polyarea(strewndata.Latitude(mass_filt),strewndata.Longitude(mass_filt));
 grams_per_km2 =  nominal_strewnmass_g / strewn_area_km2;
 

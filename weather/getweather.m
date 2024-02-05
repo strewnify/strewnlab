@@ -307,7 +307,7 @@ while weatherdatamissing
                 outfilename = ftpsave(ZipFileName,URL);
 %             catch
 %                 % return to working directory
-%                 cd(mainfolder); 
+%                 cd(getSession('folders','mainfolder')); 
 %                 error('FTPSAVE failed.  Check that the function is included in the project.')
 %             end
             unzip(ZipFileName); % unzip the file
@@ -453,7 +453,7 @@ while weatherdatamissing
 end
 
 % return to working directory
-cd(mainfolder); 
+cd(getSession('folders','mainfolder')); 
 
 EventData_ProcessedIGRA(1,:) = []; % delete initialization row
 IGRA_numDatasets = IGRA_DatasetIndex;
@@ -805,7 +805,7 @@ clear IGRA_xlsdata
 strewnbackup
 
 % return to main working directory
-cd(mainfolder); 
+cd(getSession('folders','mainfolder')); 
 
 % Check flag
 check_weatherloaded = true;

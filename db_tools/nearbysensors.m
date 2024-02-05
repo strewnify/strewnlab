@@ -59,7 +59,7 @@ data_tb.pct_vertFOV = pctVertFOV(data_tb.eff_minELEV,data_tb.eff_maxELEV,data_tb
 %data_tb.pct_vertFOV(data_tb.sensorELEV == 90) = NaN;
 
 % filter cameras pointing in the correct direction
-%data_tb = data_tb(isnan(data_tb.pct_horFOV) | (data_tb.pct_horFOV > -5 & data_tb.pct_horFOV < 105),:);
+data_tb = data_tb(isnan(data_tb.pct_horFOV) | (data_tb.pct_horFOV > -5 & data_tb.pct_horFOV < 105),:);
 
 % Sort the data, ascending by sensor range, then by type
 data_disp = sortrows(data_tb,["Type","PctSensorRange"],'ascend');

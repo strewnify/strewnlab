@@ -94,4 +94,6 @@ switch ceil(bearing/90)
     otherwise
         ornt = 'northwest';
 end
-legend(zonenames,'Location',ornt)
+if exist('zonenames','var')
+    legend(zonenames,'Location',ornt)
+end

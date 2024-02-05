@@ -75,7 +75,7 @@ export_rho
 zoneplot
 
 % Export the 2D and 3D path to kml 
-exportpath
+exportpath(nom_startlocation(1), nom_startlocation(2), nom_startaltitude, nom_darklocation(1), nom_darklocation(2), darkflight_elevation, exportfolder, [SimulationName '_Path' SimVersionSfx])
 
 % Print trajectory data
 printtrajectory

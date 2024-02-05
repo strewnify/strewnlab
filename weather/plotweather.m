@@ -75,7 +75,8 @@ scatter(EventData_ProcessedIGRA.TEMP, EventData_ProcessedIGRA.HEIGHT_km,'.b')
 plot(EventData_temp_2D_model,EventData_altitudes_fine./1000,'k','LineWidth',plot_line_width)
 
 % Maximize plot
-set(gcf, 'Position', get(0, 'Screensize').*[1 1 0.9 0.9])
+set(0,'units','pixels');
+set(handle_weather, 'Position', get(0, 'Screensize').*[1 1 0.9 0.9])
 
 % Save the current image to file
 try
