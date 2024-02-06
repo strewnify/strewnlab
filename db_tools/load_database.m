@@ -1,5 +1,7 @@
 %LOAD_DATABASE Backup the database and load it into the workspace
 
+import_ref_data
+
 strewnconfig
 
 % if strewnconfig has not been called, error
@@ -9,7 +11,7 @@ end
     
 % Logging option
 if strcmp(get(0,'Diary'),'off')
-    if exist(getSession('folders','logfolder'),'var')
+    if exist(getSession('folders','logfolder'),'dir') == 7
         diary([getSession('folders','logfolder') '\database_errorlog.txt'])
     else
         diary('database_errorlog.txt')
@@ -32,7 +34,7 @@ usefile = true;
 if exist(Database_EventData_varname,'var')
     
     % Ask for user input
-    if getSession('user','userpresent')
+    if getSession('state','userpresent')
         user_quest = 'There is a database already loaded in memory. Which would you like to use?  (Either way, a backup will be created and no data will be lost.)';
         logformat(user_quest,'USER')
         answer = questdlg(user_quest,'Warning: Database Already Loaded','Use Database From File','Use Already Loaded Database','Cancel','Use Database From File');

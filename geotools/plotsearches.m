@@ -33,8 +33,8 @@ map_handle.WindowState = 'maximized';
 pause(1)
 [latitudeLimits,longitudeLimits] = geolimits(gx,latlim,lonlim)
 
-lat_metersperdeg = 2*planet.ellipsoid_m.MeanRadius*pi/360;
-long_metersperdeg = 2*planet.ellipsoid_m.MeanRadius*pi*cos(deg2rad(latitudeLimits(1)))/360;
+lat_metersperdeg = 2*getPlanet('ellipsoid_m').MeanRadius*pi/360;
+long_metersperdeg = 2*getPlanet('ellipsoid_m').MeanRadius*pi*cos(deg2rad(latitudeLimits(1)))/360;
 
 % show search polygons
 ax2 = axes; % create cartesian axes

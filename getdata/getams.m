@@ -86,7 +86,7 @@ AMS_data((AMS_data.LAT == 0 & AMS_data.LONG == 0) ,:) = [];  % Delete records wi
 AMS_data.SolarElev = solarelevation(AMS_data.LAT,AMS_data.LONG,AMS_data.Datetime); % Calculate solar elevation
 AMS_data(AMS_data.SolarElev < 0 & AMS_data.avg_duration < min_duration,:) = [];  % Delete night events below min duration
 AMS_data.Altitude = round(AMS_data.end_alt./1000,3);
-[temp_distance_meters, temp_bearing] = distance(AMS_data.start_lat,AMS_data.start_long,AMS_data.end_lat,AMS_data.end_long,planet.ellipsoid_m);
+[temp_distance_meters, temp_bearing] = distance(AMS_data.start_lat,AMS_data.start_long,AMS_data.end_lat,AMS_data.end_long,getPlanet('ellipsoid_m'));
 AMS_data.CurveDist = temp_distance_meters ./ 1000; % convert meters to kilometers
 AMS_data.Bearing = round(temp_bearing,3);
 clear temp_distance

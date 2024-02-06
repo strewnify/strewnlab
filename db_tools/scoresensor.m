@@ -44,11 +44,11 @@ logformat('Need to update to array function','DEBUG')
 planet = getPlanet();
 
 % Calculate vectors and field of view
-[PathCurveDist_m, PathBearingAZ] = distance(startLAT,startLONG,endLAT,endLONG,planet.ellipsoid_m);
-%[startCurveDist_m, startObservedAZ] = distance(sensorLAT,sensorLONG,startLAT,startLONG,planet.ellipsoid_m);
-%[endCurveDist_m, endObservedAZ] = distance(sensorLAT,sensorLONG,endLAT,endLONG,planet.ellipsoid_m);
-[startObservedAZ, startObservedELEV, startRange_m] = geodetic2aer(startLAT, startLONG, startAlt_m, sensorLAT, sensorLONG, sensorAlt_m, planet.ellipsoid_m);
-[endObservedAZ, endObservedELEV, endRange_m] = geodetic2aer(endLAT, endLONG, endAlt_m, sensorLAT, sensorLONG, sensorAlt_m, planet.ellipsoid_m);
+[PathCurveDist_m, PathBearingAZ] = distance(startLAT,startLONG,endLAT,endLONG,getPlanet('ellipsoid_m'));
+%[startCurveDist_m, startObservedAZ] = distance(sensorLAT,sensorLONG,startLAT,startLONG,getPlanet('ellipsoid_m'));
+%[endCurveDist_m, endObservedAZ] = distance(sensorLAT,sensorLONG,endLAT,endLONG,getPlanet('ellipsoid_m'));
+[startObservedAZ, startObservedELEV, startRange_m] = geodetic2aer(startLAT, startLONG, startAlt_m, sensorLAT, sensorLONG, sensorAlt_m, getPlanet('ellipsoid_m'));
+[endObservedAZ, endObservedELEV, endRange_m] = geodetic2aer(endLAT, endLONG, endAlt_m, sensorLAT, sensorLONG, sensorAlt_m, getPlanet('ellipsoid_m'));
 
 startCurveDist_km = startRange_m ./ 1000;
 endCurveDist_km = endRange_m ./ 1000;

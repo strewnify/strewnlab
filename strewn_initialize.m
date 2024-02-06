@@ -24,7 +24,7 @@ if ~initialized
     % Session data is generated for each new session
     
     
-    if getSession('user','userpresent')
+    if getSession('state','userpresent')
         quest = ['Please Select a User Role:' newline newline 'Standard - Effortless success with the usual settings' newline ...
             'Advanced - Extra choices for users with understanding of physics and statistics' newline ...
             'Developer - Does not enhance simulation results, additional credentials required for website administration' newline newline];

@@ -5,9 +5,16 @@ function [nom_density, error_density, HTC, ablationheat, dot_mark] = materialpro
 % heat of ablation, in J/kg
 % Sources:
 % D. T. Brittl (2004) - Meteorite Porosities and Densities: A Review of Trends in the Data
+% 'random' material supports strewn mass estimation in PRINTTRAJECTORY
 
 
 switch lower(meteoroid_material)
+    case 'random'
+        nom_density = 3380;
+        error_density = 960;
+        HTC = 0.1; 
+        ablationheat = 8248100; 
+        dot_mark = 'k.';
     case 'stony'
         nom_density = 3230;
         error_density = 730;
@@ -32,6 +39,12 @@ switch lower(meteoroid_material)
         HTC = 0.1; 
         ablationheat = 8510000; 
         dot_mark = 'g.';
+    case 'comet'
+        nom_density = 900;
+        error_density = 300;
+        HTC = 0.1; % unknown 
+        ablationheat = 7980000; % unknown 
+        dot_mark = 'c.';
     case 'h chondrite'
         nom_density = 3400;
         error_density = 180;

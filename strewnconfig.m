@@ -10,9 +10,6 @@ strewn_initialize
 GoogleEarth_path = 'C:\Program Files\Google\Google Earth Pro\client\googleearth.exe';
 WCT_path = 'C:\Program Files (x86)\wct-4.8.1\wct.exe';
 
-% Load private keys
-loadprivate
-
 % Database settings
 DatabaseFilename = 'StrewnifyDatabase'; %.mat filename
 Database_prefix = 'sdb_*'; % all variables in the database must have this prefix, to be saved properly
@@ -26,18 +23,7 @@ default_aspectratio = 1.3;
 % Generate a cell array of EventID increments, in case of multiple events in one hour
 % Supports up to 1296 additional events
 EventIDidx_char = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-for cnt = 1:1296
-    if cnt <= numel(EventIDidx_char)
-        char1 = 'Z';
-    else
-        char1 = EventIDidx_char(ceil(cnt/numel(EventIDidx_char))-1);
-    end
-    char2 = EventIDidx_char(mod(cnt-1,numel(EventIDidx_char))+1);
-    EventIDidx(cnt) = {[char1 char2]};
-end
-
-% Constants
-planet = getPlanet();
+EventIDidx = genEventIDidx(EventIDidx_char);
 
 % Data filters
 slowmeteor_min_kps = 0; % meteors below this speed will be reported from ASGARD, regardless of altitude
@@ -60,11 +46,6 @@ distancestep = 200; % meters (don't forget to allow for one split per step)
 minmass = 0.001; % minimum simulation mass in kilograms, typically 0.001 (1 gram)
 maxflighttime = 14400; % maximum flight time in seconds
 ablation_thresh = 0.02; % threshold for visible ablation, in kg/s (approximately 0.02?)
-
-% Export options
-if ~exist('exporting','var')
-    exporting = false;
-end
 nom_startaltitude = 80000; % nominal path start altitude for visualization
 max_pathlength3D_m = 150000; % For very horizontal paths, it is necessary to clip the path length to prevent very long path lengths and simulation times
 

@@ -37,7 +37,7 @@ err_ZenithAngle = nan(size(startLAT));
 
 
 % Calculate nominal angles
-[AZ_raw,ELEV_nom,slantrange_nom_m] = geodetic2aer(startLAT, startLON, startH_m, endLAT, endLON, endH_m,planet.ellipsoid_m);
+[AZ_raw,ELEV_nom,slantrange_nom_m] = geodetic2aer(startLAT, startLON, startH_m, endLAT, endLON, endH_m,getPlanet('ellipsoid_m'));
 PathLength_km = slantrange_nom_m ./ 1000;
 ZenithAngle_deg = 90 - ELEV_nom;
 
@@ -64,7 +64,7 @@ for record_i = 1:numrecords
     rng(55,'twister')
     h_err0 = randbetween(-endH_ERR(record_i),endH_ERR(record_i),samplesize);
     
-    [AZ,ELEV,slantrange_m] = geodetic2aer(startLAT(record_i) + lat_err, startLON(record_i) + lon_err, startH_m(record_i) + h_err, endLAT(record_i) + lat_err0, endLON(record_i) + lon_err0, endH_m(record_i) + h_err0,planet.ellipsoid_m);
+    [AZ,ELEV,slantrange_m] = geodetic2aer(startLAT(record_i) + lat_err, startLON(record_i) + lon_err, startH_m(record_i) + h_err, endLAT(record_i) + lat_err0, endLON(record_i) + lon_err0, endH_m(record_i) + h_err0,getPlanet('ellipsoid_m'));
     
     % error values are one standard deviation, rounded to 3 significant digits
     % rounding is necessary to prevent unnecessary import, due to random differences

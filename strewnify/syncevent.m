@@ -6,7 +6,7 @@ if exist('SimulationName_OLD','var') == 0
 end
 
 % Assign data permissions, if exporting
-if ~exist('Permissions','var') || exporting 
+if ~exist('Permissions','var') || getSession('state','exporting')
     querydatapermissions
 end
 

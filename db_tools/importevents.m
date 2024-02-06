@@ -115,7 +115,7 @@ for event_i = 1:size_import
 
             % Calculate deltas
             dup_timedelta_s = abs(seconds(import_data.(datasource).LatestData.DatetimeUTC(event_i) - database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).DatetimeUTC));
-            dup_dist_km = distance(import_data.(datasource).LatestData.LAT(event_i),import_data.(datasource).LatestData.LONG(event_i),database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).LAT,database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).LONG,planet.ellipsoid_m) / 1000;
+            dup_dist_km = distance(import_data.(datasource).LatestData.LAT(event_i),import_data.(datasource).LatestData.LONG(event_i),database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).LAT,database_out.(PossibleEventIDs{dup_i}).(datatype).(CompSource)(1).LONG,getPlanet('ellipsoid_m')) / 1000;
 
             % Calculate thresholds as the sum of expected error for both sources
             max_timedelta_s = import_data.(datasource).time_err_s + import_data.(CompSource).time_err_s;

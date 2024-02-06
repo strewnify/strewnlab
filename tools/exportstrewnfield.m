@@ -1,7 +1,7 @@
 %EXPORTSTREWNFIELD Exports current figure as a png file with transparent background.
 
 % enter export mode
-exporting = true;
+setExporting(true);
 
 % Update file and folder names and query data permissions, if needed
 clear 'SimVersion' % reset version
@@ -81,4 +81,4 @@ exportpath(nom_startlocation(1), nom_startlocation(2), nom_startaltitude, nom_da
 printtrajectory
 
 % exit export mode
-exporting = false;
+setExporting(false);

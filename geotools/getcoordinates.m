@@ -3,9 +3,6 @@ function [ LAT, LONG ] = getcoordinates(locality)
 % geocoding service to determine the coodinates of a locality.
 % Google charges $5 per 1000 requests, so please do not abuse this function.
 
-% load Google Maps API
-strewnconfig
-
 % Default values
 LAT = NaN;
 LONG = NaN;

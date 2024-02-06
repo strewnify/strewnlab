@@ -17,8 +17,8 @@ planet = getPlanet();
 Height_m = Height_km.*1000; % convert units
 
 % Calculate angles and distances for each sensor
-[curveDistance_m, observed_AZ] = distance(data_tb.LAT,data_tb.LONG,LAT,LONG,planet.ellipsoid_m);
-[~, observed_ELEV, slantRange_m] = geodetic2aer(LAT,LONG, Height_m, data_tb.LAT,data_tb.LONG, data_tb.Altitude_m, planet.ellipsoid_m);
+[curveDistance_m, observed_AZ] = distance(data_tb.LAT,data_tb.LONG,LAT,LONG,getPlanet('ellipsoid_m'));
+[~, observed_ELEV, slantRange_m] = geodetic2aer(LAT,LONG, Height_m, data_tb.LAT,data_tb.LONG, data_tb.Altitude_m, getPlanet('ellipsoid_m'));
 
 % Store data to table
 data_tb.observed_AZ = observed_AZ;

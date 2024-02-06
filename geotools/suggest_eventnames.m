@@ -44,7 +44,7 @@ for radius_km = search_radii
     for az_i = 1:numsteps
         
         apicalls = apicalls + 1;    
-        [latout(apicalls),lonout(apicalls)] = reckon(lat,lon,radius_m,az_steps(az_i),planet.ellipsoid_m);
+        [latout(apicalls),lonout(apicalls)] = reckon(lat,lon,radius_m,az_steps(az_i),getPlanet('ellipsoid_m'));
 
         % Get location info from Google
         [ out1, out2, out3, out4, out5, out6 ] = getlocation(latout(az_i),lonout(az_i),max_stringlength);

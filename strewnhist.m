@@ -9,12 +9,12 @@ plotmargin = [20 20 20 20];
 
 % mass filter, in kilograms
 plot_materials = {'all'};
-plot_minmass = 0.000; plot_maxmass = inf;
+plot_minmass = 0.001; plot_maxmass = inf;
 
 % Filter masses that continued ablation in darkflight
 % Feature needs further testing, requires calibration and simulation using ablation_thresh
 filter_darkflight = darkflight_elevation - error_elevation;
-filter_darkflight = -999;
+% filter_darkflight = -999;
 
 % Wind variation
 error_windmin = weather_minsigma; error_windmax = weather_maxsigma;
@@ -33,7 +33,7 @@ end
 % Adjust for polygons
 if exist('EventData_Searched','var')
     % Ask for user input
-    if getSession('user','userpresent')
+    if getSession('state','userpresent')
         user_quest = 'Adjust for Searched Areas?';
         logformat(user_quest,'USER')
         answer = questdlg(user_quest,'Searched Area Option','Yes','No','No');

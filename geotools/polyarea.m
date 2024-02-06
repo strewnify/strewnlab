@@ -10,7 +10,7 @@ vertices_lat = lat(idx);
 vertices_lon = lon(idx);
 
 % Calculate the area of the polygon in square kilometers
-area_km2 = areaint(lat(idx), lon(idx), planet.ellipsoid_m) / 1e6;
+area_km2 = areaint(lat(idx), lon(idx), getPlanet('ellipsoid_m')) / 1e6;
 
 
 end

@@ -40,7 +40,7 @@ for Datetime_inc = Datetime_nom
             % Step around circumference
             radius_m = radius_km.*1000;
             for az_i = 1:numsteps
-                [latout(az_i),lonout(az_i)] = reckon(LAT,LONG,radius_m,az_steps(az_i),planet.ellipsoid_m);
+                [latout(az_i),lonout(az_i)] = reckon(LAT,LONG,radius_m,az_steps(az_i),getPlanet('ellipsoid_m'));
                 EventIDs(id_i,1) = {eventid(latout(az_i),lonout(az_i),Datetime_inc)};
                 id_i = id_i + 1;
             end        

@@ -5,7 +5,7 @@
 % Program Script: "C:\Program Files\MATLAB\R2020a\bin\matlab.exe"
 % Add arguments: -r cd('C:\Users\james\Documents\GitHub\strewnlab'),strewnnotify,exit -logfile c:\logfile
 
-import_ref_data
+strewn_initialize
 setUserPresent(false)
 
 % Load settings

@@ -6,7 +6,7 @@
 % Load settings
 strewnconfig
 min_radius_km = 200; % minimum allowed search radius
-max_radius_km = planet.ellipsoid_m.MeanRadius*2*pi/2/1000;
+max_radius_km = getPlanet('ellipsoid_m').MeanRadius*2*pi/2/1000;
 nowtime_utc = datetime('now','TimeZone','UTC'); 
 datetimestring = datestr(now,'yyyymmddHHMM');
 

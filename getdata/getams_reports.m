@@ -97,7 +97,7 @@ title(['AMS Start Reports: ' datestr(now_UTC,'mmm DD, YYYY') ' to ' datestr(now_
 linelength_km = 500;
 num_pending = size(AMS_data,1);
 for obs_i = 1:num_pending
-    [AMS_data.lat_startproj, AMS_data.long_startproj] = reckon(AMS_data.latitude, AMS_data.longitude, linelength_km*1000, AMS_data.initial_azimuth, planet.ellipsoid_m);
+    [AMS_data.lat_startproj, AMS_data.long_startproj] = reckon(AMS_data.latitude, AMS_data.longitude, linelength_km*1000, AMS_data.initial_azimuth, getPlanet('ellipsoid_m'));
     plot(gstart,[AMS_data.latitude(obs_i) AMS_data.lat_startproj(obs_i)], [AMS_data.longitude(obs_i) AMS_data.long_startproj(obs_i)],'b-')
     plot(gstart,AMS_data.latitude(obs_i), AMS_data.longitude(obs_i), 'ko')
 end
@@ -110,7 +110,7 @@ title(['AMS End Reports: ' datestr(now_UTC,'mmm DD, YYYY') ' to ' datestr(now_UT
 linelength_km = 500;
 num_pending = size(AMS_data,1);
 for obs_i = 1:num_pending
-    [AMS_data.lat_endproj, AMS_data.long_endproj] = reckon(AMS_data.latitude, AMS_data.longitude, linelength_km*1000, AMS_data.final_azimuth,planet.ellipsoid_m);
+    [AMS_data.lat_endproj, AMS_data.long_endproj] = reckon(AMS_data.latitude, AMS_data.longitude, linelength_km*1000, AMS_data.final_azimuth,getPlanet('ellipsoid_m'));
     plot(gend,[AMS_data.latitude(obs_i) AMS_data.lat_endproj(obs_i)],[AMS_data.longitude(obs_i) AMS_data.long_endproj(obs_i)],'b-')
     plot(gend,AMS_data.latitude(obs_i),AMS_data.longitude(obs_i),'ko')
 end
@@ -125,7 +125,7 @@ end
 % linelength_km = 500;
 % num_pending = size(AMS_data,1);
 % for obs_i = 1:num_pending
-%     [AMS_data.lat_endproj, AMS_data.long_endproj] = reckon(AMS_data.latitude, AMS_data.longitude, linelength_km*1000, AMS_data.final_azimuth,planet.ellipsoid_m);
+%     [AMS_data.lat_endproj, AMS_data.long_endproj] = reckon(AMS_data.latitude, AMS_data.longitude, linelength_km*1000, AMS_data.final_azimuth,getPlanet('ellipsoid_m'));
 %     plot([AMS_data.longitude(obs_i) AMS_data.long_endproj(obs_i)], [AMS_data.latitude(obs_i) AMS_data.lat_endproj(obs_i)],'b-')
 %     plot(AMS_data.longitude(obs_i),AMS_data.latitude(obs_i),'ko')
 % end

@@ -189,7 +189,7 @@ while weatherdatamissing
 
         % Find the nearest radiosonde stations
         %IGRA_Inventory = readtable('igra2-station-list.csv');
-        IGRA_SItable.Distance = distance(nom_lat,nom_long,IGRA_SItable.LAT,IGRA_SItable.LONG,planet.ellipsoid_m.MeanRadius);
+        IGRA_SItable.Distance = distance(nom_lat,nom_long,IGRA_SItable.LAT,IGRA_SItable.LONG,getPlanet('ellipsoid_m').MeanRadius);
 
         IGRA_Filtered = IGRA_SItable(IGRA_SItable.EndYear >= year(StartDate),:);
         IGRA_Filtered = IGRA_Filtered(IGRA_Filtered.StartYear <= year(EndDate),:);
@@ -573,7 +573,7 @@ while row <= numrows
         else 
             AZ = AZ + 180;
         end
-        ARCLEN = 360 * balloon_dist/(2 * pi * planet.ellipsoid_m.MeanRadius); % distance in degrees of arc
+        ARCLEN = 360 * balloon_dist/(2 * pi * getPlanet('ellipsoid_m').MeanRadius); % distance in degrees of arc
         [EventData_ProcessedIGRA.LAT(row), EventData_ProcessedIGRA.LONG(row)] = reckon(LAT_prev, LONG_prev, ARCLEN, AZ); 
     end     
     

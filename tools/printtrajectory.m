@@ -41,40 +41,7 @@ if exist('EventData_Finds','var') && sum(EventData_Finds.mass_kg) > 0
 end
 
 % Strewn mass estimate
-
-switch lower(material_sim)
-    case 'random'
-        HTC = 0.1; 
-        ablationheat = 8245000;         
-    case 'stony'
-        HTC = 0.1; 
-        ablationheat = 8245000;         
-    case 'iron'
-        HTC = 0.1; 
-        ablationheat = 8010000; 
-    case 'stony-iron'
-        HTC = 0.1; 
-        ablationheat = 8170000;         
-    case 'carbonaceous'
-        HTC = 0.1; 
-        ablationheat = 8510000;
-    case 'h chondrite'
-        HTC = 0.1; 
-        ablationheat = 8510000;
-    case 'l chondrite'
-        nom_density = 3400;
-        error_density = 300;
-        HTC = 0.1; 
-        ablationheat = 7980000; 
-    case 'comet'
-        nom_density = 900;
-        error_density = 300;
-        HTC = 0.1; % unknown
-        ablationheat = 7980000; % unknown 
-        warning('Cometary experiment - unknown ablation properties')
-    otherwise
-        error('Invalid meteoroid material')
-end
+[nom_density, ~, HTC, ablationheat, ~] = materialprops(material_sim);
 
 % Estimate strewn field statistics
 predicted_TKW_max_kg = eststrewnmass(nom_mass, nom_speed, ablationheat, HTC);
@@ -135,7 +102,7 @@ fm_wind = '%10.1f';
 fm_dir = '%9s';
 SimTrajectoryData = [SimTrajectoryData newline newline newline '*** StrewnLAB Weather Model ***'];
 SimTrajectoryData = [SimTrajectoryData newline sprintf('Ground Elevation:    %.0f m', ground)];
-SimTrajectoryData = [SimTrajectoryData newline sprintf('Variation Included:  %.1fσ to %.1fσ', weather_minsigma, weather_maxsigma)];
+SimTrajectoryData = [SimTrajectoryData newline sprintf('Variation Included:  %.2fσ to %.2fσ', weather_minsigma, weather_maxsigma)];
 SimTrajectoryData = [SimTrajectoryData newline newline 'Altitude  Nom Wind   Nom Dir '];
 % SimTrajectoryData = [SimTrajectoryData newline         '      km       m/s    (from) '];
 % SimTrajectoryData = [SimTrajectoryData newline '-------------------------------'];

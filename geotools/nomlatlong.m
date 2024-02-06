@@ -67,7 +67,7 @@ for record_i = 1:numrecords
         error_count = 0;
         while error_count < 100
             try
-                [LAT(record_i), LONG(record_i), slantRange_m] = aer2geosolve(ref_Bearing_deg(record_i),ref_ZenithAngle_deg(record_i) - 90,ref_Lat(record_i),ref_Long(record_i),ref_Height_km(record_i)*1000,test_height_m,planet.ellipsoid_m);
+                [LAT(record_i), LONG(record_i), slantRange_m] = aer2geosolve(ref_Bearing_deg(record_i),ref_ZenithAngle_deg(record_i) - 90,ref_Lat(record_i),ref_Long(record_i),ref_Height_km(record_i)*1000,test_height_m,getPlanet('ellipsoid_m'));
                 break
             catch
                 error_count = error_count + 1;

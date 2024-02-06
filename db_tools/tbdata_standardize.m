@@ -60,8 +60,8 @@ for var_i = 1:length(meas_var)
             quad_err_m = sqrt(2) .* 1000 .* import_data.(datasource).location_err_km; % quadrant corner distance
 
             % reckon quad corners
-            [lat_NW,lon_NW] = reckon(meas_lat,meas_lon,quad_err_m,315,planet.ellipsoid_m);
-            [lat_SE,lon_SE] = reckon(meas_lat,meas_lon,quad_err_m,135,planet.ellipsoid_m);
+            [lat_NW,lon_NW] = reckon(meas_lat,meas_lon,quad_err_m,315,getPlanet('ellipsoid_m'));
+            [lat_SE,lon_SE] = reckon(meas_lat,meas_lon,quad_err_m,135,getPlanet('ellipsoid_m'));
 
             % calculate average lat/lon error, NW and SE
             % for most point/error combinations, the difference is negligable, but corner cases near poles must be considered
@@ -143,7 +143,7 @@ end
 % Calculate geometric impact point, if input data is available
 calcImpact = ~datapresent(std_tb,{'impact_Lat' 'impact_Lon'}) & datapresent(std_tb,{'Bearing_deg' 'ZenithAngle_deg' 'ref_Lat' 'ref_Long' 'ref_Height_km'});
 if nnz(calcImpact) > 0 
-    [std_tb.impact_Lat(calcImpact),std_tb.impact_Long(calcImpact),~] = lookAtSpheroid(std_tb.ref_Lat(calcImpact),std_tb.ref_Long(calcImpact),std_tb.ref_Height_km(calcImpact),std_tb.Bearing_deg(calcImpact),std_tb.ZenithAngle_deg(calcImpact),planet.ellipsoid_m);    
+    [std_tb.impact_Lat(calcImpact),std_tb.impact_Long(calcImpact),~] = lookAtSpheroid(std_tb.ref_Lat(calcImpact),std_tb.ref_Long(calcImpact),std_tb.ref_Height_km(calcImpact),std_tb.Bearing_deg(calcImpact),std_tb.ZenithAngle_deg(calcImpact),getPlanet('ellipsoid_m'));    
 end
 
 % Default nominal point, for records with missing data

@@ -14,12 +14,12 @@ new_sensor_type = '';
 if nargin == 1 || nargin > 3
     logformat('ADDSENSOR requires 2 or 3 inputs.','ERROR')
 end
-if ~getSession('user','userpresent') && nargin == 2
+if ~getSession('state','userpresent') && nargin == 2
     logformat('Input data required in scheduled function.','ERROR')
 end
 
 % Log request type
-if getSession('user','userpresent')
+if getSession('state','userpresent')
     if nargin == 2
         logformat('User requested to add new sensor from manual input.','USER')
     elseif nargin == 3
@@ -83,7 +83,7 @@ else
 
     % calculate distance from existing stations of the same type
     filt = db_Sensors_in.Type == new_sensor_type;
-    db_Sensors_in.tempDist(filt) = distance(db_Sensors_in.LAT(filt),db_Sensors_in.LONG(filt), new_LAT, new_LONG ,planet.ellipsoid_m)./1000;
+    db_Sensors_in.tempDist(filt) = distance(db_Sensors_in.LAT(filt),db_Sensors_in.LONG(filt), new_LAT, new_LONG ,getPlanet('ellipsoid_m'))./1000;
     nearby = find(db_Sensors_in.Type == new_sensor_type & db_Sensors_in.tempDist < 2);
     if numel(nearby) > 0
         logformat(sprintf('Match found in sensor table at row %0.0f, distance = %0.\n', nearby),'INFO')
