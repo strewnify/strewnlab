@@ -1,7 +1,7 @@
 function [cfg_value] = getConfig(varname)
 %GETREF Get config data, as defined at initialization
 % The reference data is stored in a global struct, from the
-% STREWN_INITIALIZE function.
+% LOAD_CONFIG function.
 
 % Import config data
 global ref_config

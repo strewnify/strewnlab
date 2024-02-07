@@ -9,7 +9,7 @@ plotmargin = [20 20 20 20];
 
 % mass filter, in kilograms
 plot_materials = {'all'};
-plot_minmass = 0.001; plot_maxmass = inf;
+plot_minmass = 0.001; plot_maxmass = 0.050;
 
 % Filter masses that continued ablation in darkflight
 % Feature needs further testing, requires calibration and simulation using ablation_thresh

@@ -4,7 +4,7 @@
 webread_timeout = 60;
 
 % Initialize globals
-strewn_initialize
+import_ref_data
 
 % Program locations
 GoogleEarth_path = 'C:\Program Files\Google\Google Earth Pro\client\googleearth.exe';

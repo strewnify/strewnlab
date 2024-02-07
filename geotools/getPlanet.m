@@ -1,7 +1,7 @@
 function [planet_data] = getPlanet(varname)
 %GETPLANET Get planet data, as defined at initialization
 % The planet data is stored in a global struct, from the
-% STREWN_INITIALIZE function.
+% LOAD_PLANET function.
 
 global ref_planet
 

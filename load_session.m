@@ -1,22 +1,36 @@
 function load_session 
 % LOAD_SESSION Load session data
-% This function uses verious methods to obtain user location and system
+% This function uses various methods to obtain user location and system
 % information, including timezone, coordinates, operating system, and
 % screen size and resolution.
 
-% Log initialization
-logformat('Loading session data...','INFO')
+% Required Licenses
+required_licenses = {'MAP_Toolbox' 'Curve_Fitting_Toolbox' 'Statistics_Toolbox'};
 
 % Initialize global variable
-% Any existing data will be overwritten
+% Don't overwrite userpresent value!
 global ref_session
-ref_session = struct;
+if isempty(ref_session)
+    ref_session = struct;
+end
 
-% default user present to true
-ref_session.state.userpresent = true;
+% Log initialization
+if isfield(ref_session,'loaded') && ref_session.loaded
+    logformat('Reloading session data...','INFO')
+else
+    logformat('Loading session data...','INFO')
+end
+ref_session.loaded = false;
 
-% default exporting to false
-ref_session.state.exporting = false;
+% If user presence is undefined, default to user present
+if ~isfield(ref_session,'state') || ~isfield(ref_session.state,'userpresent')
+    ref_session.state.userpresent = true;
+end
+
+% If exporting state is undefined, default to false 
+if ~isfield(ref_session,'state') || ~isfield(ref_session.state,'exporting')
+    ref_session.state.exporting = false;
+end
 
 % Get operating system
 try
@@ -94,15 +108,22 @@ catch
 end
 
 % Get MATLAB license and version info
-ref_session.license.lic_num = license;
-logformat(sprintf('MATLAB license number: %s',ref_session.license.lic_num),'INFO');
-temp_license_inuse = license('inuse');
-ref_session.license.toolboxes = {temp_license_inuse.feature};
-logformat(sprintf('MATLAB licensed products: %s',strjoin(ref_session.license.toolboxes,', ')),'INFO');
+ref_session.MATLAB.version = version;
+logformat(sprintf('MATLAB version: %s',ref_session.MATLAB.version),'INFO');
 
+ref_session.MATLAB.lic_num = license;
+logformat(sprintf('MATLAB license number: %s',ref_session.MATLAB.lic_num),'INFO');
+for lic_i = 1:numel(required_licenses)
+    lic_status(lic_i) = license('test',required_licenses{lic_i});
+end
+
+% Report available licenses
+ref_session.MATLAB.toolboxes = required_licenses(find(lic_status));
+logformat(sprintf('MATLAB licensed products: %s',strjoin(ref_session.MATLAB.toolboxes,', ')),'INFO');
 
 % Get the installation directory
 ref_session.folders.mainfolder = getinstallpath('strewnlab');
+logformat(sprintf('StrewnLAB is installed at %s', ref_session.folders.mainfolder),'INFO')
 
 % Get the main prefix for the drive, where Documents and Downloads would be found
 ref_session.folders.mainprefix = [extractBefore(ref_session.folders.mainfolder,ref_session.user.winusername) ref_session.user.winusername];
@@ -179,5 +200,74 @@ else
 end
 logformat(sprintf('Import data folder %s at %s',log_msg, ref_session.folders.datafolder),'INFO')
 
-% Log 
-logformat('Session data loaded to global workspace.','INFO')
+% Initialize settings
+datetime.setDefaultFormats('defaultdate','yyyy-MM-dd HH:mm:ss');
+
+% Get user role
+if ref_session.state.userpresent
+    quest = ['Please Select a User Role:' newline newline 'Standard - Effortless success with the usual settings' newline ...
+        'Advanced - Extra choices for users with understanding of physics and statistics' newline ...
+        'Developer - Does not enhance simulation results, additional credentials required for website administration' newline newline];
+    roles = ["Standard","Advanced","Developer"];
+
+    % Get user role, saving preferences to matlab preferences
+    logformat('User queried for role preference.','USER')
+    [user_role,~] = uigetpref('strewnlab_uigetpref','role_pref','Choose User Role',quest,roles);
+
+% if no userpresent, set to developor (for scheduled scripts)
+else
+    user_role = 'developer';
+    logformat('User not present at console, user role defaulted to ''developer''.','USER')
+end
+
+% *** Credential Loading ***
+% Check for saved credentials
+% Sensitive information like passwords and API keys are saved to a
+% preferences file called matlabprefs.mat, which is typically
+% located in this folder:
+% C:\Users\<username>\AppData\Roaming\MathWorks\MATLAB\R20xxx\
+
+% load private preferences
+logformat(['Loading credentials from ' prefdir '\matlabprefs.mat...'],'INFO');
+strewnlab_private = getpref('strewnlab_private');
+
+% If no credentials found, query user
+if isempty(strewnlab_private) || isempty(fieldnames(strewnlab_private))
+    logformat(['No credentials found at ' prefdir '\matlabprefs.mat.'],'WARN');
+    get_creds = true;
+
+    % Setup credential query, based on user role
+    switch user_role
+        case 'developer'
+            creds = {'AMS_APIkey' 'Mailchimp_APIkey' 'Strewnify_APIkey' 'strewnlab_emailpassword' 'GoogleFormsCam_key' 'GoogleMapsAPIkey' 'GoogleDrive_NotifyResponses'};
+        case 'advanced'
+            creds = {'GoogleMapsAPIkey'};
+        otherwise
+            get_creds = false;
+    end
+
+    % Query user for credentials
+    if get_creds
+       for cred_i = 1:numel(creds)
+           [~] = getPrivate(creds{cred_i}); % save value, do not log
+       end
+
+    % Load the new preferences
+    strewnlab_private = getpref('strewnlab_private');
+
+    else
+       logformat([user_role ' user skipped credential setup.'],'USER')
+    end   
+else
+    % Set environment variables
+    private_var = fieldnames(strewnlab_private);
+    for private_i = 1:numel(private_var)
+        var_name = private_var{private_i};            
+        var_value = strewnlab_private.(private_var{private_i}){1};
+        logformat([var_name ' loaded from ' prefdir '\matlabprefs.mat.'],'INFO')
+    end
+end
+
+% Session loading complete
+ref_session.loaded = true;
+logformat('Session data loaded successfully.','INFO')

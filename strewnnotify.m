@@ -2,19 +2,22 @@
 
 % Schedule this task in the Windows Task Scheduler
 % Action:
-% Program Script: "C:\Program Files\MATLAB\R2020a\bin\matlab.exe"
+% Program Script: "C:\Program Files\MATLAB\R2020b\bin\matlab.exe"
 % Add arguments: -r cd('C:\Users\james\Documents\GitHub\strewnlab'),strewnnotify,exit -logfile c:\logfile
 
-strewn_initialize
+% Set user NOT present
 setUserPresent(false)
 
-% Load settings
-strewnconfig
+% Initialize session
+import_ref_data
 
 diary([getSession('folders','logfolder') '\strewnnotify_log.txt'])        
 diary on 
-logformat('Strewnify Meteor Event Notification service started.')
+logformat('Strewnify Meteor Event Notification service started.','INFO')
 %RAII.diary = onCleanup(@() diary('off')); % turn the diary off after an error
+
+% Load settings
+strewnconfig
 
 % Load database
 load StrewnifyDatabase.mat
