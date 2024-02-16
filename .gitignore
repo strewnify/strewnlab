@@ -6,7 +6,6 @@ local_data/*
 zoneplots/*
 DatabaseMerge/*
 backup/*
-working/*
 temp/*
 *.png*
 *RecentEventData.xls*
