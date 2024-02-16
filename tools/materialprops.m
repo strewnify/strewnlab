@@ -4,7 +4,8 @@ function [nom_density, error_density, HTC, ablationheat, dot_mark] = materialpro
 % heat transfer coefficient, for ablation simulation, unitless
 % heat of ablation, in J/kg
 % Sources:
-% D. T. Brittl (2004) - Meteorite Porosities and Densities: A Review of Trends in the Data
+% S1: Baldwin & Sheaffer (1971) - Ablation and Breakup of Large Meteorolds during Atmospheric Entry
+% S2: D. T. Brittl (2004) - Meteorite Porosities and Densities: A Review of Trends in the Data
 % 'random' material supports strewn mass estimation in PRINTTRAJECTORY
 
 
@@ -25,7 +26,7 @@ switch lower(meteoroid_material)
         nom_density = 7500;
         error_density = 500;
         HTC = 0.1; 
-        ablationheat = 8010000; 
+        ablationheat = 8010000; % S1
         dot_mark = 'r.';
     case 'stony-iron'
         nom_density = 4560;
@@ -37,7 +38,7 @@ switch lower(meteoroid_material)
         nom_density = 2640;
         error_density = 850;
         HTC = 0.1; 
-        ablationheat = 8510000; 
+        ablationheat = 8510000; % S1
         dot_mark = 'g.';
     case 'comet'
         nom_density = 900;

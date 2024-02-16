@@ -200,8 +200,10 @@ else
 end
 logformat(sprintf('Import data folder %s at %s',log_msg, ref_session.folders.datafolder),'INFO')
 
-% Initialize settings
-datetime.setDefaultFormats('defaultdate','yyyy-MM-dd HH:mm:ss');
+% Set default time & date format
+time_format_config = 'yyyy-MM-dd HH:mm:ss z';
+datetime.setDefaultFormats('default',time_format_config);
+logformat(sprintf('Default date/time format set to %s',time_format_config),'INFO')
 
 % Get user role
 if ref_session.state.userpresent

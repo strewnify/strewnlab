@@ -264,6 +264,8 @@ while weatherdatamissing
     numstations_t2 = 0;
     IGRA_DatasetIndex = 0;
 
+    
+    
     % If less than the target and progress is being made, continue
      while (stationprogress < IGRA_StationTarget) && (stationprogress/station > 0.2 || station < 4)
 
@@ -274,6 +276,9 @@ while weatherdatamissing
         TextFileName(station) = cellstr([EventData_IGRA_Nearby.StationID{station} '-data.txt']);
         URL = [URL_IGRA_pordatadir ZipFileName];
 
+        % Estimate station data availability
+        [EventData_IGRA_Nearby.last_sample_utc(station), EventData_IGRA_Nearby.data_available_utc(station)] = estAvailableIGRA(entrytime,EventData_IGRA_Nearby.StationID{station});
+        
         % if the file has been downloaded previously, make sure it is up to date for the current event
         if exist(TextFileName{station}, 'file') == 2
 
@@ -282,6 +287,9 @@ while weatherdatamissing
             % it happens, so add 2 days to the entry time for validity
             file = dir(TextFileName{station});
             file_updated = datetime(file.date,'TimeZone',getSession('env','TimeZone'));
+            
+            
+            
             % if it is within a few days of the event 
             % or the data has been updated in the last 4 hours
             %(and the user has not already chosen to use generic data)

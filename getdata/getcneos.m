@@ -2,14 +2,14 @@ function [ CNEOS_data ] = getcneos()
 %[ CNEOS_data ] = GETCNEOS()    Downloads and processes fireball data from
 %the CNEOS database into a data table.
 
+% Import reference data
+import_ref_data
+
 % load webread options
 strewnconfig
 
 % extend wait time for slow connections
 webread_options = weboptions('Timeout',webread_timeout);
-
-% Set date/time display format to show times
-datetime.setDefaultFormats('defaultdate','yyyy-MM-dd HH:mm:ss');
 
 % Open a waitbar
 handleCNEOS = waitbar(0,'Downloading CNEOS Fireball Data...'); 
