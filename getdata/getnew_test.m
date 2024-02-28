@@ -4,10 +4,9 @@ function [ NewEvents, output_filename, num_new, num_updated ] = getnew_test( day
 % to the database, and add new events.
 
 % Load settings
+import_ref_data
 strewnconfig
-[~,codefilename,~] = fileparts(mfilename('fullpath'));
-diary([getSession('folders','logfolder') '\\' codefilename '_log.txt'])  
-diary on
+
 logformat('Getting new events.')
 
 % Disable table row assignment warning
@@ -18,16 +17,27 @@ dayhistory = 30;
 
 %Load the database
 load_database
-
-% Query user for databases
 SourceList = fieldnames(sdb_ImportData);
-[getsources,usersuccess] = listdlg('ListString',SourceList,'SelectionMode','multiple','Name','Select Sources', 'OKString','Load','PromptString','Select Sources for Import:','ListSize',[300,300]);
-if ~usersuccess
-    clear getsources
-    clear eventindex
-    logformat('No sources selected. Exit program.','ERROR')
+
+% If the user is present, query for databases
+if getSession('state','userpresent')
+   [getsources,usersuccess] = listdlg('ListString',SourceList,'SelectionMode','multiple','Name','Select Sources', 'OKString','Load','PromptString','Select Sources for Import:','ListSize',[300,300]);
+    if ~usersuccess
+        clear getsources
+        clear eventindex
+        logformat('No sources selected. Exit program.','ERROR')
+    end
+    GetSourceList = SourceList(getsources);
+    
+% Otherwise use default list
+else
+    GetSourceList = {'Goodall' 'CNEOS' 'NEOB' 'ASGARD' 'GMN' 'AMS'};
 end
-GetSourceList = SourceList(getsources);
+
+% Error check for missing fieldnames
+if nnz(~contains(GetSourceList, SourceList)) > 0
+    logformat('Unknown data requested.', 'ERROR')
+end
 
 % Define time period
 nowtime_utc = datetime('now','TimeZone','UTC'); 
@@ -47,7 +57,7 @@ handleNewEvents = waitbar(0,'Loading Data...');
 pause(0.2)
 
 % Get data from each database requested
-for source_i = 1:numel(getsources)
+for source_i = 1:numel(GetSourceList)
 
     source_name = GetSourceList{source_i}; % name of the source database
     dayhistory_max = sdb_ImportData.(source_name).dayhistory_max; % maximum day history available from source
@@ -164,9 +174,6 @@ warning ('on','MATLAB:table:RowsAddedExistingVars')
 % close program
 close(handleNewEvents)
 logformat([newline num2str(num_reviewed) ' Meteor Events Reviewed.  ' newline num2str(num_new) ' Events Added.' newline num2str(num_updated), ' Events Updated.'])
-[~,codefilename,~] = fileparts(mfilename('fullpath'));
-logformat([upper(codefilename) ' completed.'])
-diary off
-warning('Diary disabled after GETNEW_TEST');
+
 
 

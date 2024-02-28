@@ -24,7 +24,7 @@ if ~islat(start_lat) || ~islong(start_long) || ~islat(end_lat) || ~islong(end_lo
 end
 
 % Calculate Arrow points
-arrow_len = 2000; % arrow leg length in meters
+arrow_len = 500; % arrow leg length in meters
 arrow_ang = 32;  % arrow leg angle
 [ARCLEN, backpath_AZ] = distance(end_lat,end_long,start_lat,start_long, getPlanet('ellipsoid_m'))
 [arrow_lat1, arrow_long1] = reckon(end_lat, end_long, arrow_len, wrapTo360(backpath_AZ+arrow_ang), getPlanet('ellipsoid_m'));

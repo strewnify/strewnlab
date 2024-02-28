@@ -31,7 +31,7 @@ try
 
 catch
     cd(getSession('folders','mainfolder'))
-    logformat('Google Drive download failed, manually download file.','DEBUG')
+    logformat('Google Drive download failed, manual file download required.','DEBUG')
     
     % Import the contact file
     [FILENAME, PATHNAME, FILTERINDEX] = uigetfile({'*.csv;*.xls;*.xlsx'});

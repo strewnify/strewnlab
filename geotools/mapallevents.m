@@ -45,8 +45,14 @@ for event_i = 3:numevents
                 end
                 
                 switch Sources{source_i}
+                    
+                    % DEBUG
                     case 'NEOB'
-                        MeteorReport.Duration_s(table_i) = sdb_MeteorData.(EventIDs{event_i}).Trajectory.(Sources{source_i})(1).attachments{1}.duration;
+                        if iscell(sdb_MeteorData.(EventIDs{event_i}).Trajectory.(Sources{source_i})(1).attachments)
+                            MeteorReport.Duration_s(table_i) = sdb_MeteorData.(EventIDs{event_i}).Trajectory.(Sources{source_i})(1).attachments{1}.duration;
+                        else
+                            MeteorReport.Duration_s(table_i) = sdb_MeteorData.(EventIDs{event_i}).Trajectory.(Sources{source_i})(1).attachments(1).duration;
+                        end
                         
                 end
                 

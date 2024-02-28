@@ -4,6 +4,21 @@
 % Program Script: "C:\Program Files\MATLAB\R2020b\bin\matlab.exe"
 % Add arguments: -r cd('C:\Users\james\Documents\GitHub\strewnlab'),TaskScheduler ,exit -logfile C:\Users\james\Documents\GitHub\strewnlab\logs\taskscheduler.log
 
+% temp solution
+diary('C:\Users\james\Documents\GitHub\strewnlab\logs\strewnnotify_log.txt')
+%diary([getSession('folders','logfolder') '\strewnnotify_log.txt'])        
+diary on 
+%RAII.diary = onCleanup(@() diary('off')); % turn the diary off after an error
+
+% Configuration
+FrequentTask_period = hours(2.5);
+DailyTask_period = hours(23);
+OccaisionalTask_period = days(7);
+
+% Get current time
+nowtime_utc = datetime('now','TimeZone','UTC');
+
+logformat('StrewnLAB scheduled task service started.')
 
 % Set user NOT present
 setUserPresent(false)
@@ -11,5 +26,75 @@ setUserPresent(false)
 % Initialize session
 import_ref_data
 
-% Run notification script
-strewnnotify
+% Load settings
+strewnconfig
+
+% Load the task scheduler data
+taskfilename = 'TaskSchedulerData.mat';
+if exist(taskfilename,'file') == 2
+    load(taskfilename)
+    logformat(sprintf('Task scheduler data loaded from ''%s''',taskfilename),'INFO')
+
+% Initialize the task scheduler (first time)
+else
+    default_lastrun = datetime(1900,1,1,'TimeZone','UTC');
+    taskmaster.FrequentTask.lastrun_utc = default_lastrun;
+    taskmaster.DailyTask.lastrun_utc = default_lastrun;
+    taskmaster.OccaisionalTask.lastrun_utc = default_lastrun;
+    save(taskfilename,'taskmaster')
+    logformat(sprintf('''%s'' not found.  File created with defaults.',taskfilename),'DEBUG')
+end
+
+% Run FrequentTask
+if nowtime_utc >= (taskmaster.FrequentTask.lastrun_utc + FrequentTask_period)
+    
+    logformat('StrewnLAB FrequentTask started.','INFO')
+    
+    % Strewnify notification task
+    strewnnotify
+    
+    % Record frequent task complete
+    taskmaster.FrequentTask.lastrun_utc = nowtime_utc;
+    
+    logformat('StrewnLAB FrequentTask completed.','INFO') 
+end
+
+
+% Run DailyTask
+if nowtime_utc >= (taskmaster.DailyTask.lastrun_utc + DailyTask_period)
+    
+    logformat('StrewnLAB DailyTask started.','INFO')
+    
+
+    % Currently no daily tasks
+    
+    % Record Daily task complete
+    taskmaster.DailyTask.lastrun_utc = nowtime_utc;
+    
+    logformat('StrewnLAB DailyTask completed.','INFO') 
+end
+
+
+% Run OccaisionalTask
+if nowtime_utc >= (taskmaster.OccaisionalTask.lastrun_utc + OccaisionalTask_period)
+    
+    logformat('StrewnLAB OccaisionalTask started.','INFO')
+    
+    % Get new events (new database method)
+    getnew_test
+    
+    % Record Occaisional task complete
+    taskmaster.OccaisionalTask.lastrun_utc = nowtime_utc;
+    
+    logformat('StrewnLAB OccaisionalTask completed.','INFO') 
+end
+
+% Save task scheduler data 
+% DEBUG - need to create functions to get and save scheduler data, maybe part of IMPORT_REF_DATA?
+save(taskfilename,'taskmaster')
+logformat(sprintf('Task scheduler data saved to ''%s''',taskfilename),'INFO')
+
+logformat('StrewnLAB scheduled task service complete.')
+
+% Stop logging
+diary off

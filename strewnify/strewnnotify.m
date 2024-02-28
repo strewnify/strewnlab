@@ -1,23 +1,17 @@
 % STREWNNOTIFY
 
+logformat('Strewnify Meteor Event Notification service started.','INFO')
+
 % Initialize session
 import_ref_data
-
-diary([getSession('folders','logfolder') '\strewnnotify_log.txt'])        
-diary on 
-logformat('Strewnify Meteor Event Notification service started.','INFO')
-%RAII.diary = onCleanup(@() diary('off')); % turn the diary off after an error
-
-% Load settings
 strewnconfig
 
-% Load database
-load StrewnifyDatabase.mat
+% Load contacts from database
+load('StrewnifyDatabase.mat','sdb_Contacts')
 
 % Settings
 devmode = false;
 numdays = 14;
-webmaster = 'james.a.goodall@gmail.com'; 
 major_energythresh = 0.01; % estimated energy threshold in kilotons
 earth_km = referenceEllipsoid('earth','km'); % all contacts currently live on Earth
 
@@ -30,7 +24,7 @@ switch devmode
     otherwise
         ErrorMsg = 'There was an error in STREWNNOTIFY, unknown devmode';
         logformat(ErrorMsg,'ERROR')
-        strewnmail(ErrorMsg,webmaster)
+        strewnmail(ErrorMsg,getConfig('webmaster'))
 end
 
 % Attempt to retrieve meteor events and report any error to developer
@@ -40,7 +34,7 @@ end
 %     numevents = -1;
 %     ErrorMsg = 'There was an error in GETNEW, check code.';
 %     logformat(ErrorMsg,'ERROR');
-%     strewnmail(ErrorMsg,webmaster)
+%     strewnmail(ErrorMsg,getConfig('webmaster'))
 % end
 
 
@@ -99,7 +93,7 @@ if numevents > 0
                     emailcontent = reportevents(NewEvents(major & inradius,:));
                 else
                     emailcontent = reportevents(NewEvents);
-                    strewnmail(['Invalid notification category set for ' sdb_Contacts.FirstName{i} ' ' sdb_Contacts.LastName{i} '.'],webmaster)
+                    strewnmail(['Invalid notification category set for ' sdb_Contacts.FirstName{i} ' ' sdb_Contacts.LastName{i} '.'],getConfig('webmaster'))
                 end
             end
 
@@ -121,14 +115,14 @@ if numevents > 0
                     
                     % Send email to contact
                     strewnmail(emailcontent,sdb_Contacts.Email(i))
-                    %strewnmail(emailcontent,webmaster)
+                    %strewnmail(emailcontent,getConfig('webmaster'))
                     %strewnmail(emailcontent,sdb_Contacts.Email(i),attachment)
                     
                 catch
                     ErrorMsg = ['There was an error in sending mail to ' sdb_Contacts.FirstName{i} ' ' sdb_Contacts.LastName{i} ', check code.'];
                     logformat(ErrorMsg,'ERROR')
-                    strewnmail(ErrorMsg,webmaster)
-                    strewnmail(['There was an error in sending emailcontent = ' emailcontent ' to ' sdb_Contacts.FirstName{i} ' ' sdb_Contacts.LastName{i} ', check code.'],webmaster)
+                    strewnmail(ErrorMsg,getConfig('webmaster'))
+                    strewnmail(['There was an error in sending emailcontent = ' emailcontent ' to ' sdb_Contacts.FirstName{i} ' ' sdb_Contacts.LastName{i} ', check code.'],getConfig('webmaster'))
                 end
             end
         end
@@ -136,14 +130,13 @@ if numevents > 0
 end
 
 if devmode
-    strewnmail('Development mode active!',webmaster)
+    strewnmail('Development mode active!',getConfig('webmaster'))
 end
 
 % Save log file
 logformat('Strewnify Meteor Event Notification service complete.')
 
-% Stop logging
-diary off
+
 
 
 

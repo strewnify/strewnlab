@@ -20,17 +20,29 @@ load_database
 
 % Get data from the CNEOS fireball database
 if ~exist('CNEOS_data','var')
-    CNEOS_data = getcneos();    
+    try
+        CNEOS_data = getcneos();
+    catch
+        logformat('CNEOS data retrieval failed','DEBUG')        
+    end
 end
 
 % Get data from the AMS fireball database
 if ~exist('AMS_data','var')
-    AMS_data = getams(startyear,endyear,5, 2);
+    try
+        AMS_data = getams(startyear,endyear,5, 2);
+    catch
+        logformat('AMS data retrieval failed','DEBUG')        
+    end
 end
 
 % Get data from the ASGARD site
 if ~exist('ASGARD_data','var')
-    ASGARD_data = getasgard(dayhistory);
+    try
+        ASGARD_data = getasgard(dayhistory);
+    catch
+        logformat('ASGARD data retrieval failed','DEBUG')
+    end
 end
 
 % Add source identifiers

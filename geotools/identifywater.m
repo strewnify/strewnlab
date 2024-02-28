@@ -19,20 +19,25 @@ if nargin == 2
         try
             elevation_in_m(idx) = getElevations(lat(idx),lon(idx),'key', getPrivate('GoogleMapsAPIkey'));
         catch
-            logformat('Google Maps API failure.  User queried for ground elevation.','WARN')
-            usersuccess = false;
-            while ~usersuccess
-                user_ground = inputdlg('Elevation data not accessible. Please enter ground elevation in meters:','Google API Failure',1,{'0'});        
-                ground = str2double(cell2mat(user_ground)); 
-                if isnan(ground)
-                    logformat('User entered invalid ground elevation.','ERROR')
-                    usersuccess = false;
-                else
-                    logformat(sprintf('User entered %f for ground elevation.',ground),'USER')
-                    usersuccess = true;
+            if getSession('state','userpresent')
+                logformat('Google Maps API failure.  User queried for ground elevation.','WARN')
+                usersuccess = false;
+                while ~usersuccess
+                    user_ground = inputdlg('Elevation data not accessible. Please enter ground elevation in meters:','Google API Failure',1,{'0'});        
+                    ground = str2double(cell2mat(user_ground)); 
+                    if isnan(ground)
+                        logformat('User entered invalid ground elevation.','ERROR')
+                        usersuccess = false;
+                    else
+                        logformat(sprintf('User entered %f for ground elevation.',ground),'USER')
+                        usersuccess = true;
+                    end
                 end
+                clear usersuccess
+            else
+                logformat('Google Maps API failure.  Ground elevation defaulted to zero.','WARN')
+                ground = 0;
             end
-            clear usersuccess
         end
     end
 end

@@ -42,10 +42,14 @@ SensorSummary = movevars(SensorSummary, 'Link1', 'Before', 'Type');
 SensorSummary.Link2 = strcat('<a href="', SensorSummary.Hyperlink2, '">Link2</a>');
 SensorSummary = movevars(SensorSummary, 'Link2', 'Before', 'Type');
 
-logformat('Sensor analysis complete.','INFO')
-
 % Sort the data, ascending by sensor range, then by type
-SensorSummary = sortrows(SensorSummary,["Type","score"],'descend')
+if isempty(SensorSummary)
+    logformat('Sensor analysis complete.  No sensors found!','INFO')
+else
+    SensorSummary = sortrows(SensorSummary,["Type","score"],'descend')
+    logformat('Sensor analysis complete.','INFO')
+end
+
 
 % Stop logging
 diary off

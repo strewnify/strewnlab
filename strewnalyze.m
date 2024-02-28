@@ -1,6 +1,7 @@
 % STREWNALYZE Prepares folders and reports nearby sensors for data analysis
 
 % Initialize
+import_ref_data
 strewnconfig
 
 % Start logging
