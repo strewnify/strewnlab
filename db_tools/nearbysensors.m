@@ -12,7 +12,6 @@ if ~isempty(find(data_tb.sensor_hor_FOV < 0,1)) || ~isempty(find(data_tb.sensor_
     logformat('Invalid FOV data in database','ERROR')
 end
 
-logformat('Input height not used','DEBUG')
 planet = getPlanet();
 Height_m = Height_km.*1000; % convert units
 
@@ -26,6 +25,7 @@ data_tb.curveDistance_km = curveDistance_m./1000;
 data_tb.observed_ELEV = observed_ELEV;
 data_tb.slantRange_km = slantRange_m./1000;
 data_tb.PctSensorRange = data_tb.curveDistance_km ./ data_tb.range_km .* 100;
+logformat('Need to calculate range for 3D view','DEBUG')
 
 % future feature - filter operational cameras at the time of the event
 

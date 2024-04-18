@@ -5,10 +5,10 @@
 % Add arguments: -r cd('C:\Users\james\Documents\GitHub\strewnlab'),TaskScheduler ,exit -logfile C:\Users\james\Documents\GitHub\strewnlab\logs\taskscheduler.log
 
 % temp solution
-diary('C:\Users\james\Documents\GitHub\strewnlab\logs\strewnnotify_log.txt')
-%diary([getSession('folders','logfolder') '\strewnnotify_log.txt'])        
-diary on 
-%RAII.diary = onCleanup(@() diary('off')); % turn the diary off after an error
+% diary('C:\Users\james\Documents\GitHub\strewnlab\logs\strewnnotify_log.txt')
+% %diary([getSession('folders','logfolder') '\strewnnotify_log.txt'])        
+% diary on 
+% %RAII.diary = onCleanup(@() diary('off')); % turn the diary off after an error
 
 % Configuration
 FrequentTask_period = hours(2.5);
@@ -37,11 +37,7 @@ if exist(taskfilename,'file') == 2
 
 % Initialize the task scheduler (first time)
 else
-    default_lastrun = datetime(1900,1,1,'TimeZone','UTC');
-    taskmaster.FrequentTask.lastrun_utc = default_lastrun;
-    taskmaster.DailyTask.lastrun_utc = default_lastrun;
-    taskmaster.OccaisionalTask.lastrun_utc = default_lastrun;
-    save(taskfilename,'taskmaster')
+    resetTaskScheduler
     logformat(sprintf('''%s'' not found.  File created with defaults.',taskfilename),'DEBUG')
 end
 
@@ -65,9 +61,20 @@ if nowtime_utc >= (taskmaster.DailyTask.lastrun_utc + DailyTask_period)
     
     logformat('StrewnLAB DailyTask started.','INFO')
     
-
-    % Currently no daily tasks
+    % Import new StrewnNotify contacts from GoogleDrive
+    try 
+        importcontacts
+    catch
+        logformat('Error in IMPORTCONTACTS.','DEBUG')
+    end
     
+    % Import new cameras from GoogleDrive
+    try 
+        importcameras
+    catch
+        logformat('Error in IMPORTCAMERAS.','DEBUG')
+    end
+            
     % Record Daily task complete
     taskmaster.DailyTask.lastrun_utc = nowtime_utc;
     
@@ -81,7 +88,11 @@ if nowtime_utc >= (taskmaster.OccaisionalTask.lastrun_utc + OccaisionalTask_peri
     logformat('StrewnLAB OccaisionalTask started.','INFO')
     
     % Get new events (new database method)
-    getnew_test
+    try
+        getnew_test
+    catch
+        logformat('Error in GETNEW_TEST.','DEBUG')
+    end    
     
     % Record Occaisional task complete
     taskmaster.OccaisionalTask.lastrun_utc = nowtime_utc;
@@ -98,3 +109,7 @@ logformat('StrewnLAB scheduled task service complete.')
 
 % Stop logging
 diary off
+
+% Exit MATLAB
+%exit
+

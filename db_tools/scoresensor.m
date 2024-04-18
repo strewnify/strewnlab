@@ -1,4 +1,4 @@
-function [score, data_name] = scoresensor( sensorLAT, sensorLONG, sensorAlt_m, startLAT, startLONG, startAlt_m, endLAT, endLONG, endAlt_m, locality, event_id, station_id, sensorAZ, horFOV, sensorELEV, vertFOV)
+function [score, data_name] = scoresensor( sensorLAT, sensorLONG, sensorAlt_m, startLAT, startLONG, startAlt_m, endLAT, endLONG, endAlt_m, locality, event_id, station_id, sensorAZ, horFOV, sensorELEV, vertFOV, BaseScore)
 %SCORESENSOR Scores a sensor observation and generates a data filename.
 
 defaultFOV = 180;
@@ -39,8 +39,6 @@ if nargin <= 15
 end
 
 % Load ellipsoid
-logformat('Input height not used','DEBUG')
-logformat('Need to update to array function','DEBUG')
 planet = getPlanet();
 
 % Calculate vectors and field of view
@@ -76,6 +74,7 @@ startVertMult = 38.14/(abs(startVertFOVposition_pct-50)+19.07);
 endVertMult = 38.14/(abs(endVertFOVposition_pct-50)+19.07);
 
 % Default invalid multipliers to 1
+BaseScoreMult = BaseScore./50;
 startHorMult(isnan(startHorMult)) = 1;
 endHorMult(isnan(endHorMult)) = 1;
 startVertMult(isnan(startHorMult)) = 1;
@@ -88,7 +87,7 @@ startAngMult = 1 + abs(cosd(2*startAngle));
 endAngMult = 1 + abs(cosd(2*endAngle));
 
 % Calculate final sensor score
-score = startScore*startHorMult*startVertMult*startAngMult + endScore*endHorMult*endVertMult*endAngMult;
+score = BaseScoreMult.*(startScore.*startHorMult.*startVertMult.*startAngMult + endScore.*endHorMult.*endVertMult.*endAngMult);
 score_string = ['x' sprintf('%03.0f',score)];
 
 % Create a MATLAB-friendly lat/long string suffix

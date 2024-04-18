@@ -3,6 +3,8 @@
 %   IMPORTCAMERAS allows the user to import camera registration 
 %   data into the Strewnify Database
 
+logformat('Camera Import Function Not Complete.','ERROR')
+
 % Load settings
 strewnconfig
 nowtime_utc = datetime('now','TimeZone','UTC'); 
@@ -17,9 +19,9 @@ load_database
 try
     
     % Attempt to download the file
-    cd([mainprefix '\Downloads\'])
+    cd([getSession('folders','mainprefix') '\Downloads\'])
     FILTERINDEX = 1;
-    PATHNAME = [mainprefix '\Downloads\'];
+    PATHNAME = [getSession('folders','mainprefix') '\Downloads\'];
     FILENAME = ['strewn_contacts' datetimestring '.csv'];
     options = weboptions('MediaType', 'application/json', 'ArrayFormat', 'csv');
     websave(FILENAME,['https://docs.google.com/spreadsheet/ccc?key=' getPrivate('GoogleFormsCam_key') '&output=csv&pref=1'],weboptions);

@@ -6,10 +6,7 @@
 
 diary off
 
-% Initialize globals
-import_ref_data
-
-% Import reference data
+% Initialize globals & import reference data
 import_ref_data
 
 % Load config file

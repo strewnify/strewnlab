@@ -50,6 +50,15 @@ end
 % If type is ERROR, crash
 if iserror
     
+    % If the user is not present, email the webmaster with the error
+    if ~getSession('state','userpresent')
+        try
+            strewnmail(yourMsg,getConfig('webmaster'))
+        catch
+            fprintf('%s | %s | %s\n', nowstring,'WARN','Failed to send error mail to the webmaster!' )
+        end            
+    end
+    
     % Stop logging
     diary off
         

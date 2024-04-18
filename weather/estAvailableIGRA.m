@@ -102,8 +102,10 @@ if event_time_utc < nowtime_utc
 
     % Provide countdown info
     elseif until_available_hours >= 0
-        logformat(sprintf('IGRA Station %s: Weather data available in %0.1f hours, at %s (%s)', StationID,until_available_hours,available_time_utc,available_time_local),'INFO')        
+        logformat(sprintf('IGRA Station %s: Weather data estimated available in %0.1f hours, at %s (%s)', StationID,until_available_hours,available_time_utc,available_time_local),'INFO')        
+    else
+        logformat(sprintf('IGRA Station %s: Weather data estimated available by %s (%s)', StationID,available_time_utc,available_time_local),'INFO')
     end
 else
-    logformat(sprintf('IGRA Station %s: Weather data available by %s (%s)',StationID,available_time_utc,available_time_local),'INFO')
+    logformat(sprintf('IGRA Station %s: Weather data estimated available by %s (%s)',StationID,available_time_utc,available_time_local),'INFO')
 end

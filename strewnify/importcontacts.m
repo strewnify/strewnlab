@@ -19,9 +19,9 @@ load_database
 try
     
     % Attempt to download the file
-    cd([mainprefix '\Downloads\'])
+    cd([getSession('folders','mainprefix') '\Downloads\'])
     FILTERINDEX = 1;
-    PATHNAME = [mainprefix '\Downloads\'];
+    PATHNAME = [getSession('folders','mainprefix') '\Downloads\'];
     FILENAME = ['strewn_contacts' datetimestring '.csv'];
     options = weboptions('MediaType', 'application/json', 'ArrayFormat', 'csv');
     websave(FILENAME,['https://docs.google.com/spreadsheet/ccc?key=' getPrivate('GoogleDrive_NotifyResponses') '&output=csv&pref=1'],weboptions);

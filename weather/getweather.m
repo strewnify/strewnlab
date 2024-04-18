@@ -236,9 +236,9 @@ while weatherdatamissing
     if usersuccess && ~isempty(selection_idx)
         switch numel(selection_idx)
             case 1
-                logformat('Single radiosonde station not supported.','ERROR')
+%                 logformat('Single radiosonde station not supported.','ERROR')
             case 2 
-                logformat('Two radiosonde stations not supported.  Unable to interpolate','ERROR')                                     
+%                 logformat('Two radiosonde stations not supported.  Unable to interpolate','ERROR')                                     
         end
     else
         logformat('User failed to select a radiosonde station.','ERROR')
@@ -430,15 +430,15 @@ while weatherdatamissing
         fclose(FID);
 
         % Recalculate filters and station count
-        filt_t1 = EventData_ProcessedIGRA.RELTIME <= effective_entrytime;
-        filt_t2 = EventData_ProcessedIGRA.RELTIME > effective_entrytime;
+        filt_t1 = EventData_ProcessedIGRA.NOM_RELTIME <= effective_entrytime;
+        filt_t2 = EventData_ProcessedIGRA.NOM_RELTIME > effective_entrytime;
         numstations_t1 = numel(unique(EventData_ProcessedIGRA.StationID(filt_t1)));
         numstations_t2 = numel(unique(EventData_ProcessedIGRA.StationID(filt_t2)));
         stationprogress = min([numstations_t1,numstations_t2]);
 
         % Update station data
-        filt_t1 = EventData_ProcessedIGRA.RELTIME <= effective_entrytime & ismember(EventData_ProcessedIGRA.StationID,EventData_IGRA_Nearby.StationID(station));
-        filt_t2 = EventData_ProcessedIGRA.RELTIME > effective_entrytime & ismember(EventData_ProcessedIGRA.StationID,EventData_IGRA_Nearby.StationID(station));
+        filt_t1 = EventData_ProcessedIGRA.NOM_RELTIME <= effective_entrytime & ismember(EventData_ProcessedIGRA.StationID,EventData_IGRA_Nearby.StationID(station));
+        filt_t2 = EventData_ProcessedIGRA.NOM_RELTIME > effective_entrytime & ismember(EventData_ProcessedIGRA.StationID,EventData_IGRA_Nearby.StationID(station));
         EventData_IGRA_Nearby.t1(station) = mean(EventData_ProcessedIGRA.Datetime(filt_t1));
         EventData_IGRA_Nearby.t2(station) = mean(EventData_ProcessedIGRA.Datetime(filt_t2));
         
@@ -611,8 +611,8 @@ end
 waitbar(0,WaitbarHandle,'Reticulating Splines');
 
 % Calculate times for interpolation
-filt_t1 = EventData_ProcessedIGRA.RELTIME <= effective_entrytime;
-filt_t2 = EventData_ProcessedIGRA.RELTIME > effective_entrytime;
+filt_t1 = EventData_ProcessedIGRA.NOM_RELTIME <= effective_entrytime;
+filt_t2 = EventData_ProcessedIGRA.NOM_RELTIME > effective_entrytime;
 IGRA_t1 = mean(EventData_ProcessedIGRA.Datetime(filt_t1));
 IGRA_t2 = mean(EventData_ProcessedIGRA.Datetime(filt_t2));
 
@@ -630,15 +630,63 @@ end
 EventData_ProcessedIGRA.WINDN = EventData_ProcessedIGRA.WSPD .* cosd(EventData_ProcessedIGRA.WDIR);
 EventData_ProcessedIGRA.WINDE = EventData_ProcessedIGRA.WSPD .* sind(EventData_ProcessedIGRA.WDIR);
 
-% Interpolate wind speed vectors in 3 dimensions: latitude, longitude, and altitude
-IGRA_t1_WINDN = scatteredInterpolant([EventData_ProcessedIGRA.LAT(filt_t1), EventData_ProcessedIGRA.LONG(filt_t1), EventData_ProcessedIGRA.HEIGHT(filt_t1)], EventData_ProcessedIGRA.WINDN(filt_t1),'natural','nearest');
-IGRA_t1_WINDE = scatteredInterpolant([EventData_ProcessedIGRA.LAT(filt_t1), EventData_ProcessedIGRA.LONG(filt_t1), EventData_ProcessedIGRA.HEIGHT(filt_t1)], EventData_ProcessedIGRA.WINDE(filt_t1),'natural','nearest');
-IGRA_t2_WINDN = scatteredInterpolant([EventData_ProcessedIGRA.LAT(filt_t2), EventData_ProcessedIGRA.LONG(filt_t2), EventData_ProcessedIGRA.HEIGHT(filt_t2)], EventData_ProcessedIGRA.WINDN(filt_t2),'natural','nearest');
-IGRA_t2_WINDE = scatteredInterpolant([EventData_ProcessedIGRA.LAT(filt_t2), EventData_ProcessedIGRA.LONG(filt_t2), EventData_ProcessedIGRA.HEIGHT(filt_t2)], EventData_ProcessedIGRA.WINDE(filt_t2),'natural','nearest');
 
-% lookup meteor path at time 1 and time 2 and interpolate wind vectors to entry time
-WINDN = IGRA_t1_WINDN(EventData_latitudes,EventData_longitudes,EventData_altitudes) + interpfactor .* (IGRA_t2_WINDN(EventData_latitudes,EventData_longitudes,EventData_altitudes)-IGRA_t1_WINDN(EventData_latitudes,EventData_longitudes,EventData_altitudes));
-WINDE = IGRA_t1_WINDE(EventData_latitudes,EventData_longitudes,EventData_altitudes) + interpfactor .* (IGRA_t2_WINDE(EventData_latitudes,EventData_longitudes,EventData_altitudes)-IGRA_t1_WINDE(EventData_latitudes,EventData_longitudes,EventData_altitudes));
+% Count stations at each time
+numstations_t1 = max(numel(unique(EventData_ProcessedIGRA.LAT(filt_t1))), numel(unique(EventData_ProcessedIGRA.LONG(filt_t1))));
+numstations_t2 = max(numel(unique(EventData_ProcessedIGRA.LAT(filt_t2))), numel(unique(EventData_ProcessedIGRA.LONG(filt_t2))));
+if numstations_t1 == 0 || numstations_t2 == 0
+    logformat('Unique location station data not found!','ERROR')
+end
+
+switch numstations_t1
+    case 1
+        % Interpolate wind at altitude
+        IGRA_t1_WINDN = griddedInterpolant(EventData_ProcessedIGRA.HEIGHT(filt_t1), EventData_ProcessedIGRA.WINDN(filt_t1));
+        IGRA_t1_WINDE = griddedInterpolant(EventData_ProcessedIGRA.HEIGHT(filt_t1), EventData_ProcessedIGRA.WINDE(filt_t1));
+        
+        % lookup meteor path at time 1 (single station - altitudes only)
+        IGRA_t1_WINDN_lookup = IGRA_t1_WINDN(EventData_altitudes);
+        IGRA_t1_WINDE_lookup = IGRA_t1_WINDE(EventData_altitudes);
+        
+    case 2
+        logformat('2 station interpolation not yet supported.','ERROR')
+    otherwise
+        % Interpolate wind speed vectors in 3 dimensions: latitude, longitude, and altitude
+        IGRA_t1_WINDN = scatteredInterpolant([EventData_ProcessedIGRA.LAT(filt_t1), EventData_ProcessedIGRA.LONG(filt_t1), EventData_ProcessedIGRA.HEIGHT(filt_t1)], EventData_ProcessedIGRA.WINDN(filt_t1),'natural','nearest');
+        IGRA_t1_WINDE = scatteredInterpolant([EventData_ProcessedIGRA.LAT(filt_t1), EventData_ProcessedIGRA.LONG(filt_t1), EventData_ProcessedIGRA.HEIGHT(filt_t1)], EventData_ProcessedIGRA.WINDE(filt_t1),'natural','nearest');
+
+        % lookup meteor path at time 1
+        IGRA_t1_WINDN_lookup = IGRA_t1_WINDN(EventData_latitudes,EventData_longitudes,EventData_altitudes);
+        IGRA_t1_WINDE_lookup = IGRA_t1_WINDE(EventData_latitudes,EventData_longitudes,EventData_altitudes);
+
+end
+
+switch numstations_t2
+    case 1
+        % Interpolate wind at altitude
+        IGRA_t2_WINDN = griddedInterpolant(EventData_ProcessedIGRA.HEIGHT(filt_t2), EventData_ProcessedIGRA.WINDN(filt_t2));
+        IGRA_t2_WINDE = griddedInterpolant(EventData_ProcessedIGRA.HEIGHT(filt_t2), EventData_ProcessedIGRA.WINDE(filt_t2));
+        
+        % lookup meteor path at time 2 (single station - altitudes only)
+        IGRA_t2_WINDE_lookup = IGRA_t2_WINDE(EventData_altitudes);
+        IGRA_t2_WINDN_lookup = IGRA_t2_WINDN(EventData_altitudes);
+        
+    case 2
+        logformat('2 station interpolation not yet supported.','ERROR')
+    otherwise
+        % Interpolate wind speed vectors in 3 dimensions: latitude, longitude, and altitude
+        IGRA_t2_WINDN = scatteredInterpolant([EventData_ProcessedIGRA.LAT(filt_t2), EventData_ProcessedIGRA.LONG(filt_t2), EventData_ProcessedIGRA.HEIGHT(filt_t2)], EventData_ProcessedIGRA.WINDN(filt_t2),'natural','nearest');
+        IGRA_t2_WINDE = scatteredInterpolant([EventData_ProcessedIGRA.LAT(filt_t2), EventData_ProcessedIGRA.LONG(filt_t2), EventData_ProcessedIGRA.HEIGHT(filt_t2)], EventData_ProcessedIGRA.WINDE(filt_t2),'natural','nearest');
+        
+        % lookup meteor path at time 2
+        IGRA_t2_WINDE_lookup = IGRA_t2_WINDE(EventData_latitudes,EventData_longitudes,EventData_altitudes);
+        IGRA_t2_WINDN_lookup = IGRA_t2_WINDN(EventData_latitudes,EventData_longitudes,EventData_altitudes);
+end
+
+
+% interpolate wind vectors to entry time
+WINDN = IGRA_t1_WINDN_lookup + interpfactor .* (IGRA_t2_WINDN_lookup-IGRA_t1_WINDN_lookup);
+WINDE = IGRA_t1_WINDE_lookup + interpfactor .* (IGRA_t2_WINDE_lookup-IGRA_t1_WINDE_lookup);
 EventData_WINDN_MODEL = griddedInterpolant(EventData_altitudes,WINDN);    
 EventData_WINDE_MODEL = griddedInterpolant(EventData_altitudes,WINDE); 
 
