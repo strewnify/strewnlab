@@ -8,15 +8,6 @@ diary on
 
 logformat('Analyzing nearby sensors','INFO')
 
-% Print trajectory data
-reportevents(sdb_Events(select_i,:))
-
-if strcmp(sdb_Events(select_i,:).DataSource{1},'AMS')
-    AMS_EventID = sdb_Events(select_i,:).AMS_event_id{1};
-    AMS_EventID = [AMS_EventID(12:end) '-' AMS_EventID(7:10)];
-    AMS_reports_json = getams_reportsforevent(AMS_EventID);
-end
-
 % Find nearby sensors
 startSensors = nearbysensors(sdb_Events.start_lat(select_i),sdb_Events.start_long(select_i),sdb_Events.start_alt(select_i)/1000,sdb_Sensors);
 endSensors = nearbysensors(sdb_Events.end_lat(select_i),sdb_Events.end_long(select_i),sdb_Events.end_alt(select_i)/1000,sdb_Sensors);
@@ -27,16 +18,16 @@ SensorSummary = [endSensors; startSensors];
 SensorSummary = SensorSummary(IA,:);
 
 % Replace missing data
-SensorSummary.StationName(ismissing(SensorSummary.StationName)) = "";
-SensorSummary.Operator(ismissing(SensorSummary.Operator)) = "";
-SensorSummary.City(ismissing(SensorSummary.City)) = "";
-SensorSummary.cam_Model(ismissing(SensorSummary.cam_Model)) = "";
-SensorSummary.Hyperlink1(ismissing(SensorSummary.Hyperlink1)) = "";
-SensorSummary.Hyperlink2(ismissing(SensorSummary.Hyperlink2)) = "";
-SensorSummary.Address(ismissing(SensorSummary.Address)) = "";
-SensorSummary.Email(ismissing(SensorSummary.Email)) = "";
-SensorSummary.Twitter(ismissing(SensorSummary.Twitter)) = "";
-SensorSummary.Notes(ismissing(SensorSummary.Notes)) = "";
+% SensorSummary.StationName(ismissing(SensorSummary.StationName)) = "";
+% SensorSummary.Operator(ismissing(SensorSummary.Operator)) = "";
+% SensorSummary.City(ismissing(SensorSummary.City)) = "";
+% SensorSummary.cam_Model(ismissing(SensorSummary.cam_Model)) = "";
+% SensorSummary.Hyperlink1(ismissing(SensorSummary.Hyperlink1)) = "";
+% SensorSummary.Hyperlink2(ismissing(SensorSummary.Hyperlink2)) = "";
+% SensorSummary.Address(ismissing(SensorSummary.Address)) = "";
+% SensorSummary.Email(ismissing(SensorSummary.Email)) = "";
+% SensorSummary.Twitter(ismissing(SensorSummary.Twitter)) = "";
+% SensorSummary.Notes(ismissing(SensorSummary.Notes)) = "";
 
 % Calculate score for each sensor
 for sensor_i = 1:size(SensorSummary,1)
@@ -54,12 +45,12 @@ else
 end
 
 % Write data to Excel file
-output_filenameSensorSummary = ['testxls_' datestr(now,'yyyymmddHH') '.xlsx'];
+output_filenameSensorSummary = [SimEventID '_SensorSummary_Ver' datestr(now,'yyyymmddHH') '.csv'];
 temporary = SensorSummary;
 temporary.Type = cellstr(temporary.Type);
 temporary.Network = cellstr(temporary.Network);
-SensorSummary_xlsdata = [temporary.Properties.VariableNames; table2cell(temporary)];
-xlswrite(output_filenameSensorSummary,SensorSummary_xlsdata)
+SensorSummary_csvdata = [temporary.Properties.VariableNames; table2cell(temporary)];
+writecell(SensorSummary_csvdata,[eventfolder '\' output_filenameSensorSummary])
 logformat(sprintf('Sensor summary exported to %s',output_filenameSensorSummary),'INFO')
 
 % Add a hyperlink in the command window

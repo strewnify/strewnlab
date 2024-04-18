@@ -36,6 +36,7 @@ success = EventPicker_UI.success;
 CONFIDENTIAL = EventPicker_UI.CONFIDENTIAL;
 WCT = EventPicker_UI.WCT;
 GE = EventPicker_UI.GE;
+VIDEO = EventPicker_UI.VIDEO;
 
 % temp - old database - lookup index
 select_i = find(strcmp(sdb_Events.EventID,SelectedEvent),1,'first');
@@ -90,7 +91,47 @@ else
     SimEventID = SelectedEvent;
 end
 
+% Create folders
+SimVersion = '0';
 syncevent
+
+% If Video was checked
+if VIDEO
+
+    % Create a video folder
+    if exist([eventfolder '/Video'], 'dir') ~= 7
+       mkdir([eventfolder '/Video'])
+    end
+    
+    % Open 
+    [~,temp_result] = system('tasklist /FI "imagename eq 4kvideodownloader.exe" /fo table /nh'); % check if program is running
+    if GE && strcmp(temp_result(1:4),'INFO') % if program is not running
+        system([VideoDownloader_path ' &']); % open Video Downloader
+        system('TASKKILL -f -im "cmd.exe" > NUL'); % kill the random command window from previous system command
+    end
+end
+
+% Print trajectory data
+event_report = reportevents(sdb_Events(select_i,:))
+
+% Get AMS event data
+if strcmp(sdb_Events(select_i,:).DataSource{1},'AMS')
+    
+    % DEBUG Correct the AMS event ID
+    AMS_EventID = sdb_Events(select_i,:).AMS_event_id{1};
+    AMS_EventID = [AMS_EventID(12:end) '-' AMS_EventID(7:10)];
+    
+    % Print the AMS reports
+    AMS_json = getams_reportsforevent(AMS_EventID,eventfolder);
+    
+    % Download the latest KML file from AMS and save it to the event folder 
+    KML_filepath = getamsKML(AMS_EventID,eventfolder);
+    
+    % if Google Earth was selected, open the file
+    if GE
+        winopen(KML_filepath);        
+    end
+end
 
 % Analyze nearby sensors
 analyze_nearby
@@ -104,7 +145,7 @@ if ~isempty(sdb_Events.Hyperlink2{select_i})
 end
 
 %Open Google Earth, if not open
-[~,temp_result] = system('tasklist /FI "imagename eq googleearh.exe" /fo table /nh'); % check if program is running
+[~,temp_result] = system('tasklist /FI "imagename eq googleearth.exe" /fo table /nh'); % check if program is running
 if GE && strcmp(temp_result(1:4),'INFO') % if program is not running
     system([GoogleEarth_path ' &']); % open Google Earth
     system('TASKKILL -f -im "cmd.exe" > NUL'); % kill the random command window from previous system command
