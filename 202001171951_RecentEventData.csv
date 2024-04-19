@@ -1,7 +1,0 @@
-DataSource,Datetime,Location,NumReports,LAT,LONG,Mass,Speed,Bearing,Incidence,Altitude,ProcessDate,Hyperlink1,Hyperlink2,HyperMap
-AMS,01/14/2020 04:51:35 UTC,United States,12,33.4056,-118.1342,NaN,NaN,72.686,62.074,16.913,,,,"=HYPERLINK(""https://maps.google.com/?q=33.405600%20-118.134200"",""Google Map"")"
-ASGARD,01/14/2020 09:14:31 UTC,"Chihuahua, Mexico",NaN,30.9899,-106.6237,NaN,20.8,NaN,NaN,33.9,20200115,"=HYPERLINK(""https://fireballs.ndc.nasa.gov/evcorr/20200115/20200114_091431D/event.png"",""Summary"")","=HYPERLINK(""https://fireballs.ndc.nasa.gov/20200115.html"",""Event Page"")","=HYPERLINK(""https://maps.google.com/?q=30.989900%20-106.623700"",""Google Map"")"
-AMS,01/16/2020 02:34:41 UTC,"San Bernardino, CA, USA",15,34.1915,-117.3312,NaN,NaN,186.327,21.849,44.658,,,,"=HYPERLINK(""https://maps.google.com/?q=34.191500%20-117.331200"",""Google Map"")"
-CNEOS,01/16/2020 09:31:42 UTC, ,NaN,-71.7,-116.4,9618,12.857,80.066,58.338,27.8,,,,"=HYPERLINK(""https://maps.google.com/?q=-71.700000%20-116.400000"",""Google Map"")"
-AMS,01/16/2020 21:52:01 UTC, ,70,52.7515,2.5824,NaN,NaN,329.221,56.452,26.814,,,,"=HYPERLINK(""https://maps.google.com/?q=52.751500%202.582400"",""Google Map"")"
-AMS,01/17/2020 04:57:10 UTC,"Florida, USA",25,28.7084,-82.6876,NaN,NaN,40.087,63.328,45.077,,,,"=HYPERLINK(""https://maps.google.com/?q=28.708400%20-82.687600"",""Google Map"")"

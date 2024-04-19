@@ -2,7 +2,7 @@
 
 % Logging option
 if strcmp(get(0,'Diary'),'off')
-    if exist(getSession('folders','logfolder'),'var')
+    if exist(getSession('folders','logfolder'),'var') == 7
         diary([getSession('folders','logfolder') '\database_errorlog.txt'])
     else
         diary('database_errorlog.txt')

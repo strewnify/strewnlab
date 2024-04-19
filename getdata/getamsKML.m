@@ -23,7 +23,7 @@ else
 end
 
 try
-    FILENAME = ['AMS_Event' event_id '-' year_str '_Ver' datetimestring '.kml'];
+    FILENAME = ['AMS_Event' event_id '-' year_str '_V' datetimestring '.kml'];
     filepath_export = [path_export FILENAME];
     websave(filepath_export,['https://www.amsmeteors.org/members/imo_kml/view_trajectory_kml?event_id=' event_id '&event_year=' year_str]);
     downloaded = true;
@@ -62,7 +62,7 @@ if downloaded
             
             % If the correct ID is in the file, append a version number
             if contains(file_contents(file_idx:(file_idx + 20)),correct_ID)
-                file_contents = regexprep(file_contents,correct_ID,[correct_ID ' Ver' datetimestring]);
+                file_contents = regexprep(file_contents,correct_ID,[correct_ID ' V' datetimestring]);
             
             else
                 logformat('Apparent KML file version mismatch.  Review KML file.','DEBUG')
@@ -72,7 +72,7 @@ if downloaded
             FID  = fopen(filepath_export,'w');
             fprintf(FID,'%s',file_contents);
             
-            logformat(sprintf('KML file read/write successful. %s appended to EventID',['Ver' datetimestring]),'INFO')
+            logformat(sprintf('KML file read/write successful. %s appended to EventID',['V' datetimestring]),'INFO')
         end
     end
 end

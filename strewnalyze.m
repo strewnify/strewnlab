@@ -9,12 +9,12 @@ diary([getSession('folders','logfolder') '\strewnlab_log.txt'])
 diary on 
 logformat('New meteor event analysis initialized.','INFO')
 
+% Load the event database
+load_database
+
 % Choose event database
 analyze_answer = questdlg("Choose a Database","Database Choice","New","Old","Cancel","Cancel");
 logformat('User prompted to choose old or new database','USER')
-
-% Load the event database
-load_database
 
 % Arbitrate database
 switch analyze_answer
@@ -26,9 +26,14 @@ switch analyze_answer
         logformat('User cancelled data analysis.','ERROR')
 end
 
+% Open a waitbar
+handleStrewnalyze = waitbar(0.1,'Loading Analysis Application...');
+
 % Run the Event Picker
 EventPicker_UI = EventPicker(Events_db);
 waitfor(EventPicker_UI,'success')
+
+waitbar(0.2,handleStrewnalyze,'Waiting for user selection...');
 
 % Get output data from UI before closing
 SelectedEvent = extractBefore(EventPicker_UI.SelectedEvent,' - ')
@@ -84,6 +89,8 @@ end
 clear usersuccess
 clear selection_idx
 
+waitbar(0.4,handleStrewnalyze,'Creating folders & templates...');
+
 % Create folders
 if SelectedEvent(1) == 'S'
     SimEventID = ['Y' SelectedEvent(2:end)];
@@ -111,11 +118,17 @@ if VIDEO
     end
 end
 
-% Print trajectory data
+% Print trajectory data and save to file
 event_report = reportevents(sdb_Events(select_i,:))
+writematrix(event_report,[exportfolder '\readme_' exportfoldername '.txt'],'QuoteStrings',false);
+
+% Create the KML template
+load_KMLtemplate(eventfolder, SimEventID, SimulationName, GE);
 
 % Get AMS event data
 if strcmp(sdb_Events(select_i,:).DataSource{1},'AMS')
+
+    waitbar(0.3,handleStrewnalyze,'Downloading data from AMS...');
     
     % DEBUG Correct the AMS event ID
     AMS_EventID = sdb_Events(select_i,:).AMS_event_id{1};
@@ -133,8 +146,20 @@ if strcmp(sdb_Events(select_i,:).DataSource{1},'AMS')
     end
 end
 
+waitbar(0.5,handleStrewnalyze,'Analyzing nearby sensors...');
+
 % Analyze nearby sensors
 analyze_nearby
+
+% Plot Doppler Stations
+plotsensors(SensorSummary(SensorSummary.Type=="Doppler",:))
+title([SimulationName ' : ' strrep(SimEventID,'_','-')])
+geoscatter(sdb_Events.LAT(select_i),sdb_Events.LONG(select_i),'filled','b')
+
+% Export plot to image file
+saveas(gcf,[eventfolder '/' SimEventID '_DopplerStationMap.png']);
+
+waitbar(0.75,handleStrewnalyze,'Opening Applications...');
 
 % Open browser to event pages
 if ~isempty(sdb_Events.Hyperlink1{select_i})
@@ -157,6 +182,8 @@ if WCT && strcmp(temp_result(1:4),'INFO') % if program is not running
     system([WCT_path ' &']); % open Google Earth    
 end
 
+waitbar(0.95,handleStrewnalyze,'Cleaning up...')
+
 system('TASKKILL -f -im "cmd.exe" > NUL'); % kill random command windows from previous system commands
 
 % clear temp variables
@@ -164,3 +191,8 @@ clear temp_*
 
 % Stop logging
 diary off
+
+% Close waitbar
+waitbar(1,handleStrewnalyze,'Analysis Preparation Complete.')
+pause(0.8)
+close(handleStrewnalyze)

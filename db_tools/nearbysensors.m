@@ -46,7 +46,8 @@ data_tb.eff_maxAZ = wrapTo360(sensorAZ + eff_hor_FOV./2);
 % Calculate the position of the event in the horizontal FOV of each camera
 data_tb.pct_horFOV = pctHorFOV(data_tb.eff_minAZ,data_tb.eff_maxAZ,data_tb.observed_AZ);
 data_tb.pct_horFOV(data_tb.sensor_hor_FOV == 360) = NaN; % 360 degree sensors, like NEXRAD
-%data_tb.pct_horFOV(data_tb.sensorELEV == 90) = NaN;
+data_tb.pct_horFOV(data_tb.sensorELEV == 90) = NaN; % horizontal FOV not valid for vertically pointed sensors
+logformat('Need to fix vertically pointed sensors FOV.','DEBUG')
 
 % calculate effective vertical field of view, with defaulting for missing data
 eff_vert_FOV = data_tb.sensor_vert_FOV;  % copy database FOV

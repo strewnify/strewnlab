@@ -11,18 +11,18 @@ default_BaseScore = 5;
 new_sensor_type = '';
 
 % Error checking
-if nargin == 1 || nargin > 3
-    logformat('ADDSENSOR requires 2 or 3 inputs.','ERROR')
+if nargin > 2
+    logformat('ADDSENSOR requires 1 or 2 inputs.','ERROR')
 end
-if ~getSession('state','userpresent') && nargin == 2
+if ~getSession('state','userpresent') && nargin == 1
     logformat('Input data required in scheduled function.','ERROR')
 end
 
 % Log request type
 if getSession('state','userpresent')
-    if nargin == 2
+    if nargin == 1
         logformat('User requested to add new sensor from manual input.','USER')
-    elseif nargin == 3
+    elseif nargin == 2
         logformat('User requested to add new sensor from data table.','USER')
     end
 else
@@ -33,7 +33,7 @@ end
 db_Sensors_out = db_Sensors_in;
 
 % if no data was provided, prompt user
-if nargin == 2
+if nargin == 1
     
     % Get sensor type for this session
     while isempty(new_sensor_type)        

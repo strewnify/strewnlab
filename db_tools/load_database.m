@@ -25,7 +25,7 @@ end
 
 
 % Open a waitbar
-handleLoadDatabase = waitbar(0,'Loading Data...');
+handleLoadDatabase = waitbar(0,'Loading Database...');
 
 nowtime_utc = datetime('now','TimeZone','UTC'); 
 now_datestring = datestr(nowtime_utc,'yyyymmddHHMM');
