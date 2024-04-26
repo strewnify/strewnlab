@@ -81,9 +81,6 @@ else
         ref_session.user.export_username = ref_session.user.winusername;
         logformat('No user present.  Export folders will be named with windows username','DEBUG')
     end
-            
-    
-
 end
 
 % Get timezone
@@ -199,10 +196,56 @@ else
 end
 logformat(sprintf('Working data folder %s at %s',log_msg, ref_session.folders.workingfolder),'INFO')
 
-% Meteor events folder
-ref_session.folders.meteoreventsfolder = [ref_session.folders.mainprefix '\Documents\NextCloud\StrewnifySync\Meteor Events'];
+% Get Meteor events folder
+if ispref('strewnlab','meteoreventsfolder')
+    ref_session.folders.meteoreventsfolder = getpref('strewnlab','meteoreventsfolder');
+    logformat(sprintf('Meteor Events Folder loaded from matlab preferences as %s.',ref_session.folders.meteoreventsfolder),'INFO')
+
+% First time setup
+else
+    if ref_session.state.userpresent
+        logformat('Meteor Events Folder not found in MATLAB preferences. User queried for first time setup.','INFO')
+        
+        % prompt for folder
+        user_meteoreventsfolder = uigetdir('','Select a Main Folder for Meteor Event Data');
+                
+        % save to matlab preferences
+        setpref('strewnlab','meteoreventsfolder',user_meteoreventsfolder);
+        ref_session.folders.meteoreventsfolder = getpref('strewnlab','meteoreventsfolder');
+        
+        logformat(sprintf('Meteor Events Folder saved to MATLAB preferences as %s.',ref_session.folders.meteoreventsfolder),'INFO')
+    else
+        ref_session.folders.meteoreventsfolder = [ref_session.folders.mainprefix '\Documents\NextCloud\StrewnifySync\Meteor Events'];
+        logformat('No user present.  Meteor Events Folder set to default.','DEBUG')
+    end
+end
+
 logformat(sprintf('Meteor events folder located at %s', ref_session.folders.meteoreventsfolder),'INFO')
-ref_session.folders.secreteventsfolder = [ref_session.folders.mainprefix '\Documents\NextCloud\StrewnifySync\Meteor Events CONFIDENTIAL'];
+
+% Get Secret Meteor events folder
+if ispref('strewnlab','secreteventsfolder')
+    ref_session.folders.secreteventsfolder = getpref('strewnlab','secreteventsfolder');
+    logformat(sprintf('Meteor Events Folder loaded from matlab preferences as %s.',ref_session.folders.secreteventsfolder),'INFO')
+
+% First time setup
+else
+    if ref_session.state.userpresent
+        logformat('CONFIDENTIAL Meteor Events Folder not found in MATLAB preferences. User queried for first time setup.','INFO')
+        
+        % prompt for folder
+        user_secreteventsfolder = uigetdir('','Select a Folder for CONFIDENTIAL Meteor Event Data');
+                
+        % save to matlab preferences
+        setpref('strewnlab','secreteventsfolder',user_secreteventsfolder);
+        ref_session.folders.secreteventsfolder = getpref('strewnlab','secreteventsfolder');
+        
+        logformat(sprintf('CONFIDIENTIAL Meteor Events Folder saved to MATLAB preferences as %s.',ref_session.folders.secreteventsfolder),'INFO')
+    else
+        ref_session.folders.secreteventsfolder = [ref_session.folders.mainprefix '\Documents\NextCloud\StrewnifySync\Meteor Events CONFIDENTIAL'];
+        logformat('No user present.  CONFIDENTIAL Meteor Events Folder set to default.','DEBUG')
+    end
+end
+
 logformat(sprintf('Confidential meteor events folder located at %s', ref_session.folders.secreteventsfolder),'INFO')
 
 % Automated event script folder
