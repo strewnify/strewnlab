@@ -56,7 +56,7 @@ SimVersionSfx = regexprep(SimVersionSfx,'\s*','_');
 
 % Update file and folder names, in case they changed above
 SimFilename = matlab.lang.makeValidName(SimulationName,'ReplacementStyle','delete');
-exportfoldername = [SimFilename '_StrewnLAB_export' SimVersionSfx];
+exportfoldername = [SimFilename '_StrewnLAB_' getSession('user','export_username') '_export' SimVersionSfx];
 exportfolder = [eventfolder '\' exportfoldername];
 
 % create an export subfolder in the event folder

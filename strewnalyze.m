@@ -13,8 +13,12 @@ logformat('New meteor event analysis initialized.','INFO')
 load_database
 
 % Choose event database
-analyze_answer = questdlg("Choose a Database","Database Choice","New","Old","Cancel","Cancel");
-logformat('User prompted to choose old or new database','USER')
+
+%analyze_answer = questdlg("Choose a Database","Database Choice","New","Old","Cancel","Cancel");
+%logformat('User prompted to choose old or new database','USER')
+
+analyze_answer = 'Old';
+logformat('New database in development. Defaulted to old database.','DEBUG')
 
 % Arbitrate database
 switch analyze_answer

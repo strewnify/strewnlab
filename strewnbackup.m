@@ -1,5 +1,7 @@
 % STREWNBACKUP Backup the StrewnLAB simulation in progress.
 
+logformat('Simulation interrupted. Saving progress...','INFO')
+
 % Update file and folder names
 syncevent
 
@@ -32,12 +34,12 @@ if exist('check_eventdataloaded','var')==1 && check_eventdataloaded
         % return to main folder
         cd(getSession('folders','mainfolder'))
         
-        disp(['Workspace backed up to ' newline exportfolder])
+        logformat(['Workspace backed up to ' newline exportfolder],'INFO')
      
      catch
         % return to main folder
         cd(getSession('folders','mainfolder'))
-        warning('Error in simulation data backup operation.');
+        logformat('Error in simulation data backup operation.','WARN');
      end
     
     
@@ -52,5 +54,5 @@ if exist('check_eventdataloaded','var')==1 && check_eventdataloaded
     cd(getSession('folders','mainfolder'));
 
 else
-    error('STREWNBACKUP called, but no simulation loaded')
+    logformat('STREWNBACKUP called, but no simulation loaded','ERROR')
 end

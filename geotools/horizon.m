@@ -2,8 +2,6 @@ function [dipangle,curvedist_km] = horizon(lat, long, altitude_km, AZ)
 %[DIPANGLE, DISTANCE] = HORIZON(LAT, LONG, ALTITUDE) Calculate distance to
 % the horizon and dip angle.  This function assumes the terrain is flat.
 
-planet = getPlanet();
-
 % degree step for dip angle
 step_deg = 10;
 start_angle = 90;

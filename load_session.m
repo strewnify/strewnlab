@@ -51,6 +51,41 @@ logformat(sprintf('System Version: %s',ref_session.env.system_ver),'INFO')
 ref_session.user.winusername = getenv('USERNAME');
 logformat(sprintf('System User: %s',ref_session.user.winusername),'INFO')
 
+% Get username for export folder naming
+if ispref('strewnlab','export_username')
+    ref_session.user.export_username = getpref('strewnlab','export_username');
+    logformat(sprintf('Export username loaded from matlab preferences as %s.',ref_session.user.export_username),'INFO')
+
+% First time setup
+else
+    if ref_session.state.userpresent
+        logformat('Export username not found in MATLAB preferences. User queried for first time setup.','INFO')
+        
+        % prompt the user for username
+        usersuccess = false;
+        while ~usersuccess
+            export_username = char(inputdlg('Enter a username that will be used for folder export:'));
+            if isvarname(export_username)
+                usersuccess = true;
+            else
+                warning('Invalid username.  Please enter a username, with no spaces or special characters.')
+            end
+        end
+                
+        % save to matlab preferences
+        setpref('strewnlab','export_username',export_username);
+        ref_session.user.export_username = getpref('strewnlab','export_username');
+        
+        logformat(sprintf('Export username saved to MATLAB preferences as %s.',ref_session.user.export_username),'INFO')
+    else
+        ref_session.user.export_username = ref_session.user.winusername;
+        logformat('No user present.  Export folders will be named with windows username','DEBUG')
+    end
+            
+    
+
+end
+
 % Get timezone
 ref_session.env.TimeZone = datetime.SystemTimeZone;
 logformat(sprintf('System Time Zone: %s',ref_session.env.TimeZone),'INFO')
@@ -215,12 +250,14 @@ if ref_session.state.userpresent
     % Get user role, saving preferences to matlab preferences
     logformat('User queried for role preference.','USER')
     [user_role,~] = uigetpref('strewnlab_uigetpref','role_pref','Choose User Role',quest,roles);
-
+    
+    
 % if no userpresent, set to developor (for scheduled scripts)
 else
     user_role = 'developer';
     logformat('User not present at console, user role defaulted to ''developer''.','USER')
 end
+
 
 % *** Credential Loading ***
 % Check for saved credentials

@@ -45,7 +45,7 @@ else
 end
 
 % Export sensor data to kml
-exportpins(eventfolder,[SimEventID '_Sensors_V' datestr(now,'yyyymmddHH')],[SimEventID '_Sensors_V' datestr(now,'yyyymmddHH')],SensorSummary.LAT',SensorSummary.LONG',SensorSummary.Altitude_m,SensorSummary.StationID)
+exportpins(eventfolder,[SimEventID '_Sensors_V' datestr(now,'yyyymmddHH')],[SimEventID '_Sensors_V' datestr(now,'yyyymmddHH')],SensorSummary.LAT',SensorSummary.LONG',SensorSummary.Altitude_m,SensorSummary.StationID);
 
 % Write data to Excel file
 output_filenameSensorSummary = [SimEventID '_SensorSummary_V' datestr(now,'yyyymmddHH') '.csv'];

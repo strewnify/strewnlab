@@ -56,6 +56,7 @@ end
 % If the waitbar was closed, open a new one
 if ~exist('WaitbarHandle','var') || ~ishghandle(WaitbarHandle)
     WaitbarHandle = waitbar(0,'Please wait...');
+    WaitbarHandle.Name = 'Close this Window to STOP';
     movegui(WaitbarHandle,[-100 500])  
 end
    
@@ -254,8 +255,13 @@ cam_elevation = 20000;
 %cam_location = [-83.912 42.4359 60000];
 
 % Display progress
-fprintf('Running Total: %0.0f meteorites modeled. \n', frag_index)
-disp('Please wait... ');
+disp(newline)
+disp('StrewnLAB Meteor Simulation in progress...')
+fprintf('%0.0f scenarios modeled... \n', sim_scenario)
+fprintf('%0.0f total meteorites dropped... \n', frag_index)
+disp(newline)
+disp('To STOP the simulation at any time, close the progress bar. (Progess will not be lost)')
+disp(newline)
 
 if useplot
     handle_trajectoryplot = figure;
@@ -475,10 +481,11 @@ while inflightcount > 0
     
     if plotcounter > plotstep && ~stealth
         try
-            waitbar((zmax-zmax_current)/(zmax-plotlevel),WaitbarHandle,sprintf('%0.0f Meteorites in Flight, %d Landed\nt = %0.2fs, vmax = %0.0f m/s', inflightcount, impactcounter, t(current), vmax_current));
+            waitbar((zmax-zmax_current)/(zmax-plotlevel),WaitbarHandle,sprintf('%0.0f Meteorites in Flight, %d Landed\nt = %0.2fs, vmax = %0.0f m/s', inflightcount, impactcounter, t(current), vmax_current));            
         catch
             strewnbackup
-            error([newline 'Simulation stopped by user. A backup workspace has been saved to:  ' exportfolder newline newline 'To restart simulation, type ''strewnify''.']);
+            logformat(['Simulation stopped by user. A backup workspace has been saved to:  ' exportfolder newline newline 'To restart simulation, type ''strewnify''.'],'INFO');
+            return
         end
     end
     

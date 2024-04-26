@@ -1,9 +1,6 @@
 function [newstring] = validplace(placestring,placenames,abbrev)
 %VALIDPLACE looks for a single valid place name or abbreviation in a string, and
-%returns the corrected state name, along with start and end index.  If more
-%than one match is found, an empty string and NaN's are returned.
-
-
+%returns the corrected place name
 
 cnt = 0;
 
@@ -18,7 +15,6 @@ for idx = 1:size(placenames,1)
     end    
 end
 
-
 % Check for abbreviations
 for idx = 1:size(placenames,1)
     clear test
@@ -29,7 +25,6 @@ for idx = 1:size(placenames,1)
         old = placenames{idx,2};
     end    
 end
-
 
 % Choose output format
 if abbrev
