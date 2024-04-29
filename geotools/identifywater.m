@@ -13,7 +13,6 @@ min_elevation_m = -50; % elevations below this will be considered water,if not d
 if nargin == 2
     % Get elevations from Google
     % Resolution is better if single inputs are passed
-    loadprivate % load Google Maps API key
 
     for idx = 1:numel(lat)
         try
