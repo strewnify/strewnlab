@@ -4,10 +4,13 @@
 %
 %   Program originally written by Jim Goodall, April 2018
 
-diary off
-
 % Initialize globals & import reference data
 import_ref_data
+
+% Start logging
+diary([getSession('folders','logfolder') '\strewnlab_log.txt'])        
+diary on 
+logformat('New meteor event analysis initialized.','INFO')
 
 % Load config file
 if ~exist('check_configloaded','var') || ~check_configloaded
@@ -86,6 +89,10 @@ end
 % start
 plotlevel = ground;  %generate strewn field at this level, useful for estimating radar
 %test = erfinv(confidence/100)*sqrt(2);  % experimental confidence interval
+
+% Stop logging duriong simulation
+diary off
+
 while (sim_scenario < 8000)
 clc % clear window
 clear projectile % clear projectile data from previous simulation
@@ -1019,6 +1026,7 @@ catch
 end
 
 end
+
 % Close program
 if ~stealth
     waitbar(1,WaitbarHandle,'All meteorites landed!');

@@ -1,6 +1,9 @@
 % IMPORT_REF_DATA Load reference data to the workspace
 % If reference data is not available load it
 
+diary(['log_session.txt'])     
+diary on
+
 % Get session data
 global ref_session
 if isempty(ref_session) || ~isfield(ref_session,'loaded') || ~ref_session.loaded

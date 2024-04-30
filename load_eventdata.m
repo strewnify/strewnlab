@@ -4,7 +4,14 @@
 strewnconfig
 
 % Spreadsheet config
-eventfilename = 'AllEventData.xlsx';
+% Open Event Data File
+if strcmp(getSession('user','user_role'),'developer')
+    eventfilepath = '';
+    eventfilename = 'AllEventData.xlsx';
+else
+    [eventfilename, eventfilepath, ~] = uigetfile({'*.csv;*.xls;*.xlsx'});
+end
+
 firsteventrow = 6;
 
 % Create or update waitbar
@@ -14,8 +21,7 @@ else
     waitbar(0,WaitbarHandle,['Opening ' eventfilename '...']);
 end
 
-% Open Event Data File
-[num, txt, AllEventData] = xlsread(eventfilename, 'AllEventData');
+[num, txt, AllEventData] = xlsread([eventfilepath eventfilename], 'AllEventData');
 
 % If event has not been selected, query user for event selection
 if ~exist('eventindex','var')

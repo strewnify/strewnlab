@@ -1,5 +1,9 @@
 % STREWNBACKUP Backup the StrewnLAB simulation in progress.
 
+diary([getSession('folders','logfolder') '\strewnlab_log.txt'])    
+diary on
+clc
+SimMonitor
 logformat('Simulation interrupted. Saving progress...','INFO')
 
 % Update file and folder names

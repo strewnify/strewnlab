@@ -402,7 +402,7 @@ while weatherdatamissing
                 header(6) = {release_time}; % RELTIME
 
                 % Read data from file
-                rawdata = textscan(FID,'%f %f %f %f %f %f %f %f %f','Delimiter',{'\t','\b',' ','A','B'},'MultipleDelimsAsOne',1,'N',1);
+                rawdata = textscan(FID,'%f %f %f %f %f %f %f %f %f','Delimiter',{'\t','\b',' ','A','B'},'MultipleDelimsAsOne',1);
                 for i = 1:NUMLEV
 
                     % Convert data

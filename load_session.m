@@ -32,6 +32,23 @@ if ~isfield(ref_session,'state') || ~isfield(ref_session.state,'exporting')
     ref_session.state.exporting = false;
 end
 
+% Get user role
+if ref_session.state.userpresent
+    quest = ['Please Select a User Role:' newline newline 'Standard - Effortless success with the usual settings' newline ...
+        'Advanced - Extra choices for users with understanding of physics and statistics' newline ...
+        'Developer - Does not enhance simulation results, additional credentials required for website administration' newline newline];
+    roles = ["Standard","Advanced","Developer"];
+
+    % Get user role, saving preferences to matlab preferences
+    logformat('User queried for role preference.','USER')
+    [ref_session.user.user_role,~] = uigetpref('strewnlab_uigetpref','role_pref','Choose User Role',quest,roles);
+        
+% if no userpresent, set to developer (for scheduled scripts)
+else
+    ref_session.user.user_role = 'developer';
+    logformat('User not present at console, user role defaulted to ''developer''.','USER')
+end
+
 % Get operating system
 try
     ref_session.env.OS = strtrim(getenv('OS'));
@@ -197,7 +214,7 @@ end
 logformat(sprintf('Working data folder %s at %s',log_msg, ref_session.folders.workingfolder),'INFO')
 
 % Get Meteor events folder
-if ispref('strewnlab','meteoreventsfolder')
+if ispref('strewnlab','meteoreventsfolder') && isfolder(getpref('strewnlab','meteoreventsfolder'))
     ref_session.folders.meteoreventsfolder = getpref('strewnlab','meteoreventsfolder');
     logformat(sprintf('Meteor Events Folder loaded from matlab preferences as %s.',ref_session.folders.meteoreventsfolder),'INFO')
 
@@ -207,8 +224,11 @@ else
         logformat('Meteor Events Folder not found in MATLAB preferences. User queried for first time setup.','INFO')
         
         % prompt for folder
-        user_meteoreventsfolder = uigetdir('','Select a Main Folder for Meteor Event Data');
-                
+        user_meteoreventsfolder = '';
+        while ~isfolder(user_meteoreventsfolder)
+            user_meteoreventsfolder = uigetdir('','Select a Main Folder for Meteor Event Data');            
+        end
+        
         % save to matlab preferences
         setpref('strewnlab','meteoreventsfolder',user_meteoreventsfolder);
         ref_session.folders.meteoreventsfolder = getpref('strewnlab','meteoreventsfolder');
@@ -223,7 +243,7 @@ end
 logformat(sprintf('Meteor events folder located at %s', ref_session.folders.meteoreventsfolder),'INFO')
 
 % Get Secret Meteor events folder
-if ispref('strewnlab','secreteventsfolder')
+if ispref('strewnlab','secreteventsfolder') && isfolder(getpref('strewnlab','secreteventsfolder'))
     ref_session.folders.secreteventsfolder = getpref('strewnlab','secreteventsfolder');
     logformat(sprintf('Meteor Events Folder loaded from matlab preferences as %s.',ref_session.folders.secreteventsfolder),'INFO')
 
@@ -233,7 +253,11 @@ else
         logformat('CONFIDENTIAL Meteor Events Folder not found in MATLAB preferences. User queried for first time setup.','INFO')
         
         % prompt for folder
-        user_secreteventsfolder = uigetdir('','Select a Folder for CONFIDENTIAL Meteor Event Data');
+        user_secreteventsfolder = '';
+        while ~isfolder(user_secreteventsfolder)
+            user_secreteventsfolder = uigetdir('','Select a Folder for CONFIDENTIAL Meteor Event Data');
+        end
+        
                 
         % save to matlab preferences
         setpref('strewnlab','secreteventsfolder',user_secreteventsfolder);
@@ -283,25 +307,6 @@ time_format_config = 'yyyy-MM-dd HH:mm:ss z';
 datetime.setDefaultFormats('default',time_format_config);
 logformat(sprintf('Default date/time format set to %s',time_format_config),'INFO')
 
-% Get user role
-if ref_session.state.userpresent
-    quest = ['Please Select a User Role:' newline newline 'Standard - Effortless success with the usual settings' newline ...
-        'Advanced - Extra choices for users with understanding of physics and statistics' newline ...
-        'Developer - Does not enhance simulation results, additional credentials required for website administration' newline newline];
-    roles = ["Standard","Advanced","Developer"];
-
-    % Get user role, saving preferences to matlab preferences
-    logformat('User queried for role preference.','USER')
-    [user_role,~] = uigetpref('strewnlab_uigetpref','role_pref','Choose User Role',quest,roles);
-    
-    
-% if no userpresent, set to developor (for scheduled scripts)
-else
-    user_role = 'developer';
-    logformat('User not present at console, user role defaulted to ''developer''.','USER')
-end
-
-
 % *** Credential Loading ***
 % Check for saved credentials
 % Sensitive information like passwords and API keys are saved to a
@@ -319,7 +324,7 @@ if isempty(strewnlab_private) || isempty(fieldnames(strewnlab_private))
     get_creds = true;
 
     % Setup credential query, based on user role
-    switch user_role
+    switch ref_session.user.user_role
         case 'developer'
             creds = {'AMS_APIkey' 'Mailchimp_APIkey' 'Strewnify_APIkey' 'strewnlab_emailpassword' 'GoogleFormsCam_key' 'GoogleMapsAPIkey' 'GoogleDrive_NotifyResponses'};
         case 'advanced'
@@ -338,7 +343,7 @@ if isempty(strewnlab_private) || isempty(fieldnames(strewnlab_private))
     strewnlab_private = getpref('strewnlab_private');
 
     else
-       logformat([user_role ' user skipped credential setup.'],'USER')
+       logformat([ref_session.user.user_role ' user skipped credential setup.'],'USER')
     end   
 else
     % Set environment variables

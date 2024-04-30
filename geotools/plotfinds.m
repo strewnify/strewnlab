@@ -14,7 +14,7 @@ EventData_Finds.diameter_m = (6.*EventData_Finds.volume_m3./pi).^(1/3); % diamet
 find_filter = (EventData_Finds.mass_kg >= plot_minmass) & (EventData_Finds.mass_kg <= plot_maxmass);
 
 % filter out confidential data
-if exist('permission_filter','var')
+if exist('permission_filter','var') & ~isempty(permission_filter)
     find_filter = find_filter & permission_filter;
 end
 
