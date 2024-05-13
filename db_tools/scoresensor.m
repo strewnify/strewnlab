@@ -108,9 +108,9 @@ end
 
 % longitude string
 if sensorLONG >= 0
-    LONGstring = [sprintf(formatting,round(sensorLONG,7)) 'N'];
+    LONGstring = [sprintf(formatting,round(sensorLONG,7)) 'E'];
 else
-    LONGstring = [sprintf(formatting,round(abs(sensorLONG),7)) 'S'];
+    LONGstring = [sprintf(formatting,round(abs(sensorLONG),7)) 'W'];
 end
 coord_string = strrep([LATstring '_' LONGstring],'.','p');
 

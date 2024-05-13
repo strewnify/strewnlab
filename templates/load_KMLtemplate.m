@@ -53,7 +53,7 @@ end
 if GE
     winopen(temp_GE_filepath)
     pause(2)
-    delete(temp_GE_filepath)
+    %delete(temp_GE_filepath)
     logformat(sprintf('KML template %s imported into Google Earth',[SimEventID '_' SimulationName]),'INFO')
 else
     logformat(sprintf('KML template exported to %s',temp_GE_filepath),'INFO')

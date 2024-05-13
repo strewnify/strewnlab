@@ -405,7 +405,7 @@ for sensor_i = 1:numsensors
             
             % Geolocate LAT/LONG 
             [ ~, db_Sensors_out.City(add_i), db_Sensors_out.State(add_i), db_Sensors_out.Country(add_i), ~, ~ ] = getlocation(db_Sensors_out.LAT(add_i),db_Sensors_out.LONG(add_i));
-            logformat(sprintf('New station location retrieved as %g.', db_Sensors_out.BaseScore(add_i)),'INFO')
+            logformat(sprintf('New station location retrieved as %s, %s, %s.', db_Sensors_out.City(add_i), db_Sensors_out.State(add_i), db_Sensors_out.Country(add_i)),'INFO')
 
         % Import location data
         else

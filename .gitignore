@@ -10,7 +10,7 @@ working/*
 temp/*
 *.png*
 *RecentEventData.xls*
-~$AllEventData.xlsx
+~$*
 *.asv
 *_backup*
 matlab.mat

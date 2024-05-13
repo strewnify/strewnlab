@@ -167,10 +167,10 @@ waitbar(0.75,handleStrewnalyze,'Opening Applications...');
 
 % Open browser to event pages
 if ~isempty(sdb_Events.Hyperlink1{select_i})
-    system(['start ' sdb_Events.Hyperlink1{select_i}]);
+    openlink(sdb_Events.Hyperlink1{select_i});
 end
 if ~isempty(sdb_Events.Hyperlink2{select_i})
-    system(['start ' sdb_Events.Hyperlink2{select_i}]);
+    openlink(sdb_Events.Hyperlink2{select_i});    
 end
 
 %Open Google Earth, if not open

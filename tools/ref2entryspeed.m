@@ -11,7 +11,7 @@ max_extreme_kps = 70;
 height_km = [-999 3 10 12 15 20 25 30 35 40 50 60 70 80 999];
 
 if nargin == 3
-    speed_type = 'avg';
+    speed_type = 'average';
 end
 
 % Choose model data

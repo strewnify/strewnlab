@@ -1,0 +1,2 @@
+2024-05-06T01:02:30Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
+2024-05-06T01:52:55Z | DATABASE | SAVE_DATABASE | Database saved to StrewnifyDatabase.mat file.
