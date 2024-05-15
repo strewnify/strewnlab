@@ -32,13 +32,18 @@ try
 catch
     cd(getSession('folders','mainfolder'))
     logformat('Google Drive download failed, manual file download required.','DEBUG')
-    
-    % Import the contact file
-    [FILENAME, PATHNAME, FILTERINDEX] = uigetfile({'*.csv;*.xls;*.xlsx'});
-    if FILTERINDEX == 0
-        error('No file selected for import.')
-    end
     dateFormat = 'yyyy/MM/dd h:mm:SS aa z';
+    
+    if getSession('state','userpresent')
+        % Import the contact file
+        [FILENAME, PATHNAME, FILTERINDEX] = uigetfile({'*.csv;*.xls;*.xlsx'});
+        if FILTERINDEX == 0
+            error('No file selected for import.')
+        end
+    else
+        logformat('No user present for manual file import.','WARN')
+        return
+    end
 end
 
 % import the data
