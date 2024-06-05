@@ -20,7 +20,6 @@ else
 end
 ref_config.loaded = false;
 
-
 % While loading, loading is incomplete
 ref_config.loaded = false;
 

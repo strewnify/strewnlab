@@ -5,7 +5,8 @@ function [data_out] = getSession(group,varname)
 global ref_session
 
 % Check for missing initialization
-if isempty(ref_session)      
+if isempty(ref_session)
+    setUserPresent(true) % assume user present, prevent unnecessary webmaster emails
     logformat('Session data not loaded, run IMPORT_REF_DATA.','ERROR')    
 else
 

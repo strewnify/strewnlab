@@ -1,7 +1,4 @@
 function response = addmailchimp(firstname, lastname, email)
-    % Load API key
-    loadprivate
-
     % Set Mailchimp API configuration
     serverPrefix = 'us4';  % Replace with your Mailchimp server prefix
 
@@ -34,11 +31,11 @@ function response = addmailchimp(firstname, lastname, email)
 %     disp(webwriteOptions.HeaderFields);
     
     % Make API request
-%     try
+     try
         response = webwrite(MailchimpURL, jsonData, webwriteOptions);
         logformat(sprintf('%s %s - %s added to Mailchimp mailing list', firstname, lastname, email), 'EMAIL')
-%     catch
-%         response = -1;
-%         logformat(sprintf('Failed to add %s %s - %s to Mailchimp mailing list',firstname, lastname, email),'DEBUG')
-%     end
+    catch
+        response = -1;
+        logformat(sprintf('Failed to add %s %s - %s to Mailchimp mailing list',firstname, lastname, email),'DEBUG')
+    end
 end

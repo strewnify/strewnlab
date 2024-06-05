@@ -73,7 +73,7 @@ end
 
 % If the event was less than 3 days ago, weather data may not yet be available
 if ~exist('user_weatherchoice','var') && weatherdatamissing && days(nowtime-entrytime) < 3
-    user_weatherchoice = questdlgtimeout(60,'The event occurred recently, so weather data may not yet be available...','Recent Event Warning','Use Generic Data','Try Anyway','Stop','Use Generic Data');
+    user_weatherchoice = questdlgtimeout(60,'The event occurred recently, so weather data may not yet be available...','Recent Event Warning','Use Generic Data','Try Anyway','Stop','Try Anyway');
 
     switch user_weatherchoice
         case 'Use Generic Data'
@@ -205,7 +205,7 @@ while weatherdatamissing
         IGRA_nomdistance_km = EventData_IGRA_Nearby.Distance(1:numstations)/1000;
         
         % Display 
-        disp(EventData_IGRA_Nearby.StationID(1:8))
+        disp(EventData_IGRA_Nearby.StationID(1:min(8,numel(EventData_IGRA_Nearby.StationID))))
     end
 
     % Create a map figure
@@ -641,8 +641,14 @@ end
 switch numstations_t1
     case 1
         % Interpolate wind at altitude
-        IGRA_t1_WINDN = griddedInterpolant(EventData_ProcessedIGRA.HEIGHT(filt_t1), EventData_ProcessedIGRA.WINDN(filt_t1));
-        IGRA_t1_WINDE = griddedInterpolant(EventData_ProcessedIGRA.HEIGHT(filt_t1), EventData_ProcessedIGRA.WINDE(filt_t1));
+        if numel(unique(EventData_ProcessedIGRA.DatasetIndex(filt_t1))) == 1  % one dataset, lookup values by simple interpolation
+            IGRA_t1_WINDN = griddedInterpolant(EventData_ProcessedIGRA.HEIGHT(filt_t1), EventData_ProcessedIGRA.WINDN(filt_t1));
+            IGRA_t1_WINDE = griddedInterpolant(EventData_ProcessedIGRA.HEIGHT(filt_t1), EventData_ProcessedIGRA.WINDE(filt_t1));
+
+        else % multiple datasets, fit a model to data
+            IGRA_t1_WINDN = fit(EventData_ProcessedIGRA.HEIGHT(filt_t1), EventData_ProcessedIGRA.WINDN(filt_t1),'poly2');
+            IGRA_t1_WINDE = fit(EventData_ProcessedIGRA.HEIGHT(filt_t1), EventData_ProcessedIGRA.WINDE(filt_t1),'poly2');
+        end
         
         % lookup meteor path at time 1 (single station - altitudes only)
         IGRA_t1_WINDN_lookup = IGRA_t1_WINDN(EventData_altitudes);
@@ -664,13 +670,18 @@ end
 switch numstations_t2
     case 1
         % Interpolate wind at altitude
-        IGRA_t2_WINDN = griddedInterpolant(EventData_ProcessedIGRA.HEIGHT(filt_t2), EventData_ProcessedIGRA.WINDN(filt_t2));
-        IGRA_t2_WINDE = griddedInterpolant(EventData_ProcessedIGRA.HEIGHT(filt_t2), EventData_ProcessedIGRA.WINDE(filt_t2));
+        if numel(unique(EventData_ProcessedIGRA.DatasetIndex(filt_t2))) == 1  % one dataset, lookup values by simple interpolation
+            IGRA_t2_WINDN = griddedInterpolant(EventData_ProcessedIGRA.HEIGHT(filt_t2), EventData_ProcessedIGRA.WINDN(filt_t2));
+            IGRA_t2_WINDE = griddedInterpolant(EventData_ProcessedIGRA.HEIGHT(filt_t2), EventData_ProcessedIGRA.WINDE(filt_t2));
+
+        else % multiple datasets, fit a model to data
+            IGRA_t2_WINDN = fit(EventData_ProcessedIGRA.HEIGHT(filt_t2), EventData_ProcessedIGRA.WINDN(filt_t2),'poly2');
+            IGRA_t2_WINDE = fit(EventData_ProcessedIGRA.HEIGHT(filt_t2), EventData_ProcessedIGRA.WINDE(filt_t2),'poly2');
+        end
         
         % lookup meteor path at time 2 (single station - altitudes only)
-        IGRA_t2_WINDE_lookup = IGRA_t2_WINDE(EventData_altitudes);
         IGRA_t2_WINDN_lookup = IGRA_t2_WINDN(EventData_altitudes);
-        
+        IGRA_t2_WINDE_lookup = IGRA_t2_WINDE(EventData_altitudes);
     case 2
         logformat('2 station interpolation not yet supported.','ERROR')
     otherwise

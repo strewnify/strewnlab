@@ -12,6 +12,8 @@ type = upper(type);
 
 % Check for error
 iserror = strcmp(type,'ERROR');
+isdebug = strcmp(type,'DEBUG');
+
 
 % Only run this function if diary is on or if there is an error 
 % (and crash is happening anyway, below)
@@ -48,7 +50,7 @@ if strcmp(get(0,'Diary'),'on') || ~exist('logging','var') || logging || iserror
 end
 
 % If type is ERROR, crash
-if iserror
+if iserror || isdebug
     
     % If the user is not present, email the webmaster with the error
     if ~getSession('state','userpresent')
@@ -58,7 +60,9 @@ if iserror
             fprintf('%s | %s | %s\n', nowstring,'WARN','Failed to send error mail to the webmaster!' )
         end            
     end
-    
+end
+
+if iserror
     % Stop logging
     diary off
         
