@@ -14,6 +14,7 @@ devmode = false;
 numdays = 14;
 major_energythresh = 0.01; % estimated energy threshold in kilotons
 earth_km = referenceEllipsoid('earth','km'); % all contacts currently live on Earth
+email_subject = 'Strewnify Automated Meteor Report';
 
 % Dev mode selection
 switch devmode
@@ -23,19 +24,17 @@ switch devmode
         numrecipients = 1;
     otherwise
         ErrorMsg = 'There was an error in STREWNNOTIFY, unknown devmode';
-        logformat(ErrorMsg,'ERROR')
-        strewnmail(ErrorMsg,getConfig('webmaster'))
+        logformat(ErrorMsg,'ERROR')        
 end
 
 % Attempt to retrieve meteor events and report any error to developer
-% try
+try
     [NewEvents, attachment, numevents] = getnew(numdays);    
-% catch
-%     numevents = -1;
-%     ErrorMsg = 'There was an error in GETNEW, check code.';
-%     logformat(ErrorMsg,'ERROR');
-%     strewnmail(ErrorMsg,getConfig('webmaster'))
-% end
+catch
+    numevents = -1;
+    ErrorMsg = 'There was an error in GETNEW, check code.';
+    logformat(ErrorMsg,'ERROR');
+end
 
 
 
@@ -93,7 +92,7 @@ if numevents > 0
                     emailcontent = reportevents(NewEvents(major & inradius,:));
                 else
                     emailcontent = reportevents(NewEvents);
-                    strewnmail(['Invalid notification category set for ' sdb_Contacts.FirstName{i} ' ' sdb_Contacts.LastName{i} '.'],getConfig('webmaster'))
+                    logformat(['Invalid notification category set for ' sdb_Contacts.FirstName{i} ' ' sdb_Contacts.LastName{i} '.'],'DEBUG')
                 end
             end
 
@@ -114,15 +113,11 @@ if numevents > 0
                     logformat(sprintf('Queuing email for %s %s: %s...',sdb_Contacts.FirstName{i}, sdb_Contacts.LastName{i}, replace(header,char(10),' ')),'INFO')
                     
                     % Send email to contact
-                    strewnmail(emailcontent,sdb_Contacts.Email(i))
-                    %strewnmail(emailcontent,getConfig('webmaster'))
-                    %strewnmail(emailcontent,sdb_Contacts.Email(i),attachment)
+                    strewnmail(emailcontent,sdb_Contacts.Email(i),email_subject,99)
                     
                 catch
                     ErrorMsg = ['There was an error in sending mail to ' sdb_Contacts.FirstName{i} ' ' sdb_Contacts.LastName{i} ', check code.'];
-                    logformat(ErrorMsg,'ERROR')
-                    strewnmail(ErrorMsg,getConfig('webmaster'))
-                    strewnmail(['There was an error in sending emailcontent = ' emailcontent ' to ' sdb_Contacts.FirstName{i} ' ' sdb_Contacts.LastName{i} ', check code.'],getConfig('webmaster'))
+                    logformat(ErrorMsg,'ERROR')                    
                 end
             end
         end
@@ -130,7 +125,7 @@ if numevents > 0
 end
 
 if devmode
-    strewnmail('Development mode active!',getConfig('webmaster'))
+    strewnmail('Development mode active!',getConfig('webmaster'),'StrewnLAB Dev Mode',1)    
 end
 
 % Save log file

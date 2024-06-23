@@ -49,6 +49,9 @@ if nowtime_utc >= (taskmaster.FrequentTask.lastrun_utc + FrequentTask_period)
     % Strewnify notification task
     strewnnotify
     
+    % Check mail queue
+    strewnmail
+    
     % Record frequent task complete
     taskmaster.FrequentTask.lastrun_utc = nowtime_utc;
     
