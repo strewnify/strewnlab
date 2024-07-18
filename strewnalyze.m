@@ -167,11 +167,11 @@ waitbar(0.75,handleStrewnalyze,'Opening Applications...');
 
 % Create shortcut file and open browser to event pages
 if ~isempty(sdb_Events.Hyperlink1{select_i})
-    createURLshortcut(sdb_Events.Hyperlink1{select_i}, eventfolder, ['Hyperlink1.url');
+    createURLshortcut(sdb_Events.Hyperlink1{select_i}, eventfolder, 'Hyperlink1.url');
     openlink(sdb_Events.Hyperlink1{select_i});
 end
 if ~isempty(sdb_Events.Hyperlink2{select_i})
-    createURLshortcut(sdb_Events.Hyperlink2{select_i}, eventfolder, ['Hyperlink2.url');
+    createURLshortcut(sdb_Events.Hyperlink2{select_i}, eventfolder, 'Hyperlink2.url');
     openlink(sdb_Events.Hyperlink2{select_i});    
 end
 

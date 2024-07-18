@@ -98,17 +98,16 @@ while table_i <= table_size
         logformat(sprintf('StationID: %s',sdb_Sensors.StationID{table_i}),'INFO')
         if ~ismissing(sdb_Sensors.Hyperlink1(table_i))
             logformat(sprintf('Hyperlink1: %s',sdb_Sensors.Hyperlink1{table_i}),'INFO')
+            % open the page
+            success = openlink(sdb_Sensors.Hyperlink1{table_i});
+            if ~success
+                logformat(sprintf('Failed to open %s',sdb_Sensors.Hyperlink1{table_i}),'ERROR')
+            end        
         end
         if ~ismissing(sdb_Sensors.Hyperlink2(table_i))
             logformat(sprintf('Hyperlink2: %s',sdb_Sensors.Hyperlink2{table_i}),'INFO')
         end
-        
-        % open the page
-        success = openlink(sdb_Sensors.Hyperlink1{table_i});
-        if ~success
-            logformat(sprintf('Failed to open %s',sdb_Sensors.Hyperlink1{table_i}),'ERROR')
-        end
-
+                
         answer = questdlg('Video Type','Choose','Good','Poor','Bad','Good');
 
         switch answer
