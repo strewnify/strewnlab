@@ -115,7 +115,6 @@ while weatherdatamissing
         effective_entrytime = entrytime - days(5);
         StartDate = datetime(year(effective_entrytime),month(effective_entrytime),day(effective_entrytime),12,0,0,'TimeZone','UTC') - days(2);
         EndDate = datetime(year(effective_entrytime),month(effective_entrytime),day(effective_entrytime),12,0,0,'TimeZone','UTC') + days(2);
-        devwarning('GETWEATHER');
     end
     
 

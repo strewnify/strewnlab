@@ -19,8 +19,12 @@ filter_darkflight = darkflight_elevation - error_elevation;
 % Wind variation
 error_windmin = weather_minsigma; error_windmax = weather_maxsigma;
 
+% Bearing
+bearingmin = 0
+bearingmax = 360;
+
 % Lookup the mass filtered indices
-filter = (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= error_windmin) & (strewndata.error_wind <= error_windmax);
+filter = (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= error_windmin) & (strewndata.error_wind <= error_windmax) & (strewndata.bearing >= bearingmin) & (strewndata.bearing <= bearingmax);
 if ~strcmp(plot_materials{1},'all')
     filter = filter & matches(strewndata.material,plot_materials);
 end

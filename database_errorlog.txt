@@ -9,3 +9,9 @@
 2024-05-28T13:02:36Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
 2024-05-28T13:02:37Z | EMAIL | STREWNMAIL | Email sent to james.a.goodall@gmail.com.
 2024-05-28T13:03:00Z | DATABASE | SAVE_DATABASE | Database saved to StrewnifyDatabase.mat file.
+2024-07-12T16:38:00Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
+2024-07-12T16:38:20Z | DATABASE | SAVE_DATABASE | Database saved to StrewnifyDatabase.mat file.
+2024-07-12T18:01:42Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
+2024-07-12T18:02:01Z | DATABASE | SAVE_DATABASE | Database saved to StrewnifyDatabase.mat file.
+2024-07-17T22:29:21Z | DEBUG | SAVE_DATABASE | Unexpected call, logging forced on
+2024-07-17T22:29:44Z | DATABASE | SAVE_DATABASE | Database saved to StrewnifyDatabase.mat file.

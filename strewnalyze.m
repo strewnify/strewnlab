@@ -40,15 +40,19 @@ waitfor(EventPicker_UI,'success')
 waitbar(0.2,handleStrewnalyze,'Waiting for user selection...');
 
 % Get output data from UI before closing
-SelectedEvent = extractBefore(EventPicker_UI.SelectedEvent,' - ')
-success = EventPicker_UI.success;
-CONFIDENTIAL = EventPicker_UI.CONFIDENTIAL;
-WCT = EventPicker_UI.WCT;
-GE = EventPicker_UI.GE;
-VIDEO = EventPicker_UI.VIDEO;
-
-% temp - old database - lookup index
-select_i = find(strcmp(sdb_Events.EventID,SelectedEvent),1,'first');
+if ~isempty(EventPicker_UI.SelectedEvent)
+    SelectedEvent = extractBefore(EventPicker_UI.SelectedEvent,' - ')
+    success = EventPicker_UI.success;
+    CONFIDENTIAL = EventPicker_UI.CONFIDENTIAL;
+    WCT = EventPicker_UI.WCT;
+    GE = EventPicker_UI.GE;
+    VIDEO = EventPicker_UI.VIDEO;
+    
+    % temp - old database - lookup index
+    select_i = find(strcmp(sdb_Events.EventID,SelectedEvent),1,'first');
+else
+    success = false;
+end 
 
 % Close the Event Picker UI
 EventPicker_UI.delete
