@@ -349,7 +349,7 @@ projectile(n).ref_altitude_corr = 0;
 projectile(n).ref_speed_corr = 0;
 projectile(n).ref_slope_corr = 0;
 
-[nom_density, error_density, HTC, ablationheat, dot_mark] = materialprops(meteoroid_material);
+[nom_density, error_density, HTC, ablationheat, ~, ~, dot_mark] = materialprops(meteoroid_material);
 
 % Estimate strewn mass
 strewnmass_predicted = eststrewnmass(entrymass,entryspeed,ablationheat, HTC);

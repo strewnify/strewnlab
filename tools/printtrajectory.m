@@ -41,7 +41,7 @@ if exist('EventData_Finds','var') && sum(EventData_Finds.mass_kg) > 0
 end
 
 % Strewn mass estimate
-[nom_density, ~, HTC, ablationheat, ~] = materialprops(material_sim);
+[nom_density, ~, HTC, ablationheat, ~, ~, ~] = materialprops(material_sim);
 
 % Estimate strewn field statistics
 predicted_TKW_max_kg = eststrewnmass(nom_mass, nom_speed, ablationheat, HTC);

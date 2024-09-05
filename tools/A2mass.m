@@ -15,7 +15,7 @@ for idx = 1:10000
     material = possible_materials{randi(size(possible_materials,2),1)};
 
     % Get materal properties
-    [nom_density, error_density, ~, ~, ~] = materialprops(material);
+    [nom_density, error_density, ~, ~, ~, ~, ~] = materialprops(material);
     
     % Choose random density, within limits
     density = randbetween(nom_density - error_density, nom_density + error_density);
