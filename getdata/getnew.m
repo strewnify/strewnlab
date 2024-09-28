@@ -22,8 +22,10 @@ load_database
 if ~exist('CNEOS_data','var')
     try
         CNEOS_data = getcneos();
+        CNEOS_success = true;
     catch
-        logformat('CNEOS data retrieval failed','DEBUG')        
+        CNEOS_success = false;
+        logformat('CNEOS data retrieval failed','DEBUG')
     end
 end
 
@@ -31,7 +33,9 @@ end
 if ~exist('AMS_data','var')
     try
         AMS_data = getams(startyear,endyear,5, 2);
+        AMS_success = true;
     catch
+        AMS_success = false;
         logformat('AMS data retrieval failed','DEBUG')        
     end
 end
@@ -40,7 +44,9 @@ end
 if ~exist('ASGARD_data','var')
     try
         ASGARD_data = getasgard(dayhistory);
+        ASGARD_success = true;
     catch
+        ASGARD_success = false;
         logformat('ASGARD data retrieval failed','DEBUG')
     end
 end
@@ -51,8 +57,21 @@ AMS_data.DataSource(:) = {'AMS'};
 ASGARD_data.DataSource(:) = {'ASGARD'};
 
 % Merge the data from all sources
-Merge_data = outerjoin(AMS_data,CNEOS_data,'MergeKeys',true);
-Merge_data = outerjoin(Merge_data,ASGARD_data,'MergeKeys',true);
+if AMS_success
+    Merge_data = AMS_data;
+elseif CNEOS_success
+    Merge_data = CNEOS_data;
+elseif ASGARD_success
+    Merge_data = ASGARD_data;
+end
+   
+if CNEOS_success
+    Merge_data = outerjoin(Merge_data,CNEOS_data,'MergeKeys',true);
+end
+
+if ASGARD_success
+    Merge_data = outerjoin(Merge_data,ASGARD_data,'MergeKeys',true);
+end
 
 %new = find(Merge_data.Datetime > (datetime('now')-days(dayhistory)));
 
@@ -60,7 +79,7 @@ qualifiers = {'EventID','DataSource'};
 new = find(~ismember(Merge_data(:,qualifiers),sdb_Events(:,qualifiers)));
 
 % Open a waitbar
-handleNewEvents = waitbar(0,'Downloading CNEOS Fireball Data...'); 
+handleNewEvents = waitbar(0,'Please Wait...'); 
 numnew = numel(new);
 
 % If events found, summarize and export

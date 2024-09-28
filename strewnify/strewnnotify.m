@@ -11,7 +11,7 @@ load('StrewnifyDatabase.mat','sdb_Contacts')
 
 % Settings
 devmode = false;
-numdays = 14;
+numdays = 15;
 major_energythresh = 0.01; % estimated energy threshold in kilotons
 earth_km = referenceEllipsoid('earth','km'); % all contacts currently live on Earth
 email_subject = 'Strewnify Automated Meteor Report';

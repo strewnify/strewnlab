@@ -103,10 +103,15 @@ AMS_data.event_id = [];
 % Assign EventID
 AMS_data.EventID = arrayfun(@eventidcalc,AMS_data.LAT,AMS_data.LONG,AMS_data.Datetime,'UniformOutput',false);
 
+% Add Process Date
+AMS_data.ProcessDate(:) = datetime('now');
+
 % Add Hyperlinks
 for row = 1:size(AMS_data,1)
     AMS_data.Hyperlink1(row) = strcat('https://fireball.amsmeteors.org/members/imo_view/',{regexprep(AMS_data.AMS_event_id{row},'(?:_)','/')});
 end
+
+AMS_data.Hyperlink2(:) = {''};
 
 % Re-enable table row assignment warning
 warning('on','MATLAB:table:RowsAddedExistingVars');

@@ -128,7 +128,7 @@ end
 warning('on','MATLAB:table:RowsAddedExistingVars');
 
 if readpages == 0
-    error('ASGARD data not found.  Server may be down.')
+    logformat('ASGARD data not found. Server may be down.','ERROR')
 end
 
 % Calculate solar elevation

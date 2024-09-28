@@ -30,7 +30,7 @@ end
 emails_per_period = 40;
 queue_period_hr = 1;
 warn_size = 2 * emails_per_period;
-log_size_cut = 500;
+log_size_cut = 2000;
 
 % Load email queue
 if isfile('email_queue.mat')

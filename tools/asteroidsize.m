@@ -47,12 +47,19 @@ function [diameter_m] = asteroidsize(abs_magnitude,albedo)
 %
 % See also .
 
-if albedo < 0 || albedo > 1
-    logformat('Albedo values range from 0 (pitch black) to 1 (perfect reflector)','ERROR')
-elseif abs_magnitude > 50 || abs_magnitude < 0
-    logformat('Typical values for absolute magnitude are 18 to 35','WARN')
+% Ensure albedo values are in valid range
+if any(albedo < 0 | albedo > 1)
+    error('Albedo values range from 0 (pitch black) to 1 (perfect reflector)');
 end
 
+% Ensure abs_magnitude values are in typical range
+if any(abs_magnitude > 50 | abs_magnitude < 0)
+    warning('Typical values for absolute magnitude are 18 to 35');
+end
+
+% Calculate the diameter in meters, allowing for array inputs
 diameter_m = 10.^(6.123525 - 0.5.*log10(albedo) - 0.2.*abs_magnitude);
+
+end
 
 
