@@ -175,5 +175,15 @@ warning ('on','MATLAB:table:RowsAddedExistingVars')
 close(handleNewEvents)
 logformat([newline num2str(num_reviewed) ' Meteor Events Reviewed.  ' newline num2str(num_new) ' Events Added.' newline num2str(num_updated), ' Events Updated.'])
 
+% TEMPORARY EMAIL ROUTINE
+% Check for new events - TEMPORARY CODE
+% added in the last hour
+mintime_utc = datetime('now','TimeZone','UTC') - hours(1);
+testlist = sdb_MeteorData.ChangeLog.EventID(sdb_MeteorData.ChangeLog.DatetimeUTC > mintime_utc);
+testlist = unique(testlist(not(cellfun(@isnumeric,testlist))));
 
+if numel(testlist) > 0
+    emailcontent = reportevents_test(sdb_MeteorData, testlist);
+    strewnmail(emailcontent,getConfig('webmaster'),email_subject,1)
+end
 

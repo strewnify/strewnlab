@@ -19,6 +19,7 @@ ChangeLog_idx = size(database_out.ChangeLog,1) + 1;
 nowtime = datetime('now','TimeZone','UTC');
 database_out.ChangeLog.DatetimeUTC(ChangeLog_idx) = nowtime;
 database_out.ChangeLog.ChangeType(ChangeLog_idx) = {'Import Log'};
+database_out.ChangeLog.EventID(ChangeLog_idx) = {''};
 database_out.ChangeLog.datasource(ChangeLog_idx) = {datasource};
 database_out.ChangeLog.ChangeSummary(ChangeLog_idx) = {['Started importing ' datasource]};
 
@@ -427,6 +428,7 @@ ChangeLog_idx = ChangeLog_idx + 1;
 warning('off','MATLAB:table:RowsAddedExistingVars');
 database_out.ChangeLog.DatetimeUTC(ChangeLog_idx) = nowtime;
 database_out.ChangeLog.ChangeType(ChangeLog_idx) = {'Import Log'};
+database_out.ChangeLog.EventID(ChangeLog_idx) = {''};
 database_out.ChangeLog.datasource(ChangeLog_idx) = {datasource};
 database_out.ChangeLog.ChangeSummary(ChangeLog_idx) = {['Finished importing ' datasource ]};
 

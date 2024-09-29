@@ -13,5 +13,5 @@ end
 default_lastrun = datetime(1900,1,1,'TimeZone','UTC');
 taskmaster.FrequentTask.lastrun_utc = default_lastrun;
 taskmaster.DailyTask.lastrun_utc = default_lastrun;
-taskmaster.OccaisionalTask.lastrun_utc = default_lastrun;
+taskmaster.OccasionalTask.lastrun_utc = default_lastrun;
 save(taskfilename,'taskmaster')

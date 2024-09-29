@@ -13,7 +13,7 @@
 % Configuration
 FrequentTask_period = hours(2.5);
 DailyTask_period = hours(23);
-OccaisionalTask_period = days(7);
+OccasionalTask_period = days(4);
 
 % Get current time
 nowtime_utc = datetime('now','TimeZone','UTC');
@@ -47,10 +47,18 @@ if nowtime_utc >= (taskmaster.FrequentTask.lastrun_utc + FrequentTask_period)
     logformat('StrewnLAB FrequentTask started.','INFO')
     
     % Strewnify notification task
-    strewnnotify
+    try
+        strewnnotify
+    catch
+        logformat('Unknown error in STREWNNOTIFY!','ERROR')
+    end
     
     % Check mail queue
-    strewnmail
+    try
+        strewnmail
+    catch
+        logformat('Unknown error in STREWNMAIL!','ERROR')
+    end
     
     % Record frequent task complete
     taskmaster.FrequentTask.lastrun_utc = nowtime_utc;
@@ -85,22 +93,22 @@ if nowtime_utc >= (taskmaster.DailyTask.lastrun_utc + DailyTask_period)
 end
 
 
-% Run OccaisionalTask
-if nowtime_utc >= (taskmaster.OccaisionalTask.lastrun_utc + OccaisionalTask_period)
+% Run OccasionalTask
+if nowtime_utc >= (taskmaster.OccasionalTask.lastrun_utc + OccasionalTask_period)
     
-    logformat('StrewnLAB OccaisionalTask started.','INFO')
+    logformat('StrewnLAB OccasionalTask started.','INFO')
     
     % Get new events (new database method)
     try
         getnew_test
     catch
-        logformat('Error in GETNEW_TEST.','DEBUG')
+        logformat('Unknown error in GETNEW_TEST.','DEBUG')
     end    
     
-    % Record Occaisional task complete
-    taskmaster.OccaisionalTask.lastrun_utc = nowtime_utc;
+    % Record Occasional task complete
+    taskmaster.OccasionalTask.lastrun_utc = nowtime_utc;
     
-    logformat('StrewnLAB OccaisionalTask completed.','INFO') 
+    logformat('StrewnLAB OccasionalTask completed.','INFO') 
 end
 
 % Save task scheduler data 
