@@ -1,5 +1,7 @@
 % STREWNCONFIG load strewn field configuration file
-
+% TBD - all config variables need to reviewed and updated to the new
+% ref_config.XXX format defined in LOAD_CONFIG, and then STREWNCONFIG can be removed from the
+% code.
 
 webread_timeout = 60;
 

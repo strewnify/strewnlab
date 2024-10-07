@@ -1,9 +1,9 @@
 function load_config
 % LOAD_CONFIG Load configuration data
-% This function uses verious methods to obtain user location and system
-% information, including timezone, coordinates, operating system, and
-% screen size and resolution.
-
+% This function loads user config from file.
+% TBD - all config variables need to reviewed and updated to the new
+% ref_config.XXX format, and then STREWNCONFIG can be removed from the
+% code.
 
 % Initialize global variable
 % Any existing data will be overwritten
@@ -24,10 +24,7 @@ ref_config.loaded = false;
 ref_config.loaded = false;
 
 % Load user data
-ref_config = load('user_data.mat');
-
-% Log temporary code fix, need to improve this function
-logformat('User data loaded from temporary file.  Need fix.','DEBUG')
+ref_config = load('user_config.mat');
 
 % Configuration loading complete
 ref_config.loaded = true;
