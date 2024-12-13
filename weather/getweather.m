@@ -262,8 +262,7 @@ while weatherdatamissing
     numstations_t1 = 0;
     numstations_t2 = 0;
     IGRA_DatasetIndex = 0;
-
-    
+   
     
     % If less than the target and progress is being made, continue
      while (stationprogress < IGRA_StationTarget) && (stationprogress/station > 0.2 || station < 4)

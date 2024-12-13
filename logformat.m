@@ -55,7 +55,7 @@ if iserror || isdebug
     % If the user is not present, email the webmaster with the error
     if ~getSession('state','userpresent')
         try
-            strewnmail(yourMsg,getConfig('webmaster'),'StrewnLAB Error',1)
+            notifywebmaster(yourMsg);
         catch
             fprintf('%s | %s | %s\n', nowstring,'WARN','Failed to send error mail to the webmaster!' )
         end            

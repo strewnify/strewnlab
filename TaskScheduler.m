@@ -4,11 +4,11 @@
 % Program Script: "C:\Program Files\MATLAB\R2020b\bin\matlab.exe"
 % Add arguments: -r "cd('C:\Users\james\Documents\GitHub\strewnlab'); TaskScheduler; exit" -logfile C:\Users\james\Documents\GitHub\strewnlab\logs\taskscheduler.log
 
-% temp solution
-% diary('C:\Users\james\Documents\GitHub\strewnlab\logs\strewnnotify_log.txt')
-% %diary([getSession('folders','logfolder') '\strewnnotify_log.txt'])        
-% diary on 
-% %RAII.diary = onCleanup(@() diary('off')); % turn the diary off after an error
+temp solution
+diary('C:\Users\james\Documents\GitHub\strewnlab\logs\strewnnotify_log.txt')
+%diary([getSession('folders','logfolder') '\strewnnotify_log.txt'])        
+diary on 
+%RAII.diary = onCleanup(@() diary('off')); % turn the diary off after an error
 
 % Configuration
 FrequentTask_period = hours(2.5);
@@ -48,7 +48,7 @@ if nowtime_utc >= (taskmaster.FrequentTask.lastrun_utc + FrequentTask_period)
     
     % Strewnify notification task
     try
-        strewnnotify
+        %strewnnotify
     catch
         logformat('Unknown error in STREWNNOTIFY!','ERROR')
     end
@@ -100,7 +100,7 @@ if nowtime_utc >= (taskmaster.OccasionalTask.lastrun_utc + OccasionalTask_period
     
     % Get new events (new database method)
     try
-        getnew_test
+        %getnew_test
     catch
         logformat('Unknown error in GETNEW_TEST.','DEBUG')
     end    

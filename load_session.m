@@ -177,12 +177,19 @@ logformat(sprintf('StrewnLAB is installed at %s', ref_session.folders.mainfolder
 % Get the main prefix for the drive, where Documents and Downloads would be found
 ref_session.folders.mainprefix = [extractBefore(ref_session.folders.mainfolder,ref_session.user.winusername) ref_session.user.winusername];
 
+% Save a folder for downloads
+ref_session.folders.downloads = [ref_session.folders.mainprefix '\Downloads'];
+logformat(sprintf('Downloads folder identified at %s', ref_session.folders.downloads),'INFO')
+
 % Add working directory and subfolders to search path and go to the folder
+logformat(sprintf('Switching to working directory at %s', ref_session.folders.mainfolder),'INFO')
 addpath(genpath(ref_session.folders.mainfolder)) 
 cd(ref_session.folders.mainfolder)
 
 % Logging folder
 ref_session.folders.logfolder = [ref_session.folders.mainfolder '\logs'];
+logformat(sprintf('Log folder identified at %s', ref_session.folders.logfolder),'INFO')
+
 
 % Remote data folders
 ref_session.folders.weatherfolder = [ref_session.folders.mainfolder '\local_data\radiosonde'];

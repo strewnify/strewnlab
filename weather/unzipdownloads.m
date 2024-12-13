@@ -6,7 +6,7 @@ import_ref_data
 skipdownload = true
 
 % Go to the downloads folder
-cd([getSession('folders','mainprefix') '\Downloads']);
+cd(getSession('folders','downloads'));
 
 for station = 1:size(EventData_IGRA_Nearby,1)
     ZipFileName = [EventData_IGRA_Nearby.StationID{station} '-data.txt.zip'];

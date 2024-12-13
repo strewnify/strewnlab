@@ -143,14 +143,22 @@ if strcmp(sdb_Events(select_i,:).DataSource{1},'AMS')
     AMS_EventID = [AMS_EventID(12:end) '-' AMS_EventID(7:10)];
     
     % Print the AMS reports
-    AMS_json = getams_reportsforevent(AMS_EventID,eventfolder);
+    if getConfig('ams_disable')
+        logformat('AMS connectivity not available to retrieve reports.','WARN')
+    else
+        AMS_json = getams_reportsforevent(AMS_EventID,eventfolder);
+    end
     
-    % Download the latest KML file from AMS and save it to the event folder 
-    KML_filepath = getamsKML(AMS_EventID,eventfolder);
-    
-    % if Google Earth was selected, open the file
-    if GE
-        winopen(KML_filepath);        
+    % Download the latest KML file from AMS and save it to the event folder
+    try
+        KML_filepath = getamsKML(AMS_EventID,eventfolder);
+
+        % if Google Earth was selected, open the file
+        if GE
+            winopen(KML_filepath);        
+        end
+    catch
+        logformat('Cannot retrieve/open AMS KML file.','WARN')
     end
 end
 

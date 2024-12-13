@@ -2,6 +2,8 @@ function filepath_export = getamsKML(AMS_EventID, path_export)
 %GETAMSKML Download and save the latest AMS trajectory KML file.
 %
 
+preventAbuse(15,10);  % Prevent abuse of this function
+
 % Initialize
 downloaded = false;
 
