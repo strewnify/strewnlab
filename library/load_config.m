@@ -14,7 +14,7 @@ end
 
 % Log initialization
 if isfield(ref_config,'loaded') && ref_config.loaded
-    logformat('Reloading configuration data...','INFO')
+    logformat('Reloading event data...','INFO')
 else
     logformat('Loading configuration data...','INFO')
 end

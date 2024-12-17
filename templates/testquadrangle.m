@@ -22,8 +22,12 @@ p3_long = max(long1,long2);
 p4_lat = min(lat1,lat2);
 p4_long = max(long1,long2);
 
-% Load the template from file
-filepath = [eventfolder '\TestQuadrangle.kml'];
+minlat = fix(mean([p1_lat p2_lat p3_lat p4_lat]));
+minlong = fix(mean([p1_long p2_long p3_long p4_long]));
+
+% Generate a path and filename
+filename = sprintf('TestQuadrangle_%.0f_%.0f', minlat, minlong);
+filepath = [eventfolder '\' filename '.kml'];
 
 % Rename the file and copy to the event folder
 copyfile([getSession('folders','mainfolder') '\templates\TestQuadrangle.kml'],filepath)
@@ -55,7 +59,8 @@ else
         file_contents = regexprep(file_contents,'p2_long',sprintf('%.6f',p2_long));
         file_contents = regexprep(file_contents,'p3_long',sprintf('%.6f',p3_long));
         file_contents = regexprep(file_contents,'p4_long',sprintf('%.6f',p4_long));
-        
+        file_contents = regexprep(file_contents,'TestQuadrangle',filename);
+                
         % Re-write the file
         FID  = fopen(filepath,'w');
         fprintf(FID,'%s',file_contents);
@@ -72,8 +77,7 @@ end
 if GE
     winopen(filepath)
     pause(2)
-    %delete(temp_GE_filepath)
-    logformat(sprintf('KML template %s imported into Google Earth',[SimEventID '_' SimulationName]),'INFO')
+    %delete(temp_GE_filepath)    
 else
     logformat(sprintf('KML quadrangle exported to %s',filepath),'INFO')
 end
