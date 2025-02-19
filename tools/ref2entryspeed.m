@@ -1,7 +1,9 @@
 function [entry_Speed_kps, err_entry_Speed_kps] = ref2entryspeed(ref_Speed_kps,err_ref_Speed_kps, ref_Height_km, speed_type)
 %REF2ENTRYSPEED Estimates entry speed and error, based on reference point speed, height, and speed error.
+% [entry_Speed_kps, err_entry_Speed_kps] = ref2entryspeed(ref_Speed_kps,err_ref_Speed_kps, ref_Height_km, speed_type)
 % The model is based on a simulated dataset, and assumes entry height is
 % 100km.  Variation in speed is less than 2% between 60 km
+% speed_type is either 'average' or 'instant'
 
 % Extreme limits of meteor speed
 min_extreme_kps = 9;

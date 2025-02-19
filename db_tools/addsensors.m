@@ -1,5 +1,6 @@
 function [db_Sensors_out, inputdata] = addsensors(db_Sensors_in, inputdata)
 %ADDSENSORS Add a new sensor to the database
+%[db_Sensors_out, inputdata] = addsensors(db_Sensors_in, inputdata)
 
 % Load config for default FOV
 strewnconfig
@@ -74,7 +75,7 @@ switch new_sensor_type
         plot_color = [0.2863 0.2863 0.2784];               
 end
 
-% Get data an analyze sensors, one at a time
+% Get data and analyze sensors, one at a time
 for sensor_i = 1:numsensors
     
     % Get data
@@ -259,7 +260,7 @@ for sensor_i = 1:numsensors
             elseif isnan(db_Sensors_out.sensorAZ(add_i))
                 db_Sensors_out.sensor_hor_FOV(add_i) = NaN;
             else
-                db_Sensors_out.sensor_hor_FOV(add_i) = default_hor_FOV;
+                db_Sensors_out.sensor_hor_FOV(add_i) = getConfig('default_hor_FOV');
             end
             logformat(sprintf('hor_FOV defaulted to %g.', db_Sensors_out.sensor_hor_FOV(add_i)),'INFO')
 
@@ -276,9 +277,9 @@ for sensor_i = 1:numsensors
             elseif isnan(db_Sensors_out.sensorAZ(add_i))
                 db_Sensors_out.sensor_vert_FOV(add_i) = NaN;
             else
-                db_Sensors_out.sensor_vert_FOV(add_i) = db_Sensors_out.sensor_hor_FOV(add_i)/default_aspectratio;
+                db_Sensors_out.sensor_vert_FOV(add_i) = db_Sensors_out.sensor_hor_FOV(add_i)/getConfig('default_aspectratio');
             end
-            logformat(sprintf('vert_FOV defaulted to %g, using default aspect ratio %g.', db_Sensors_out.sensor_vert_FOV(add_i),default_aspectratio),'INFO')
+            logformat(sprintf('vert_FOV defaulted to %g, using default aspect ratio %g.', db_Sensors_out.sensor_vert_FOV(add_i),getConfig('default_aspectratio')),'INFO')
 
         % save vert_FOV
         else

@@ -19,10 +19,6 @@ Database_prefix = 'sdb_*'; % all variables in the database must have this prefix
 Database_EventData_varname = 'sdb_Events'; % database integrity check, if this variable is not found, error
 column_width = 25; % column width for reports and location string length.  WARNING: Database rebuild required to update old events.
 
-% Sensor database settings
-default_hor_FOV = 140;
-default_aspectratio = 1.3;
-
 % Generate a cell array of EventID increments, in case of multiple events in one hour
 % Supports up to 1296 additional events
 EventIDidx_char = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';

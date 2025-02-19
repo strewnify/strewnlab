@@ -31,7 +31,12 @@ if getSession('state','userpresent')
     
 % Otherwise use default list
 else
-    GetSourceList = {'Goodall' 'CNEOS' 'NEOB' 'ASGARD' 'GMN' 'AMS'};
+    GetSourceList = {'Goodall' 'CNEOS' 'NEOB' 'ASGARD' 'GMN'};
+end
+
+% Check for disabled sources
+if getConfig('ams_disable') && nnz(contains(GetSourceList,'AMS')) > 0
+    logformat('AMS connectivity is disabled by default until further notice.','ERROR')
 end
 
 % Error check for missing fieldnames
@@ -184,6 +189,6 @@ testlist = unique(testlist(not(cellfun(@isnumeric,testlist))));
 
 if numel(testlist) > 0
     emailcontent = reportevents_test(sdb_MeteorData, testlist);
-    strewnmail(emailcontent,getConfig('webmaster'),email_subject,1)
+    strewnmail(emailcontent,getConfig('webmaster'),'getnew_test TEST',1)
 end
 

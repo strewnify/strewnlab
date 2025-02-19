@@ -1,6 +1,6 @@
 function [LAT,LONG,slantRange] = vectorsolution(AZ, ELEV, LAT0, LONG0, H0, H_target, ELLIPSOID, eventfolder)
-% VECTORSOLUTION Sweep a solution set for a single array input to
-% AER2GEOSOLVE
+% VECTORSOLUTION Sweep a solution set for a single array input to AER2GEOSOLVE
+% [LAT,LONG,slantRange] = vectorsolution(AZ, ELEV, LAT0, LONG0, H0, H_target, ELLIPSOID, eventfolder)
 
 logformat('currently this function only supports H_target array input','WARN')
 

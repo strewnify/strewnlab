@@ -30,7 +30,7 @@ if ~exist('CNEOS_data','var')
 end
 
 % Get data from the AMS fireball database
-if ~exist('AMS_data','var')
+if ~getConfig('ams_disable') && ~exist('AMS_data','var')
     try
         AMS_data = getams(startyear,endyear,5, 2);
         AMS_success = true;
@@ -38,6 +38,8 @@ if ~exist('AMS_data','var')
         AMS_success = false;
         logformat('AMS data retrieval failed','DEBUG')        
     end
+else
+    AMS_success = false;
 end
 
 % Get data from the ASGARD site
@@ -117,7 +119,8 @@ if numnew > 0
     NewEvents.ProcessDate(isnat(NewEvents.ProcessDate)) = ProcessDatetime;
 
     % Append data to database and sort
-    sdb_Events = [sdb_Events; NewEvents];
+    %sdb_Events = [sdb_Events; NewEvents];
+    sdb_Events = outerjoin(sdb_Events,NewEvents,'MergeKeys',true);
     sdb_Events = sortrows(sdb_Events,'EventID','ascend');
     
     % Write data to Excel file

@@ -1,8 +1,6 @@
 function db_Sensors_out = updatesensor(db_Sensors_in, StationID)
 %UPDATESENSOR Update sensor data after detailed review
-
-default_hor_FOV = 140;
-default_aspectratio = 1.3;
+%db_Sensors_out = updatesensor(db_Sensors_in, StationID)
 
 logformat(sprintf('User requested data update for %s.',StationID),'USER')
 
@@ -79,7 +77,7 @@ else
 
     % default hor_FOV
     if isempty(new_hor_FOV)
-        db_Sensors_out.sensor_hor_FOV(updt_i) = default_hor_FOV;
+        db_Sensors_out.sensor_hor_FOV(updt_i) = getConfig('default_hor_FOV');
         logformat(sprintf('hor_FOV defaulted to %g.', db_Sensors_out.sensor_hor_FOV(updt_i)),'INFO')
 
     % change hor_FOV
@@ -98,8 +96,8 @@ else
 
     % default vert_FOV
     if isempty(new_vert_FOV)
-        db_Sensors_out.sensor_vert_FOV(updt_i) = db_Sensors_out.sensor_hor_FOV(updt_i)/default_aspectratio;
-        logformat(sprintf('vert_FOV defaulted to %g, using default aspect ratio %g.', db_Sensors_out.sensor_vert_FOV(updt_i),default_aspectratio),'INFO')
+        db_Sensors_out.sensor_vert_FOV(updt_i) = db_Sensors_out.sensor_hor_FOV(updt_i)/getConfig('default_aspectratio');
+        logformat(sprintf('vert_FOV defaulted to %g, using default aspect ratio %g.', db_Sensors_out.sensor_vert_FOV(updt_i),getConfig('default_aspectratio')),'INFO')
 
     % change vert_FOV
     elseif abs(new_vert_FOV - old_vert_FOV) > 0.01
