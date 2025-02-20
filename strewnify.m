@@ -293,6 +293,7 @@ rockcount = 1;
 inflightcount = 1;
 splitcounter = 1;
 plotcounter = 0;
+recordcounter = 0;
 history = 2; % preallocation size
 current = 1;
 previous = 2;
@@ -343,6 +344,7 @@ projectile(n).ref_determined_altitude = 0;
 projectile(n).ref_determined_speed = 0;
 projectile(n).ref_determined_slope = 0;
 projectile(n).darkflight = 0;
+projectile(n).ablation = false;
 projectile(n).ablated = false;
 
 projectile(n).ref_altitude_corr = 0;
@@ -529,6 +531,9 @@ while inflightcount > 0
                 projectile(n).mass = projectile(n).mass - projectile(n).dMdt(current) * timestep(current);
                 
                 % Detect if ablation occurred
+                if projectile(n).dMdt(current) >= ablation_thresh
+                    projectile(n).ablation = true;
+                end
                 if projectile(n).ablated == false && projectile(n).dMdt(current) >= ablation_thresh
                     projectile(n).ablated = true;
                 end
@@ -816,6 +821,19 @@ while inflightcount > 0
         %fprintf('t = %0.2f, pause = %0.3f\n', t(1), floor(timestep(current)*plotstep/1.5/RealtimeMult/inflightcount*100)/100);
     end
     
+    % Simulate sensor or observer data
+    if recordsensors && recordcounter > plotstep
+        recordcounter = 1;
+        for n = 1:rockcount
+            if projectile(n).position(current,3) > plotlevel && projectile(n).inflight > 0
+            % Simulate data from observers/sensors
+            observations = simulate_sensors(entrytime, t(current), projectile(n).location(current,1), projectile(n).location(current,2), projectile(n).position(current,3), projectile(n).mass, projectile(n).diameter, projectile(n).ablation, sdb_Sensors, r_stations,observations);
+            end
+        end
+    else
+        recordcounter = recordcounter + 1;
+    end
+    
     if useplot && plotcounter > plotstep
         plotcounter = 1;
         figure(handle_trajectoryplot)
@@ -843,7 +861,7 @@ while inflightcount > 0
                 mark = 'rp';
                 marksize = 3*default_marksize;
             end
-            if projectile(n).dMdt(current)> ablation_thresh
+            if projectile(n).ablation
                 mark = 'ro';
             else
                 mark = 'ko';
@@ -853,8 +871,7 @@ while inflightcount > 0
                     %Update projectile position plot
                     figure(handle_trajectoryplot)
                     plot3(projectile(n).location(current,2), projectile(n).location(current,1), projectile(n).position(current,3),mark,'MarkerSize',marksize*projectile(n).diameter);
-                end
-
+                end           
 
             elseif useplot && projectile(n).position(current,3) == plotlevel
                 figure(handle_trajectoryplot)

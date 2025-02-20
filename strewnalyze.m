@@ -130,6 +130,35 @@ end
 event_report = reportevents(sdb_Events(select_i,:))
 writematrix(event_report,[exportfolder '\readme_' exportfoldername '.txt'],'QuoteStrings',false);
 
+% If an ASGARD event, save ASGARD image
+if contains(sdb_Events.Hyperlink1(select_i),'event.png')
+    try
+        ASGARD_path = websave([eventfolder '\' SimEventID 'NASA_ASGARD.png'],sdb_Events.Hyperlink1{select_i}); % save the file
+        logformat(['ASGARD solution saved to ' ASGARD_path],'INFO')
+    catch
+        logformat('Error saving ASGARD image.','DEBUG')
+    end
+    
+    try
+        % Read the image
+        ASGARD_img = imread(ASGARD_path);
+
+        % Crop the map area of the ASGARD image
+        % Define crop region as [x, y, width, height]
+        xmin = floor(0.5209*size(img,1));
+        xmax = size(ASGARD_img,1);
+        ymin = 1;
+        ymax = floor(0.2735*size(ASGARD_img,2));
+        ASGARD_cropped_img = ASGARD_img(xmin:xmax, ymin:ymax, :);
+
+        % Save the cropped image
+        imwrite(ASGARD_cropped_img, [eventfolder '\' SimEventID 'NASA_ASGARD_map_cropped.png']);
+        logformat('Cropped ASGARD image saved.','DEBUG')
+    catch
+        logformat('Error cropping ASGARD image.','DEBUG')
+    end
+end
+
 % Create the KML template
 load_KMLtemplate(eventfolder, SimEventID, SimulationName, GE);
 
