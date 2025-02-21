@@ -31,17 +31,17 @@ function observations = simulate_sensors(entry_time, sim_time, lat, lon, alt_m, 
 
     % Initialize table if not provided
     if nargin < 12 || isempty(observations)
-        observations = table([], [], [], [], [], [], [], [], [], [], [], [], [], 'VariableNames', ...
+        observations = table([], [], [], [], [], [], [], [], [], [], [], [], [], [], 'VariableNames', ...
             {'ObservationTime', 'SimulationTime', 'Lat', 'Lon', 'Alt_km', ...
-             'Mass_kg', 'Diameter_m', 'FrontalArea_m2', 'Ablation', 'StationID', ...
-             'observed_Az', 'observed_ELEV', 'SlantRange_km', 'P_detect'});
+             'Mass_kg', 'Diameter_m', 'frontalarea_m2', 'ablation', 'StationID', ...
+             'observed_AZ', 'observed_ELEV', 'slantRange_m', 'P_detect'});
     end
 
     % Compute the current observation time
     obs_time = entry_time + seconds(sim_time);
 
     % Loop through specified stations
-    for i = 1:length(station_list)
+    for i = 1:numel(station_list)
         % Find the index of the station in the table
         station_idx = find(strcmp(sensor_db.StationID, station_list{i}), 1);
 
@@ -57,19 +57,19 @@ function observations = simulate_sensors(entry_time, sim_time, lat, lon, alt_m, 
         El_max = wrapTo180(sensor_db.sensorELEV(station_idx) + sensor_db.sensor_vert_FOV(station_idx) / 2);
 
         % Convert geodetic coordinates to AER (Azimuth, Elevation, Range)
-        [observed_Az, observed_ELEV, slantRange_km] = geodetic2aer(lat, lon, alt_m, ...
+        [observed_AZ, observed_ELEV, slantRange_m] = geodetic2aer(lat, lon, alt_m, ...
             sensor_db.LAT(station_idx), sensor_db.LONG(station_idx), sensor_db.Altitude_m(station_idx), ...
             getPlanet('ellipsoid_m'));
 
         % Wrap azimuth and elevation
-        observed_Az = wrapTo360(observed_Az);
+        observed_AZ = wrapTo360(observed_AZ);
         observed_ELEV = wrapTo180(observed_ELEV);
 
         % Check visibility
         if Az_min < Az_max
-            az_visible = (Az_min <= observed_Az) & (observed_Az <= Az_max);
+            az_visible = (Az_min <= observed_AZ) & (observed_AZ <= Az_max);
         else
-            az_visible = (observed_Az >= Az_min) | (observed_Az <= Az_max);
+            az_visible = (observed_AZ >= Az_min) | (observed_AZ <= Az_max);
         end
 
         visible = (observed_ELEV > 0) & az_visible & (El_min <= observed_ELEV) & (observed_ELEV <= El_max);
@@ -77,14 +77,14 @@ function observations = simulate_sensors(entry_time, sim_time, lat, lon, alt_m, 
         % If visible, append the observation
         if any(visible)
             % Compute the detection probability
-            P_detect = NEXRAD_detection_probability(frontal_area_m2, slantRange_km * 1000); % Convert slant range to meters
+            P_detect = NEXRAD_detection_probability(frontal_area_m2, slantRange_m); % Convert slant range to meters
 
             % Create the new rows for the observations table
             new_rows = table( ...
                 repmat(obs_time, size(alt_m)), repmat(sim_time, size(alt_m)), lat * ones(size(alt_m)), ...
                 lon * ones(size(alt_m)), alt_m / 1000, repmat(mass_kg, size(alt_m)), repmat(diameter_m, size(alt_m)), ...
                 repmat(frontal_area_m2, size(alt_m)), repmat(ablation, size(alt_m)), repmat({sensor_db.StationID{station_idx}}, size(alt_m)), ...
-                observed_Az, observed_ELEV, slantRange_km, repmat(P_detect, size(alt_m)), 'VariableNames', observations.Properties.VariableNames);
+                observed_AZ, observed_ELEV, slantRange_m, repmat(P_detect, size(alt_m)), 'VariableNames', observations.Properties.VariableNames);
 
             % Append to the observations table
             observations = [observations; new_rows];

@@ -16,7 +16,8 @@ function P_d = NEXRAD_detection_probability(frontalarea_m2, slantRange_m)
     L = 2.7;      % System losses (dB)
     N = -112;     % Noise power (dBm)
     beam_width_deg = 0.925; % NEXRAD beam width in degrees
-    detection_threshold_dB = -9.5; % Detection threshold in dB
+    %detection_threshold_dB = -9.5; % Detection threshold in dB
+    detection_threshold_dB = -4; % Detection threshold in dB
     
     % Convert gain and losses from dB to linear scale
     Gt_linear = 10^(Gt / 10);

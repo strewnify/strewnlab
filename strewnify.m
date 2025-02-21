@@ -58,6 +58,11 @@ else
     end    
 end
 
+% Create or update the simulation monitor
+if ~exist('observations','var')
+    observations = table;
+end
+
 % If the waitbar was closed, open a new one
 if ~exist('WaitbarHandle','var') || ~ishghandle(WaitbarHandle)
     WaitbarHandle = waitbar(0,'Please wait...');
@@ -170,8 +175,8 @@ end
 % [n1 n2 n3...; z1 z2 z3...; m1 m2 m3]
 % Example: [ 1 1 1 2; 24344 24344 21000 21000; 0.103 0.050 0.010 0.0003];
 predefinedsplits = true;
-lognrndmultlow = 0.001; % typically 0.001
-lognrndmulthigh = 0.1; % typically 0.1
+lognrndmultlow = 0.0001; % typically 0.001
+lognrndmulthigh = 0.01; % typically 0.1
 count1 = randbetween(2,100); % number of fragments
 
 for i = 1:count1
@@ -376,9 +381,9 @@ projectile(n).spin(current,:) = spinmagnitude .* randomunitvector;
 projectile(n).volume = projectile(n).mass/projectile(n).density;
 projectile(n).radius = (0.75 * projectile(n).volume / pi)^(1/3);
 projectile(n).diameter = projectile(n).radius*2;
-projectile(n).frontalarea = pi*projectile(n).radius^2*projectile(n).frontalareamult; % frontal area in m^2
-projectile(n).noseradius = sqrt(projectile(n).frontalarea / pi);
-projectile(n).shapefactor = projectile(n).frontalarea / (projectile(n).volume)^(2/3);
+projectile(n).frontalarea_m2 = pi*projectile(n).radius^2*projectile(n).frontalareamult; % frontal area in m^2
+projectile(n).noseradius = sqrt(projectile(n).frontalarea_m2 / pi);
+projectile(n).shapefactor = projectile(n).frontalarea_m2 / (projectile(n).volume)^(2/3);
 
 % Initial conditions
 % Position specified as [x y z]
@@ -424,9 +429,9 @@ projectile(n).speedsound = 20.05*sqrt(projectile(n).temperature(current)+273.15)
 projectile(n).Mach(current) = projectile(n).airspeed(current)/projectile(n).speedsound; % local Mach number
 projectile(n).CD(current) = dragcoef(projectile(n).Mach(current), projectile(n).cubicity);
 airvelocityunitvector = projectile(n).airvelocity(current,:)/norm(projectile(n).airvelocity(current,:));
-projectile(n).DragForce(current,:) = airvelocityunitvector(current,:).*dragforce(projectile(n).airspeed(current), projectile(n).rho(current), projectile(n).CD(current), projectile(n).frontalarea);
+projectile(n).DragForce(current,:) = airvelocityunitvector(current,:).*dragforce(projectile(n).airspeed(current), projectile(n).rho(current), projectile(n).CD(current), projectile(n).frontalarea_m2);
 g = G_constant*planet.mass_kg/(planet.ellipsoid_m.MeanRadius + projectile(n).position(current,3))^2;
-projectile(n).v_terminal(current) = sqrt((2*projectile(n).mass*g)/(projectile(n).rho(current)*projectile(n).frontalarea*projectile(n).CD(current)));
+projectile(n).v_terminal(current) = sqrt((2*projectile(n).mass*g)/(projectile(n).rho(current)*projectile(n).frontalarea_m2*projectile(n).CD(current)));
 projectile(n).MagnusForce(current,:) = MagnusMult * 8/3 * pi * projectile(n).radius^3 * projectile(n).rho(current) * projectile(n).CD(current) * cross(projectile(n).airvelocity(current,:), projectile(n).spin(current,:));
 projectile(n).force(current,1) = projectile(n).DragForce(current,1); % drag force in the x direction
 projectile(n).force(current,2) = projectile(n).DragForce(current,2); % drag force in the y direction
@@ -526,7 +531,7 @@ while inflightcount > 0
             % Ablation Simulation
             % loss of mass, due to high temperature evaporation           
             if projectile(n).mass > minmass
-                projectile(n).dMdt(current) = (HTC*projectile(n).frontalarea*projectile(n).rho(current)*(projectile(n).speed(current))^3)/(2*ablationheat);
+                projectile(n).dMdt(current) = (HTC*projectile(n).frontalarea_m2*projectile(n).rho(current)*(projectile(n).speed(current))^3)/(2*ablationheat);
                 projectile(n).ablationrate = projectile(n).dMdt(current)/projectile(n).mass;
                 projectile(n).mass = projectile(n).mass - projectile(n).dMdt(current) * timestep(current);
                 
@@ -560,7 +565,7 @@ while inflightcount > 0
                 projectile(n).volume = projectile(n).mass/projectile(n).density;
                 projectile(n).radius = (0.75 * projectile(n).volume / pi)^(1/3);
                 projectile(n).diameter = projectile(n).radius*2;
-                projectile(n).frontalarea = pi*projectile(n).radius^2*projectile(n).frontalareamult; % frontal area in m^2
+                projectile(n).frontalarea_m2 = pi*projectile(n).radius^2*projectile(n).frontalareamult; % frontal area in m^2
             
             end
             % end Ablation Simulation
@@ -573,10 +578,10 @@ while inflightcount > 0
             projectile(n).Mach(current) = projectile(n).airspeed(current)/projectile(n).speedsound; % local Mach number
             projectile(n).CD(current) = dragcoef(projectile(n).Mach(current), projectile(n).cubicity);
             airvelocityunitvector = projectile(n).airvelocity(current,:)/norm(projectile(n).airvelocity(current,:));
-            projectile(n).DragForce(current,:) = airvelocityunitvector(current,:).*dragforce(projectile(n).airspeed(current), projectile(n).rho(current), projectile(n).CD(current), projectile(n).frontalarea);
+            projectile(n).DragForce(current,:) = airvelocityunitvector(current,:).*dragforce(projectile(n).airspeed(current), projectile(n).rho(current), projectile(n).CD(current), projectile(n).frontalarea_m2);
             projectile(n).MagnusForce(current,:) = MagnusMult * 8 * pi / 3 * projectile(n).radius * projectile(n).rho(current) * projectile(n).CD(current) * cross(projectile(n).velocity(current,:), projectile(n).spin(current,:));
             g = G_constant*planet.mass_kg/(planet.ellipsoid_m.MeanRadius + projectile(n).position(current,3))^2;
-            projectile(n).v_terminal(current) = sqrt((2*projectile(n).mass*g)/(projectile(n).rho(current)*projectile(n).frontalarea*projectile(n).CD(current)));
+            projectile(n).v_terminal(current) = sqrt((2*projectile(n).mass*g)/(projectile(n).rho(current)*projectile(n).frontalarea_m2*projectile(n).CD(current)));
             projectile(n).force(current,1) = projectile(n).DragForce(current,1) + projectile(n).MagnusForce(current,1); % drag force in the x direction
             
 %             % **** CORIOLIS ADDED - TEMPORARY TEST for France
@@ -726,7 +731,7 @@ while inflightcount > 0
                 projectile(n).volume = projectile(n).mass/projectile(n).density;
                 projectile(n).radius = (0.75 * projectile(n).volume / pi)^(1/3);
                 projectile(n).diameter = projectile(n).radius*2;
-                projectile(n).frontalarea = pi*projectile(n).radius^2*projectile(n).frontalareamult; % frontal area in m^2
+                projectile(n).frontalarea_m2 = pi*projectile(n).radius^2*projectile(n).frontalareamult; % frontal area in m^2
                 
                 % New projectile properties 
                 projectile(rockcount).parent = n;
@@ -759,7 +764,7 @@ while inflightcount > 0
                 projectile(rockcount).volume = projectile(rockcount).mass/projectile(rockcount).density;
                 projectile(rockcount).radius = (0.75 * projectile(rockcount).volume / pi)^(1/3);
                 projectile(rockcount).diameter = projectile(rockcount).radius*2;
-                projectile(rockcount).frontalarea = pi*projectile(rockcount).radius^2*projectile(rockcount).frontalareamult; % frontal area in m^2
+                projectile(rockcount).frontalarea_m2 = pi*projectile(rockcount).radius^2*projectile(rockcount).frontalareamult; % frontal area in m^2
 
                 % Initial conditions
                 % Position specified as [x y z]
@@ -801,9 +806,9 @@ while inflightcount > 0
                 projectile(rockcount).Mach(current) = projectile(rockcount).airspeed(current)/projectile(rockcount).speedsound; % local Mach number
                 projectile(rockcount).CD(current) = dragcoef(projectile(rockcount).Mach(current), projectile(rockcount).cubicity);
                 airvelocityunitvector = projectile(rockcount).airvelocity(current,:)/norm(projectile(rockcount).airvelocity(current,:));
-                projectile(rockcount).DragForce(current,:) = airvelocityunitvector(current,:).*dragforce(projectile(rockcount).airspeed(current), projectile(rockcount).rho(current), projectile(rockcount).CD(current), projectile(rockcount).frontalarea);
+                projectile(rockcount).DragForce(current,:) = airvelocityunitvector(current,:).*dragforce(projectile(rockcount).airspeed(current), projectile(rockcount).rho(current), projectile(rockcount).CD(current), projectile(rockcount).frontalarea_m2);
                 g = G_constant*planet.mass_kg/(planet.ellipsoid_m.MeanRadius + projectile(rockcount).position(current,3))^2;
-                projectile(rockcount).v_terminal(current) = sqrt((2*projectile(rockcount).mass*g)/(projectile(rockcount).rho(current)*projectile(rockcount).frontalarea*projectile(rockcount).CD(current)));
+                projectile(rockcount).v_terminal(current) = sqrt((2*projectile(rockcount).mass*g)/(projectile(rockcount).rho(current)*projectile(rockcount).frontalarea_m2*projectile(rockcount).CD(current)));
                 projectile(rockcount).MagnusForce(current,:) = MagnusMult * 8 * pi / 3 * projectile(rockcount).radius * projectile(rockcount).rho(current) * projectile(rockcount).CD(current) * cross(projectile(rockcount).velocity(current,:), projectile(rockcount).spin(current,:));
                 projectile(rockcount).force(current,1) = projectile(rockcount).DragForce(current,1); % drag force in the x direction
                 projectile(rockcount).force(current,2) = projectile(rockcount).DragForce(current,2); % drag force in the y direction
@@ -822,13 +827,13 @@ while inflightcount > 0
     end
     
     % Simulate sensor or observer data
-    recordsensors = false;
+    recordsensors = true;
     if recordsensors && recordcounter > plotstep
         recordcounter = 1;
         for n = 1:rockcount
             if projectile(n).position(current,3) > plotlevel && projectile(n).inflight > 0
             % Simulate data from observers/sensors
-            observations = simulate_sensors(entrytime, t(current), projectile(n).location(current,1), projectile(n).location(current,2), projectile(n).position(current,3), projectile(n).mass, projectile(n).diameter, projectile(n).ablation, sdb_Sensors, r_stations,observations);
+            observations = simulate_sensors(entrytime, t(current), projectile(n).location(current,1), projectile(n).location(current,2), projectile(n).position(current,3), projectile(n).mass, projectile(n).diameter, projectile(n).frontalarea_m2, projectile(n).ablation, sdb_Sensors, r_stations,observations);
             end
         end
     else
@@ -1038,13 +1043,14 @@ SimMonitor.speed_corr(sim_index) = projectile(1).ref_speed_corr;
 SimMonitor.slope_corr(sim_index) = projectile(1).ref_slope_corr;
 SimMonitor.strewnmass_predicted(sim_index) = strewnmass_predicted;
 
-% Backup the simulation results
-try
-    strewnbackup
-catch
-    failtime = datestr(datetime('now','TimeZone','UTC'),'yyyy/mm/dd HH:MM')
+% Backup the simulation results, every 10 scenarios
+if mod(sim_scenario,10) == 0
+    try
+        strewnbackup
+    catch
+        failtime = datestr(datetime('now','TimeZone','UTC'),'yyyy/mm/dd HH:MM')
+    end
 end
-
 end
 
 % Close program
