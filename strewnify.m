@@ -822,6 +822,7 @@ while inflightcount > 0
     end
     
     % Simulate sensor or observer data
+    recordsensors = false;
     if recordsensors && recordcounter > plotstep
         recordcounter = 1;
         for n = 1:rockcount
