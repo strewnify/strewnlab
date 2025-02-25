@@ -1,4 +1,4 @@
-function probability = P_NEXRAD_visible(slantRange_km, objAZ, objELEV, vNorth, vEast, vDown, VCPmode)
+function probability = P_NEXRAD_visible(slantRange_km, objAZ, objELEV, vNorth_mps, vEast_mps, vDown_mps, VCPmode)
 % This function calculates the probability that a NEXRAD radar beam will
 % scan an object, based on it's instantaneous trajectory and operating mode
 % This function DOES NOT calculate the probability that the object will be
@@ -47,7 +47,7 @@ function probability = P_NEXRAD_visible(slantRange_km, objAZ, objELEV, vNorth, v
     volume_scan_time_s = getNEXRAD('VCP_duration_s',VCPmode);
     
     % Calculate the residence time of the object in the elevation range
-    residence_time_s = beam_residence_time(slantRange_km, objAZ, objELEV, vNorth, vEast, vDown);
+    residence_time_s = beam_residence_time(slantRange_km, objAZ, objELEV, vNorth_mps, vEast_mps, vDown_mps);
     
     % Calculate the probability that the object will be scanned
     % meaning that residence will occur during a scan at that elevation.  

@@ -68,9 +68,9 @@ CNEOS_data(1,:) = []; % delete initialization row
 % Post processing
 CNEOS_data.SolarElev = solarelevation(CNEOS_data.LAT,CNEOS_data.LONG,CNEOS_data.Datetime); % Calculate solar elevation
 CNEOS_data.Mass = round(Ev2mass(CNEOS_data.ImpactEnergy,CNEOS_data.Speed.*1000),0);
-[CNEOS_data.vNorth,CNEOS_data.vEast,CNEOS_data.vDown] = ecef2nedv(CNEOS_data.vx,CNEOS_data.vy,CNEOS_data.vz,CNEOS_data.LAT,CNEOS_data.LONG);
-CNEOS_data.Bearing = round(wrapTo360(90 - atan2d(CNEOS_data.vNorth,CNEOS_data.vEast)),3); % bearing angle (heading azimuth)
-CNEOS_data.Incidence = round(atand(sqrt(CNEOS_data.vNorth.^2+CNEOS_data.vEast.^2)./CNEOS_data.vDown),3);  % incidence angle from vertical
+[CNEOS_data.vNorth_kps,CNEOS_data.vEast_kps,CNEOS_data.vDown_kps] = ecef2nedv(CNEOS_data.vx,CNEOS_data.vy,CNEOS_data.vz,CNEOS_data.LAT,CNEOS_data.LONG);
+CNEOS_data.Bearing = round(wrapTo360(90 - atan2d(CNEOS_data.vNorth_kps,CNEOS_data.vEast_kps)),3); % bearing angle (heading azimuth)
+CNEOS_data.Incidence = round(atand(sqrt(CNEOS_data.vNorth_kps.^2+CNEOS_data.vEast_kps.^2)./CNEOS_data.vDown_kps),3);  % incidence angle from vertical
 CNEOS_data.Hyperlink1(:) = {'https://cneos.jpl.nasa.gov/fireballs/'};
 CNEOS_data.Hyperlink2(:) = {''};
 CNEOS_data.ImpactEnergy_Est = CNEOS_data.ImpactEnergy;
@@ -80,9 +80,9 @@ CNEOS_data.ProcessDate(:) = datetime('now');
 CNEOS_data.EventID = arrayfun(@eventidcalc,CNEOS_data.LAT,CNEOS_data.LONG,CNEOS_data.Datetime,'UniformOutput',false);
 CNEOS_data = movevars(CNEOS_data, 'EventID', 'Before', 'Datetime');
 
-CNEOS_data = removevars(CNEOS_data, 'vNorth');
-CNEOS_data = removevars(CNEOS_data, 'vEast');
-CNEOS_data = removevars(CNEOS_data, 'vDown');
+CNEOS_data = removevars(CNEOS_data, 'vNorth_kps');
+CNEOS_data = removevars(CNEOS_data, 'vEast_kps');
+CNEOS_data = removevars(CNEOS_data, 'vDown_kps');
 
 % Log
 logformat(sprintf('%0.0f records retrieved from CNEOS',size(CNEOS_data,1)),'DATA')

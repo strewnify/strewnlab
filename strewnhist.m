@@ -25,6 +25,15 @@ bearingmax = 360;
 
 % Lookup the mass filtered indices
 filter = (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= error_windmin) & (strewndata.error_wind <= error_windmax) & (strewndata.bearing >= bearingmin) & (strewndata.bearing <= bearingmax);
+
+% Compile valid rockID's for other functions, like SIMSENSOR
+% This has to compiled after running full scenarios, because data recorded
+% during the simulation will not have a priori knowledge of darkflight
+valid_rockIDs = strewndata.rockID(filter);
+if exist('observations','var')
+    valid_observations = ismember(valid_rockIDs,observations.rockID);
+end
+
 if ~strcmp(plot_materials{1},'all')
     filter = filter & matches(strewndata.material,plot_materials);
 end

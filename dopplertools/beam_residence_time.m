@@ -1,8 +1,8 @@
-function residence_time_s = beam_residence_time(slantRange_km, objAZ, objELEV, vNorth, vEast, vDown)
+function residence_time_s = beam_residence_time(slantRange_km, objAZ, objELEV, vNorth_mps, vEast_mps, vDown_mps)
 % BEAM_RESIDENCE_TIME - Calculates the residence time of an object in the radar beam.
 %
 % Syntax:
-%   residence_time_s = beam_residence_time(slantRange_m, objAZ, objELEV, vNorth, vEast, vDown)
+%   residence_time_s = beam_residence_time(slantRange_m, objAZ, objELEV, vNorth_mps, vEast_mps, vDown_mps)
 %
 % Description:
 %   This function calculates the residence time of an object within the radar beam based
@@ -14,9 +14,9 @@ function residence_time_s = beam_residence_time(slantRange_km, objAZ, objELEV, v
 %   slantRange_m - Slant range to the object in meters.
 %   objAZ        - Azimuth angle of the object's position (degrees).
 %   objELEV      - Elevation angle of the object's position (degrees).
-%   vNorth       - Velocity component of the object in the North direction (m/s).
-%   vEast        - Velocity component of the object in the East direction (m/s).
-%   vDown        - Velocity component of the object in the Down direction (m/s).
+%   vNorth_mps       - Velocity component of the object in the North direction (m/s).
+%   vEast_mps        - Velocity component of the object in the East direction (m/s).
+%   vDown_mps        - Velocity component of the object in the Down direction (m/s).
 %
 % Outputs:
 %   residence_time_s - Time in seconds the object remains within the radar beam's elevation range.
@@ -36,7 +36,7 @@ function residence_time_s = beam_residence_time(slantRange_km, objAZ, objELEV, v
     
     % Convert object velocity components from local ENU to AER coordinates, 
     % from the perspective of the radar station
-    [~, ~, ELEV_deg_per_s] = trajectory2aerv(objAZ, objELEV, slantRange_m, vNorth, vEast, vDown);
+    [~, ~, ELEV_deg_per_s] = trajectory2aerv(objAZ, objELEV, slantRange_m, vNorth_mps, vEast_mps, vDown_mps);
     
     % Calculate time to cross the beam in elevation
     residence_time_s = abs(beam_width_deg ./ ELEV_deg_per_s);  % Time in seconds to cross the beam width

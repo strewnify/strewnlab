@@ -122,6 +122,7 @@ marksize = default_marksize;
 
 % Calculate random inputs, based on nominal values and known uncertainty
 bearing = wrapTo360(randbetween(nom_bearing - error_bearing, nom_bearing + error_bearing)); % initial bearing, use to align wind to x-axis
+bearing_rad = deg2rad(bearing);
 angledeg = randbetween(nom_angle - error_angle, nom_angle + error_angle); % incidence angle from vertical
 if angledeg >= 90 || angledeg < 0
     angledeg
@@ -300,7 +301,7 @@ splitcounter = 1;
 plotcounter = 0;
 recordcounter = 0;
 history = 2; % preallocation size
-current = 1;
+current = 1; % Do not change, defines current value in timestep arrays
 previous = 2;
 impactcounter = 0;
 zmax = -9999999;
@@ -312,6 +313,7 @@ maxtimestep = 9999999;
 % Initialize Arrays
 t = zeros(history,1); % time in seconds
 timestep = zeros(history,1);
+projectile(n).rockID = generateRockID(); % 64 bit unique id for this rock
 projectile(n).position = zeros(history,3); % 3D position in meters
 projectile(n).location = zeros(history,2); % 2D location in latitude and longitude
 projectile(n).spin = zeros(history,3);
@@ -319,7 +321,9 @@ projectile(n).velocity = zeros(history,3);
 projectile(n).speed = zeros(history,1);
 projectile(n).flightdist = zeros(history,1);
 projectile(n).acceleration = zeros(history,3);
-projectile(n).unitvector = zeros(history,3);
+projectile(n).vNorth_mps = 0;
+projectile(n).vEast_mps = 0;
+projectile(n).vDown_mps = 0;
 projectile(n).force = zeros(history,3);
 projectile(n).windvelocity = zeros(history, 3);
 projectile(n).airspeed = zeros(history,1);
@@ -393,8 +397,7 @@ projectile(n).shapefactor = projectile(n).frontalarea_m2 / (projectile(n).volume
 
 % Calculate release vector
 vector = endposition - startposition;
-projectile(n).unitvector(current,:) = vector/norm(vector);
-    
+
 projectile(n).x0 = startposition(1);
 projectile(n).y0 = 0;
 projectile(n).z0 = eff_startaltitude;
@@ -409,7 +412,12 @@ end
 % Calculate initial vectors
 projectile(n).position(current,:) = [projectile(n).x0 0 projectile(n).z0];
 projectile(n).speed(current) = projectile(n).v0;
-projectile(n).velocity(current,:) = projectile(n).speed(current) * projectile(n).unitvector(current,:);
+projectile(n).velocity(current,:) = projectile(n).speed(current) * (vector/norm(vector));
+
+% Calculate vEast_mps and vNorth_mps components using the bearing angle
+projectile(n).vEast_mps = projectile(n).speed(current) * cos(bearing_rad);   % Speed in the East direction
+projectile(n).vNorth_mps = projectile(n).speed(current) * sin(bearing_rad);  % Speed in the North direction
+projectile(n).vDown_mps = -projectile(n).velocity(current,3); % Speed in the Down direction
 
 % Calculation initial latitude and longitude location
 AZ = bearing + atan2d(-projectile(n).position(current,2),projectile(n).position(current,1)); % convert position to azimuth angle
@@ -628,7 +636,13 @@ while inflightcount > 0
             projectile(n).speed(current) = norm(projectile(n).velocity(current,:));
             speedratio = projectile(n).speed(current)/projectile(n).speed(previous);
             projectile(n).spin(current,:) = projectile(n).spin(previous,:) * speedratio;  % angular acceleration proportional to change in velocity
-                        
+            
+            % Calculate vEast_mps and vNorth_mps components using the bearing angle
+            projectile(n).vEast_mps = projectile(n).speed(current) * cos(bearing_rad);   % Speed in the East direction
+            projectile(n).vNorth_mps = projectile(n).speed(current) * sin(bearing_rad);  % Speed in the North direction
+            projectile(n).vDown_mps = -projectile(n).velocity(current,3); % Speed in the Down direction
+
+            
             % Calculation latitude and longitude location
             AZ = bearing + atan2d(-projectile(n).position(current,2),projectile(n).position(current,1)); % convert position to azimuth angle
             ARCLEN = norm([projectile(n).position(current,1),projectile(n).position(current,2)]); % distance in meters
@@ -734,6 +748,7 @@ while inflightcount > 0
                 projectile(n).frontalarea_m2 = pi*projectile(n).radius^2*projectile(n).frontalareamult; % frontal area in m^2
                 
                 % New projectile properties 
+                projectile(rockcount).rockID = generateRockID(); % 64 bit unique id for this new rock
                 projectile(rockcount).parent = n;
                 projectile(rockcount).cubicity = randnsigma(cubicity_mean,cubicity_stdev,sigma_thresh,cubicity_min,cubicity_max);
                 projectile(rockcount).frontalareamult = randnsigma(frontalareamult_mean,frontalareamult_stdev,sigma_thresh,frontalareamult_min,frontalareamult_max);
@@ -830,12 +845,9 @@ while inflightcount > 0
     recordsensors = true;
     if recordsensors && recordcounter > plotstep
         recordcounter = 1;
-        for n = 1:rockcount
-            if projectile(n).position(current,3) > plotlevel && projectile(n).inflight > 0
-                % Simulate data from observers/sensors
-                [observations] = simsensor(entrytime, t(current), projectile(n).location(current,1), projectile(n).location(current,2), projectile(n).position(current,3), projectile(n).mass, projectile(n).diameter, projectile(n).frontalarea_m2, projectile(n).ablation, 0, 0, -projectile(n).velocity(current,3), sdb_Sensors, r_stations,observations);
-            end
-        end
+        % Simulate data from observers/sensors
+        [observations] = simsensor(entrytime, t(current), projectile, sdb_Sensors, r_stations,observations);
+    
     else
         recordcounter = recordcounter + 1;
     end
@@ -971,6 +983,7 @@ for n = 1:rockcount
         end
         
         % Store landed fragments to struct
+        strewn_struct.rockID = projectile(n).rockID;
         strewn_struct.sim_scenario = sim_scenario;
         strewn_struct.entrymass = entrymass; 
         strewn_struct.angledeg = angledeg; 
