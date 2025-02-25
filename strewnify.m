@@ -175,8 +175,8 @@ end
 % [n1 n2 n3...; z1 z2 z3...; m1 m2 m3]
 % Example: [ 1 1 1 2; 24344 24344 21000 21000; 0.103 0.050 0.010 0.0003];
 predefinedsplits = true;
-lognrndmultlow = 0.0001; % typically 0.001
-lognrndmulthigh = 0.01; % typically 0.1
+lognrndmultlow = 0.001; % typically 0.001
+lognrndmulthigh = 0.1; % typically 0.1
 count1 = randbetween(2,100); % number of fragments
 
 for i = 1:count1
@@ -832,8 +832,8 @@ while inflightcount > 0
         recordcounter = 1;
         for n = 1:rockcount
             if projectile(n).position(current,3) > plotlevel && projectile(n).inflight > 0
-            % Simulate data from observers/sensors
-            observations = simulate_sensors(entrytime, t(current), projectile(n).location(current,1), projectile(n).location(current,2), projectile(n).position(current,3), projectile(n).mass, projectile(n).diameter, projectile(n).frontalarea_m2, projectile(n).ablation, sdb_Sensors, r_stations,observations);
+                % Simulate data from observers/sensors
+                [observations] = simsensor(entrytime, t(current), projectile(n).location(current,1), projectile(n).location(current,2), projectile(n).position(current,3), projectile(n).mass, projectile(n).diameter, projectile(n).frontalarea_m2, projectile(n).ablation, 0, 0, -projectile(n).velocity(current,3), sdb_Sensors, r_stations,observations);
             end
         end
     else

@@ -1,4 +1,4 @@
-function probability = P_NEXRAD_detect(frontalarea_m2, slantRange_km)
+function [P_detect, magnitude_dB] = P_NEXRAD_detect(frontalarea_m2, slantRange_km)
     % NEXRAD_detection_probability calculates the probability of detection using Rayleigh scattering.
     % This function assumes the radar beam passes over the object.
     %
@@ -89,8 +89,8 @@ function probability = P_NEXRAD_detect(frontalarea_m2, slantRange_km)
     SNR = (TxPower_W .* Gt_linear .* Gr_linear .* RCS) ./ (L_linear .* N_linear .* slantRange_m.^4);
     
     % Convert SNR to dB
-    SNR_dB = 10 .* log10(SNR);
+    magnitude_dB = 10 .* log10(SNR);
     
     % Calculate the probability of detection using a sigmoid function
-    probability = 1 ./ (1 + exp(-(SNR_dB - detection_threshold_dB)));
+    P_detect = 1 ./ (1 + exp(-(magnitude_dB - detection_threshold_dB)));
 

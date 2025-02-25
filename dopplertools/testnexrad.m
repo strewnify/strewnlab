@@ -41,7 +41,6 @@ for modnum = 1:numel(opmodes)
     % Initialize probability storage
     P_d_values = zeros(length(object_diameters_m), length(slantRanges_km));
 
-       
     % Compute detection probabilities
     for i = 1:length(object_diameters_m)
         for j = 1:length(slantRanges_km)

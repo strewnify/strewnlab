@@ -67,17 +67,17 @@ function [value] = getNEXRAD(parameter, mode)
     % spin_rate is the rotation rate of the reflectivity scan only
     % detailed spin rate is available for some modes
     mode_data = struct( ...
-    'VCP21', struct('name', 'VCP 21*', 'spinrate_deg_s', 11.339, 'elevations', [0.5, 0.5, 1.45, 1.45, 2.4, 3.35, 4.3, 6, 9, 14.6, 19.5], 'detailed_spin_rates', [11.339, 11.360, 11.339, 11.360, 11.180, 11.182, 11.185, 11.189, 14.260, 14.322, 14.415], 'VCP_duration_s', 327.2, 'mode_type', 'Clear-air'), ...
-    'VCP31', struct('name', 'VCP 31', 'spinrate_deg_s', 5.039, 'elevations', [0.5, 0.5, 1.5, 1.5, 2.5, 2.5, 3.5, 4.5], 'detailed_spin_rates', [5.039, 5.039, 5.040, 5.062, 5.041, 5.062, 5.063, 5.065], 'VCP_duration_s', 570.1, 'mode_type', 'Clear-air'), ...
-    'VCP32', struct('name', 'VCP 32*', 'spinrate_deg_s', 4.961, 'elevations', [0.5, 0.5, 1.5, 1.5, 2.5, 3.5, 4.5], 'detailed_spin_rates', [4.961, 4.544, 4.961, 4.544, 4.060, 4.061, 4.063], 'VCP_duration_s', 565.5, 'mode_type', 'Clear-air'), ...
-    'VCP34', struct('name', 'VCP 34', 'spinrate_deg_s', 5.5, 'elevations', [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5], 'VCP_duration_s', 660, 'mode_type', 'Clear-air'), ...
-    'VCP35', struct('name', 'VCP 35', 'spinrate_deg_s', 12, 'elevations', [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5], 'VCP_duration_s', 420, 'mode_type', 'Clear-air'), ...
-    'VCP11', struct('name', 'VCP 11*', 'spinrate_deg_s', 18.675, 'elevations', [0.5, 0.5, 1.45, 1.45, 2.4, 3.35, 4.3, 5.25, 6.2, 7.5, 8.7, 10, 12, 14, 16.7, 19.5], 'detailed_spin_rates', [18.675, 19.224, 19.854, 19.225, 16.166, 17.893, 17.898, 17.459, 17.466, 25.168, 25.398, 25.421, 25.464, 25.515, 25.596, 25.696], 'VCP_duration_s', 269.4, 'mode_type', 'Precipitation'), ...
-    'VCP12', struct('name', 'VCP 12', 'spinrate_deg_s', 21.150, 'elevations', [0.5, 0.5, 0.9, 1.3, 1.8, 2.4, 3.1, 3.1, 4, 5.1, 6.4, 8, 10, 12.5, 15.6, 19.5], 'detailed_spin_rates', [21.150, 25.000, 21.150, 25.000, 26.640, 26.400, 26.400, 26.400, 28.010, 28.010, 28.010, 28.400, 28.884, 28.741, 28.741, 28.741], 'VCP_duration_s', 216.5, 'mode_type', 'Precipitation'), ...
-    'VCP112', struct('name', 'VCP 112', 'spinrate_deg_s', 18, 'elevations', [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5], 'VCP_duration_s', 330, 'mode_type', 'Precipitation'), ...
-    'VCP121', struct('name', 'VCP 121*', 'spinrate_deg_s', 29.301, 'elevations', [0.5, 0.5, 0.5, 0.5, 1.45, 1.45, 1.45, 1.45, 2.4, 2.4, 2.4, 3.5, 3.5, 3.5, 4.3, 4.3, 6, 9.9, 14.6, 19.5], 'detailed_spin_rates', [29.301, 29.795, 27.400, 21.402, 29.300, 29.795, 27.400, 21.402, 19.205, 27.400, 21.402, 21.600, 27.400, 21.402, 16.304, 29.499, 20.204, 29.499, 29.795, 29.795], 'VCP_duration_s', 330, 'mode_type', 'Precipitation'), ...
-    'VCP212', struct('name', 'VCP 212', 'spinrate_deg_s', 18, 'elevations', [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5], 'VCP_duration_s', 276, 'mode_type', 'Precipitation'), ...
-    'VCP215', struct('name', 'VCP 215', 'spinrate_deg_s', 15, 'elevations', [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5], 'VCP_duration_s', 360, 'mode_type', 'Precipitation') ...
+    'VCP21', struct('name', 'VCP 21', 'elevations', [0.5, 0.5, 1.45, 1.45, 2.4, 3.35, 4.3, 6, 9, 14.6, 19.5], 'spin_rates_deg_s', [11.339, 11.360, 11.339, 11.360, 11.180, 11.182, 11.185, 11.189, 14.260, 14.322, 14.415], 'reflectivity', [true false true false true true true true true true true], 'mode_type', 'Clear-air'), ...
+    'VCP31', struct('name', 'VCP 31', 'elevations', [0.5, 0.5, 1.5, 1.5, 2.5, 2.5, 3.5, 4.5], 'spin_rates_deg_s', [5.039, 5.039, 5.040, 5.062, 5.041, 5.062, 5.063, 5.065], 'reflectivity', [true false true false true false true true], 'mode_type', 'Clear-air'), ...
+    'VCP32', struct('name', 'VCP 32*', 'elevations', [0.5, 0.5, 1.5, 1.5, 2.5, 3.5, 4.5], 'spin_rates_deg_s', [4.961, 4.544, 4.961, 4.544, 4.060, 4.061, 4.063], 'reflectivity', [true false true false true true true], 'mode_type', 'Clear-air'), ...
+    'VCP34', struct('name', 'VCP 34', 'elevations', [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5], 'spin_rates_deg_s', [5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5, 5.5], 'reflectivity', [true true true true true true true true true true], 'mode_type', 'Clear-air'), ...
+    'VCP35', struct('name', 'VCP 35', 'elevations', [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5], 'spin_rates_deg_s', [12, 12, 12, 12, 12, 12, 12, 12, 12], 'reflectivity', [true true true true true true true true true], 'mode_type', 'Clear-air'), ...
+    'VCP11', struct('name', 'VCP 11', 'elevations', [0.5, 0.5, 1.45, 1.45, 2.4, 3.35, 4.3, 5.25, 6.2, 7.5, 8.7, 10, 12, 14, 16.7, 19.5], 'spin_rates_deg_s', [18.675, 19.224, 19.854, 19.225, 16.166, 17.893, 17.898, 17.459, 17.466, 25.168, 25.398, 25.421, 25.464, 25.515, 25.596, 25.696], 'reflectivity', [true false true false true true true true true true true true true true true true], 'mode_type', 'Precipitation'), ...
+    'VCP12', struct('name', 'VCP 12', 'elevations', [0.5, 0.5, 0.9, 1.3, 1.8, 2.4, 3.1, 3.1, 4, 5.1, 6.4, 8, 10, 12.5, 15.6, 19.5], 'spin_rates_deg_s', [21.150, 25.000, 21.150, 25.000, 26.640, 26.400, 26.400, 26.400, 28.010, 28.010, 28.010, 28.400, 28.884, 28.741, 28.741, 28.741],'reflectivity', [true false true true true true true false true true true true true true true true], 'mode_type', 'Precipitation'), ...
+    'VCP112', struct('name', 'VCP 112', 'elevations', [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5], 'spin_rates_deg_s', [18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18], 'reflectivity', [true true true true true true true true true true true true true true], 'mode_type', 'Precipitation'), ...
+    'VCP121', struct('name', 'VCP 121', 'elevations', [0.5, 0.5, 0.5, 0.5, 1.45, 1.45, 1.45, 1.45, 2.4, 2.4, 2.4, 3.5, 3.5, 3.5, 4.3, 4.3, 6, 9.9, 14.6, 19.5], 'spin_rates_deg_s', [29.301, 29.795, 27.400, 21.402, 29.300, 29.795, 27.400, 21.402, 19.205, 27.400, 21.402, 21.600, 27.400, 21.402, 16.304, 29.499, 20.204, 29.499, 29.795, 29.795], 'reflectivity', [true false false false true false false false true false false true false false true false true true true true], 'mode_type', 'Precipitation'), ...
+    'VCP212', struct('name', 'VCP 212', 'elevations', [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5], 'spin_rates_deg_s', [18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18],'reflectivity', [true true true true true true true true true true true true true true], 'mode_type', 'Precipitation'), ...
+    'VCP215', struct('name', 'VCP 215', 'elevations', [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5], 'spin_rates_deg_s', [15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15], 'reflectivity', [true true true true true true true true true true true true true true true true], 'mode_type', 'Precipitation') ...
 );
 
     % Radar system constants
@@ -89,6 +89,12 @@ function [value] = getNEXRAD(parameter, mode)
     NoisePower_dBm = -112;             % Noise power (dBm)
     beamwidth_deg = 0.925;   % Beam width (degrees)
     
+    % Limits
+    % Need to better comprehend the velocity limit
+    % Does the velocity scan ignore everything past the limit?
+    range_reflectivity_km = 467;
+    range_velocity_km = 116;
+    
     % Default mode: 'VCP 31' if no mode is provided
     if nargin < 2
         mode = 'VCP31';  % Default to 'VCP 31'
@@ -97,6 +103,7 @@ function [value] = getNEXRAD(parameter, mode)
     
     % Switch case to handle different requested parameters
     switch lower(parameter)
+        
         case 'lambda_m'
             value = lambda_m;  % Radar wavelength (m)
             
@@ -114,25 +121,39 @@ function [value] = getNEXRAD(parameter, mode)
             
         case 'noisepower_dbm'
             value = NoisePower_dBm;  % Noise power (dBm)
+        
+        case 'range_reflectivity_km'
+            value = range_reflectivity_km;
+            
+        case 'range_velocity_km'
+            value = range_velocity_km;
             
         case 'beamwidth_deg'
             value = beamwidth_deg;
 
+        case 'name'
+            mode_needed = true;
+            value =  mode_data.(mode).name; % Name of the VCP mode 
+            
+        case 'mode_type'
+            mode_needed = true;
+            value =  mode_data.(mode).mode_type; % Name of the VCP mode 
+            
         case 'vcp_duration_s'
             mode_needed = true;
-            value = mode_data.(mode).VCP_duration_s;
+            value =  numel(mode_data.(mode).spin_rates_deg_s) * 360 * (1/mean(mode_data.(mode).spin_rates_deg_s));
             
         case 'elevations'
             mode_needed = true;
             value = mode_data.(mode).elevations;
             
-        case 'spinrate_deg_s'
+        case 'reflectivity'
             mode_needed = true;
-            value = mode_data.(mode).spinrate_deg_s;
-        
-        case 'detailed_spin_rates'
+            value = mode_data.(mode).reflectivity;
+            
+        case 'spin_rates_deg_s'
             mode_needed = true;
-            value = mode_data.(mode).detailed_spin_rates;
+            value = mode_data.(mode).spin_rates_deg_s;
                     
         case 'mode_type'
             mode_needed = true;
