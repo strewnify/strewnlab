@@ -732,6 +732,8 @@ while inflightcount > 0
                 rockcount = rockcount + 1;
                 inflightcount = inflightcount + 1;
                 projectile(rockcount) = projectile(n);
+                projectile(rockcount).rockID = generateRockID(); % 64 bit unique id for this new rock
+                projectile(rockcount).parent = n;
                 projectile(rockcount).mass = splitmass;
                 projectile(n).mass = projectile(n).mass - projectile(rockcount).mass;
                 
@@ -747,9 +749,7 @@ while inflightcount > 0
                 projectile(n).diameter = projectile(n).radius*2;
                 projectile(n).frontalarea_m2 = pi*projectile(n).radius^2*projectile(n).frontalareamult; % frontal area in m^2
                 
-                % New projectile properties 
-                projectile(rockcount).rockID = generateRockID(); % 64 bit unique id for this new rock
-                projectile(rockcount).parent = n;
+                % New projectile properties
                 projectile(rockcount).cubicity = randnsigma(cubicity_mean,cubicity_stdev,sigma_thresh,cubicity_min,cubicity_max);
                 projectile(rockcount).frontalareamult = randnsigma(frontalareamult_mean,frontalareamult_stdev,sigma_thresh,frontalareamult_min,frontalareamult_max);
                 projectile(rockcount).ref_time = 0;
@@ -846,7 +846,7 @@ while inflightcount > 0
     if recordsensors && recordcounter > plotstep
         recordcounter = 1;
         % Simulate data from observers/sensors
-        [observations] = simsensor(entrytime, t(current), projectile, sdb_Sensors, r_stations,observations);
+        [observations] = simsensor(entrytime, t(current), projectile, sdb_Sensors, station_data, observations);
     
     else
         recordcounter = recordcounter + 1;

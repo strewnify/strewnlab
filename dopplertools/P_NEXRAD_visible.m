@@ -11,7 +11,7 @@ function probability = P_NEXRAD_visible(slantRange_km, objAZ, objELEV, vNorth_mp
     % For example, if an object is at 1.2 degrees, with an error of +/- 0.5 degrees,
     % it will be considered to be anywhere between 0.7 and 1.7 degrees, so
     % it will be visible to both the 0.5 and 1.5 degrees elevation sweeps
-    ELEV_data_error = 0.5;
+    ELEV_data_error = 0.2;
 
     % Option to use only the reflectivity scans for probability calculation
     reflect_only = true;

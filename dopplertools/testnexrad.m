@@ -84,7 +84,7 @@ end
     grid on;
     xlabel('Ground Distance (km)');
     ylabel('Beam Width, meters');
-    title(['Radar Beam Altitude' newline sprintf('Radar Beam Width = %.3f%s', getNEXRAD('beamwidth_deg'), char(176)) ]);
+    title(['Radar Beam Diameter' newline sprintf('Radar Beam Width = %.3f%s', getNEXRAD('beamwidth_deg'), char(176)) ]);
     axis([0 maxDistance_km 0 7000]);
     
     % Plot Termninal Velocity

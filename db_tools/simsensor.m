@@ -30,9 +30,9 @@ current = 1; % Do not change, defines current value in timestep arrays
 
 % Initialize table if not provided
 if nargin < 6 || isempty(observations)
-    observations = table([], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], 'VariableNames', ...
+    observations = table([], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], 'VariableNames', ...
         {'rockID', 'ObservationTime', 'SimulationTime', 'Lat', 'Long', 'Alt_km', ...
-         'Mass_kg', 'Diameter_m', 'frontalarea_m2', 'ablation', 'StationID', 'sensorMode' ...
+         'Mass_kg', 'Diameter_m', 'frontalarea_m2', 'ablation', 'StationID', 'sensorMode', ...
          'observed_AZ', 'observed_ELEV', 'slantRange_m', 'signal_delay_s', 'magnitude_dB', 'P_detect'});
 end
 
@@ -57,6 +57,7 @@ for n = 1:size(projectile,2)
         LAT = projectile(n).location(current,1);
         LONG = projectile(n).location(current,2);
         altitude_m = projectile(n).position(current,3);
+        altitude_km = altitude_m ./ 1000;
         mass_kg = projectile(n).mass;
         diameter_m = projectile(n).diameter;
         frontalarea_m2 = projectile(n).frontalarea_m2;
@@ -85,6 +86,8 @@ for n = 1:size(projectile,2)
 
             slantRange_km(station_i) = slantRange_m(station_i) ./ 1000;
 
+            sensorMode(station_i) = station_data.sensorMode(station_i);
+            
             % Check Sensor Type
             % Camera, Doppler, Geostationary, or Seismic
             switch sensor_db.Type(station_idx)
@@ -116,11 +119,9 @@ for n = 1:size(projectile,2)
                     magnitude_dB = NaN;
 
                 case 'Doppler'
-                     % Default mode
-                    VCP_mode = station_data.sensorMode{station_i};
                     
                     % Calculate the probability that the object will be visible to a radar sweep
-                    P_visible = P_NEXRAD_visible(slantRange_km(station_i),observed_AZ(station_i),observed_ELEV(station_i),vNorth_mps,vEast_mps,vDown_mps,VCP_mode);
+                    P_visible = P_NEXRAD_visible(slantRange_km(station_i),observed_AZ(station_i),observed_ELEV(station_i),vNorth_mps,vEast_mps,vDown_mps,sensorMode{station_i});
 
                     % Calculate the probability that the object would be detected, if it was in the beam
                     [P_NEXRAD, magnitude_dB(station_i)] = P_NEXRAD_detect(frontalarea_m2, slantRange_km(station_i));
@@ -149,8 +150,6 @@ for n = 1:size(projectile,2)
 
                     % Convert vector speed to scalar airspeed
                     % This is oversimplified slightly, because airspeed should include wind
-
-                    altitude_km = altitude_m ./ 1000;
 
                     % Calculate atmosphere
                     ground = 0;
@@ -190,8 +189,8 @@ for n = 1:size(projectile,2)
         % Create the new rows for the observations table
         new_rows = table( ...
             repmat(rockID, numrows,1), repmat(obs_time, numrows,1), repmat(sim_time, numrows,1), repmat(LAT, numrows,1), ...
-            repmat(LONG, numrows,1), repmat(altitude_m / 1000, numrows,1), repmat(mass_kg, numrows,1), repmat(diameter_m, numrows,1), ...
-            repmat(frontalarea_m2, numrows,1), repmat(ablation, numrows,1), StationID', ...
+            repmat(LONG, numrows,1), repmat(altitude_km, numrows,1), repmat(mass_kg, numrows,1), repmat(diameter_m, numrows,1), ...
+            repmat(frontalarea_m2, numrows,1), repmat(ablation, numrows,1), StationID', sensorMode', ...
             observed_AZ', observed_ELEV', slantRange_m', signal_delay_s', magnitude_dB', P_detect', 'VariableNames', observations.Properties.VariableNames);
 
         % Append to the observations table

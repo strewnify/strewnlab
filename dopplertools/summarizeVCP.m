@@ -25,14 +25,36 @@ function summarizeVCP(VCPmode)
     % Get the mode type (Clear-air or Precipitation)
     modeType = getNEXRAD('mode_type', VCPmode);
     
+    sweep_time_s = 360./spinRates;
+    
     range_reflectivity_km = getNEXRAD('range_reflectivity_km',VCPmode);
     
+    % Determine the dynamic separator length
+    separatorLength = 20 + min(150, numel(elevations) * 7);
+    separator = repmat('-', 1, separatorLength);
+
     % Display summary
-    fprintf('VCP Mode: %s\n', vcpName);
+    fprintf('VCP Mode:  %s\n', vcpName);
     fprintf('Mode Type: %s\n', modeType);
-    fprintf('Duration (seconds): %.2f\n', vcpDuration);
-    fprintf('Elevation angles: %s\n', num2str(elevations));
-    fprintf('Spin Rates (deg/s): %s\n', num2str(spinRates));
+    fprintf('Duration:  %.0f seconds\n', vcpDuration);
+    fprintf('%s\n', separator);
+    letters = repmat('v', size(reflectivity)); % Default to 'v'
+    letters(reflectivity) = 'r'; % Set 'r' where true
+
+    fprintf('Elevation Scans:    ');
+    for i = 1:numel(elevations)
+        fprintf('%5.1f%c ', elevations(i), letters(i)); % Use %c for character formatting
+    end
+    fprintf('\n');
+
+    fprintf('Spin Rates (deg/s):');
+    fprintf('%6.1f ', spinRates); % Prints all values in a single line
+    fprintf('\n');
+
+    fprintf('Sweep Time (s):    ');
+    fprintf('%6.1f ', sweep_time_s); % Prints all values in a single line
+    fprintf('\n');
+    fprintf('%s\n', separator);
     
     % Plot Beam Height vs Curve Distance with varying beam width
     figure;
@@ -67,6 +89,13 @@ function summarizeVCP(VCPmode)
 
         % Plot beam height vs curve distance for this elevation with black lines and thinner width
         plot(curve_distances_km, altitudes_km, 'k', 'LineWidth', 1, 'DisplayName', sprintf('ELEV = %.1f°'));
+        
+        % Label the rightmost point of each beam path
+        text(curve_distances_km(end), altitudes_km(end), sprintf(' %.1f°', ELEV_deg), ...
+        'FontSize', 10, 'Color', 'k', 'HorizontalAlignment', 'left', 'VerticalAlignment', 'middle');
+
+        axis([0 500 0 180])
+    
     end
     hold off;
     
