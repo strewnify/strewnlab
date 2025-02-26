@@ -31,7 +31,7 @@ filter = (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) &
 % during the simulation will not have a priori knowledge of darkflight
 valid_rockIDs = strewndata.rockID(filter);
 if exist('observations','var')
-    valid_observations = ismember(valid_rockIDs,observations.rockID);
+    valid_observations = ismember(observations.rockID,valid_rockIDs);
 end
 
 if ~strcmp(plot_materials{1},'all')

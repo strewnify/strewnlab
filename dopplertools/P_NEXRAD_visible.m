@@ -44,15 +44,23 @@ function probability = P_NEXRAD_visible(slantRange_km, objAZ, objELEV, vNorth_mp
     
     % Sum the sweep times where the object would be visible
     visible_sweep_time_s = sum(sweep_times_s(visible));
+    
+    % Calculated scan time
     volume_scan_time_s = getNEXRAD('VCP_duration_s',VCPmode);
     
-    % Calculate the residence time of the object in the elevation range
-    residence_time_s = beam_residence_time(slantRange_km, objAZ, objELEV, vNorth_mps, vEast_mps, vDown_mps);
+    % If the object is visible to an elevation scan, calculate probability
+    if visible_sweep_time_s > 0
+        % Calculate the residence time of the object, to cross 1 beam width
+        residence_time_s = beam_residence_time(slantRange_km, objAZ, objELEV, vNorth_mps, vEast_mps, vDown_mps);
+
+        % Calculate the probability that the object will be scanned
+        % meaning that residence will occur during a scan at that elevation.  
+        % Probabilty cannot be greater than 1.  In
+        % statistics this is known as an interval overlap problem.
+        probability = min(1,(residence_time_s + visible_sweep_time_s) ./ volume_scan_time_s);
     
-    % Calculate the probability that the object will be scanned
-    % meaning that residence will occur during a scan at that elevation.  
-    % Probabilty cannot be greater than 1.  In
-    % statistics this is known as an interval overlap problem.
-    probability = min(1,(residence_time_s + visible_sweep_time_s) ./ volume_scan_time_s);
-    
+    % Otherwise, probability is zero (object not seen)
+    else
+        probability = 0;
+    end
 
