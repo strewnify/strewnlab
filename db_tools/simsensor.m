@@ -40,6 +40,7 @@ end
 obs_time = entry_time + seconds(sim_time);
 
 for n = 1:size(projectile,2)
+    n
     if projectile(n).inflight > 0
         
         % Clear previous
@@ -66,6 +67,13 @@ for n = 1:size(projectile,2)
         vEast_mps = projectile(n).vEast_mps;
         vDown_mps = projectile(n).vDown_mps;
 
+        % Get sensor mode data
+        if isfield(station_data,'sensorMode')
+            sensorMode = station_data.sensorMode;
+        else
+            sensorMode = repmat({['N/A']},size(station_data.StationID'));
+        end
+        
         % Loop through specified stations
         for station_i = 1:size(station_data,1)
             % Find the index of the station in the table
@@ -86,8 +94,6 @@ for n = 1:size(projectile,2)
 
             slantRange_km(station_i) = slantRange_m(station_i) ./ 1000;
 
-            sensorMode(station_i) = station_data.sensorMode(station_i);
-            
             % Check Sensor Type
             % Camera, Doppler, Geostationary, or Seismic
             switch sensor_db.Type(station_idx)
@@ -119,7 +125,7 @@ for n = 1:size(projectile,2)
                     magnitude_dB = NaN;
 
                 case 'Doppler'
-                    
+            
                     % Calculate the probability that the object will be visible to a radar sweep
                     P_visible = P_NEXRAD_visible(slantRange_km(station_i),observed_AZ(station_i),observed_ELEV(station_i),vNorth_mps,vEast_mps,vDown_mps,sensorMode{station_i});
 
@@ -141,6 +147,8 @@ for n = 1:size(projectile,2)
 
                     % Nearly zero, but light speed radar delay calculated for completeness
                     signal_delay_s(station_i) = slantRange_m(station_i) ./ getConstant('c_mps'); 
+                    
+                    magnitude_dB(station_i) = NaN;
 
                 case 'Seismic'
                     % Not supported
@@ -165,14 +173,14 @@ for n = 1:size(projectile,2)
 
                     % Estimate mass from frontal area
                     density_kg_m3 = 3380;
-                    mass_kg = (4/3) * density_kg_m3 * pi^(1/2) * A_frontal_m2^(3/2);
+                    mass_kg = (4/3) * density_kg_m3 * pi^(1/2) * frontalarea_m2^(3/2);
 
                     % Calculate probability of sonic boom, based on sigmoid function, centered around mach 1
                     k = 0.13; % Estimated based on a transition range of ~30 m/s
                     P_Boom = 1 ./ (1 + exp(-k * (airspeed_mps - speedsound)));
-                    [P_Boom_detect, magnitude_dB] = P_Seismic_detect(slantRange_km(station_i), altitude_km, mass_kg, airspeed_mps);
+                    [P_Boom_detect, magnitude_dB(station_i)] = P_Seismic_detect(slantRange_km(station_i), altitude_km, mass_kg, airspeed_mps);
 
-                    Calculate the probability of detection, based on distance from the seismic station
+                    %Calculate the probability of detection, based on distance from the seismic station
                     P_detect(station_i) = P_Boom .* P_Boom_detect;
 
                     % Calculate sonic delay 
@@ -185,7 +193,7 @@ for n = 1:size(projectile,2)
         
         % Count rows for repmat
         numrows = numel(P_detect)';
-
+   
         % Create the new rows for the observations table
         new_rows = table( ...
             repmat(rockID, numrows,1), repmat(obs_time, numrows,1), repmat(sim_time, numrows,1), repmat(LAT, numrows,1), ...
