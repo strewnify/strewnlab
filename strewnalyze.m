@@ -197,9 +197,15 @@ waitbar(0.5,handleStrewnalyze,'Analyzing nearby sensors...');
 analyze_nearby
 
 % Plot Doppler Stations
-plotsensors(SensorSummary(SensorSummary.Type=="Doppler",:))
+DopplerStations = SensorSummary(SensorSummary.Type=="Doppler",:);
+plotsensors(DopplerStations)
 title([SimulationName ' : ' strrep(SimEventID,'_','-')])
 geoscatter(sdb_Events.LAT(select_i),sdb_Events.LONG(select_i),'filled','b')
+
+% Export Doppler Station Data
+% (future release will include other stations as well)
+DopplerStationIDs = DopplerStations.StationID;
+station_data = getstation_metadata(DopplerStationIDs,entrytime);
 
 % Export plot to image file
 saveas(gcf,[eventfolder '/' SimEventID '_DopplerStationMap.png']);
@@ -219,14 +225,14 @@ end
 %Open Google Earth, if not open
 [~,temp_result] = system('tasklist /FI "imagename eq googleearth.exe" /fo table /nh'); % check if program is running
 if GE && strcmp(temp_result(1:4),'INFO') % if program is not running
-    system([GoogleEarth_path ' &']); % open Google Earth
+    system([getConfig('GoogleEarth_path') ' &']); % open Google Earth
     system('TASKKILL -f -im "cmd.exe" > NUL'); % kill the random command window from previous system command
 end
 
 %Open WCT, if not open
 [~,temp_result] = system('tasklist /FI "imagename eq wct.exe" /fo table /nh'); % check if program is running
 if WCT && strcmp(temp_result(1:4),'INFO') % if program is not running
-    system([WCT_path ' &']); % open Google Earth    
+    system([getConfig('WCT_path') ' &']); % open Google Earth    
 end
 
 waitbar(0.95,handleStrewnalyze,'Cleaning up...')

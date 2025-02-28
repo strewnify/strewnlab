@@ -128,6 +128,16 @@ for alt = [ground 2500 5000 7500 10000 12500 15000 20000 30000 40000]
 end
 SimTrajectoryData = [SimTrajectoryData newline newline 'NOTE: Wind variation is analyzed on a vector basis, so min and max wind scalar value will not necessarily fall in order.'];
 
+% Summarize simulated sensor data
+if exist('observations','var')
+    % Calculate overall station stats
+    SimTrajectoryData = [SimTrajectoryData newline newline newline '*** Radar Station Detection Summary ***'];
+    SimTrajectoryData = [SimTrajectoryData newline 'Station ID    Mean P_detect    Max P_detect'];
+    SimTrajectoryData = [SimTrajectoryData newline '--------------------------------------------------'];
+    for i = 1:height(station_summary)
+        SimTrajectoryData = [SimTrajectoryData newline sprintf('%7s %16.2f%% %16.2f%%', station_summary.StationID{i}, station_summary.mean_P_detect(i)*100, station_summary.max_P_detect(i)*100)];
+    end
+end
 
 % ***************************************
 % Write Press Release Templates

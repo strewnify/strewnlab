@@ -84,7 +84,7 @@ Lat_edges = MINLAT:lat_gridsize:MAXLAT;
 Long_edges = MINLONG:long_gridsize:MAXLONG;
 
 % Create a new plot
-figure
+fig_strewnfield = figure
 hold on
 
 % Create Plot Title
@@ -152,4 +152,8 @@ end
 disp(['Grid size is ' num2str(gridsize) ' meters.'])
 if exist('DataPermissionsTitle','var')
     disp(DataPermissionsTitle)
+end
+
+if exist('observations', 'var')
+    [fig_radarheatmap, station_summary] = binAndSummarize(observations(valid_observations,:));
 end

@@ -15,7 +15,7 @@ if exist([exportfolder '\zoneplots'])~=7
 end
 
 %Create/update figure 4
-figure(4)
+fig_zoneplot = figure;
 hold on
 title([SimulationName ' Mass Zones'])
 xlabel('Longitude');

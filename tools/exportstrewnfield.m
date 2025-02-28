@@ -13,12 +13,16 @@ export_filename = [SimulationName '_StrewnField_' datestr(nowtime,'yyyymmdd_HHMM
 % Backup the workspace
 strewnbackup
 
-try
+% export the strewn field map
+ try
     % change directory
     cd(exportfolder)
 
+    % Set the current figure to the strewn field histogram
+    figure(fig_strewnfield);
+    
     % Save the current image to file
-    saveas(gcf,[export_filename '.png']);
+    saveas(fig_strewnfield,[export_filename '.png']);
     
     % Set color white to transparent
     img = imread([export_filename '.png']);   % an rgb image
@@ -34,11 +38,11 @@ try
     align_lats = [y_ticks(end) y_ticks(1) y_ticks(1)];
     align_lons = [x_ticks(1) x_ticks(1) x_ticks(end)];
 
-catch
+ catch
     % return to main folder
     cd(getSession('folders','mainfolder'))
     logformat('Error in strewn field image export!','ERROR');
-end
+ end
 
 % MAKEKMZ needs a lot of work
 try
@@ -79,6 +83,24 @@ exportpath(nom_startlocation(1), nom_startlocation(2), nom_startaltitude, nom_da
 
 % Print trajectory data
 printtrajectory
+
+% Export radar binned data, if existing
+if exist('fig_radarheatmap','var')
+    try
+        export_filename = [SimulationName '_NEXRAD_' datestr(nowtime,'yyyymmdd_HHMMSS')];
+                           
+        % change directory
+        cd(exportfolder)
+
+        % Save the current image to file
+        saveas(fig_radarheatmap,[export_filename '.png']);
+
+        % return to main folder
+        cd(getSession('folders','mainfolder'))
+    catch
+        logformat('Failed to export radar heatmap','WARN')
+    end
+end
 
 % exit export mode
 setExporting(false);

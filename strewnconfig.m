@@ -8,10 +8,6 @@ webread_timeout = 60;
 % Initialize globals
 import_ref_data
 
-% Program locations
-GoogleEarth_path = 'C:\Program Files\Google\Google Earth Pro\client\googleearth.exe';
-WCT_path = 'C:\Program Files (x86)\wct-4.8.1\wct.exe';
-VideoDownloader_path = 'C:\Program Files\4KDownload\4kvideodownloader\4kvideodownloader.exe';
 
 % Database settings
 DatabaseFilename = 'StrewnifyDatabase'; %.mat filename

@@ -1,4 +1,4 @@
-function station_data = queryVCPMode(r_stations, datetime_min, datetime_max)
+function station_data = queryVCPMode(StationIDs, datetime_min, datetime_max)
 
     % Get supported VCP modes (now already sorted)
     vcp_modes = getNEXRAD('supported_modes');
@@ -19,8 +19,8 @@ function station_data = queryVCPMode(r_stations, datetime_min, datetime_max)
     sensor_Modes = {};
 
     % Loop through each station and prompt user
-    for i = 1:length(r_stations)
-        station_id = r_stations{i};
+    for i = 1:length(StationIDs)
+        station_id = StationIDs{i};
 
         % Format datetime strings
         datetime_min_str = datestr(datetime_min, 'yyyy-mmm-dd HH:MM:SS');
@@ -28,7 +28,7 @@ function station_data = queryVCPMode(r_stations, datetime_min, datetime_max)
 
         % Create prompt string with instructions (as a cell array)
         prompt_str = {sprintf('Select VCP mode for station %d of %d: ''%s''', ...
-                             i, length(r_stations), station_id), ...
+                             i, length(StationIDs), station_id), ...
                       sprintf('Time Window: %s to %s (UTC)', ...
                              datetime_min_str, datetime_max_str)};
 

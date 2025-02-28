@@ -1,13 +1,11 @@
-function observation_analysis = binAndSummarize(observations)
+function [fig_radarheatmap, station_summary] = binAndSummarize(observations)
 
     
     % Remove zero probability observations
     observations(observations.P_detect == 0,:)=[];
     
-    % Calculate overall station stats
-    station_summary = groupsummary(observations,{'StationID'},{'mean' 'max'},'P_detect');
-    station_summary = sortrows(station_summary,'mean_P_detect','descend')
-       
+    % Round time values to the nearest second to avoid bin errors
+     observations.ObservationTime = dateshift(observations.ObservationTime, 'start', 'second', 'nearest');
     
     % Create a list of unique radar station VCP modes
     VCPmodes = unique(observations.sensorMode);
@@ -17,7 +15,7 @@ function observation_analysis = binAndSummarize(observations)
     sum_scantime_s = 0;
     num_modes = numel(VCPmodes);
     for mode_i = 1:num_modes
-        mode = VCPmodes{mode_i};
+        mode = VCPmodes(mode_i);
         sample_elevation = getNEXRAD('elevations', mode);
         validIdx = getNEXRAD('reflectivity', mode);
         sample_elevation = sample_elevation(validIdx);
@@ -65,6 +63,10 @@ function observation_analysis = binAndSummarize(observations)
     observations.datetime_bin_idx = discretize(observations.ObservationTime, datetime_binEdges);
     observations.datetime_bin = datetime_binLabels(observations.datetime_bin_idx);
 
+    % Calculate overall station stats
+    station_summary = groupsummary(observations,{'StationID'},{'mean' 'max'},'P_detect');
+    station_summary = sortrows(station_summary,'mean_P_detect','descend');
+    
     % Summarize data by Elevation
     elev_summary = groupsummary(observations,{'StationID' 'ELEV_bin'},'mean','P_detect');
 
@@ -140,7 +142,7 @@ function observation_analysis = binAndSummarize(observations)
     sgtitle('Mean Detection Probability by Station, Elevation, and Time'); % Overall title
 
 
-figure;
+fig_radarheatmap = figure;
 
 % Create a dummy heatmap to get the colormap and limits
 allAggregatedData = [];

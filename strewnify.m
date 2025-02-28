@@ -314,6 +314,7 @@ maxtimestep = 9999999;
 t = zeros(history,1); % time in seconds
 timestep = zeros(history,1);
 projectile(n).rockID = generateRockID(); % 64 bit unique id for this rock
+projectile(n).sim_scenario = sim_scenario;
 projectile(n).position = zeros(history,3); % 3D position in meters
 projectile(n).location = zeros(history,2); % 2D location in latitude and longitude
 projectile(n).spin = zeros(history,3);
@@ -733,6 +734,7 @@ while inflightcount > 0
                 inflightcount = inflightcount + 1;
                 projectile(rockcount) = projectile(n);
                 projectile(rockcount).rockID = generateRockID(); % 64 bit unique id for this new rock
+                projectile(rockcount).sim_scenario = sim_scenario;
                 projectile(rockcount).parent = n;
                 projectile(rockcount).mass = splitmass;
                 projectile(n).mass = projectile(n).mass - projectile(rockcount).mass;
@@ -984,7 +986,7 @@ for n = 1:rockcount
         
         % Store landed fragments to struct
         strewn_struct.rockID = projectile(n).rockID;
-        strewn_struct.sim_scenario = sim_scenario;
+        strewn_struct.sim_scenario = projectile(n).sim_scenario;
         strewn_struct.entrymass = entrymass; 
         strewn_struct.angledeg = angledeg; 
         strewn_struct.bearing = bearing;

@@ -15,7 +15,7 @@ function probability = P_NEXRAD_visible(slantRange_km, objAZ, objELEV, vNorth_mp
 
     % Option to use only the reflectivity scans for probability calculation
     reflect_only = true;
-    
+           
     % Calculate elevation range of the observation
     objELEV_min = objELEV - ELEV_data_error;
     objELEV_max = objELEV + ELEV_data_error;
