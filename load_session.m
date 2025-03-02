@@ -190,7 +190,6 @@ cd(ref_session.folders.mainfolder)
 ref_session.folders.logfolder = [ref_session.folders.mainfolder '\logs'];
 logformat(sprintf('Log folder identified at %s', ref_session.folders.logfolder),'INFO')
 
-
 % Remote data folders
 ref_session.folders.weatherfolder = [ref_session.folders.mainfolder '\local_data\radiosonde'];
 if ~(exist(ref_session.folders.weatherfolder,'dir')==7)

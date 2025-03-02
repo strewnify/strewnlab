@@ -121,7 +121,7 @@ if VIDEO
     % Open 
     [~,temp_result] = system('tasklist /FI "imagename eq 4kvideodownloader.exe" /fo table /nh'); % check if program is running
     if GE && strcmp(temp_result(1:4),'INFO') % if program is not running
-        system([VideoDownloader_path ' &']); % open Video Downloader
+        system([getConfig('VideoDownloader_path') ' &']); % open Video Downloader
         system('TASKKILL -f -im "cmd.exe" > NUL'); % kill the random command window from previous system command
     end
 end
