@@ -1,5 +1,7 @@
-function station_data = queryVCPMode(StationIDs, datetime_min, datetime_max)
+function station_data = queryVCPMode(station_data, StationID, datetime_min, datetime_max)
 
+    default_timestep = seconds(200); % used if timestamp metadata is unavailable
+    
     % Get supported VCP modes (now already sorted)
     vcp_modes = getNEXRAD('supported_modes');
 
@@ -14,50 +16,55 @@ function station_data = queryVCPMode(StationIDs, datetime_min, datetime_max)
     logformat('User queried for radar station VCP modes', 'USER');
     logformat(sprintf('Supported Modes for data analysis: %s', vcp_modes_str), 'INFO');
 
-    % Initialize results
-    station_IDs = {};
-    sensor_Modes = {};
+    % Look at struct
+    if ~isfield(station_data,'StationID')
+        station_i = 1;
+    elseif any(strcmp({station_data.StationID}, StationID))
+        logformat('Unknown error: Station already present in station data', 'ERROR');
+    else
+        station_i = length(station_data) + 1;
+    end
+    
+    % Format datetime strings
+    datetime_min_str = datestr(datetime_min, 'yyyy-mmm-dd HH:MM:SS');
+    datetime_max_str = datestr(datetime_max, 'yyyy-mmm-dd HH:MM:SS');
 
-    % Loop through each station and prompt user
-    for i = 1:length(StationIDs)
-        station_id = StationIDs{i};
+    % Create prompt string with instructions (as a cell array)
+    prompt_str = {sprintf('Select VCP mode for station: ''%s''', StationID), ...
+                  sprintf('Time Window: %s to %s (UTC)', datetime_min_str, datetime_max_str)};
 
-        % Format datetime strings
-        datetime_min_str = datestr(datetime_min, 'yyyy-mmm-dd HH:MM:SS');
-        datetime_max_str = datestr(datetime_max, 'yyyy-mmm-dd HH:MM:SS');
+    titleStr = sprintf('Select VCP mode: %s', StationID);
 
-        % Create prompt string with instructions (as a cell array)
-        prompt_str = {sprintf('Select VCP mode for station %d of %d: ''%s''', ...
-                             i, length(StationIDs), station_id), ...
-                      sprintf('Time Window: %s to %s (UTC)', ...
-                             datetime_min_str, datetime_max_str)};
+    [choice, ok_pressed] = listdlg('PromptString', prompt_str, ...
+                                   'SelectionMode', 'single', ...
+                                   'ListString', vcp_modes, ...
+                                   'ListSize', [400, 300], ...
+                                   'Name', titleStr);
 
-        titleStr = sprintf('Select VCP mode: %s', station_id);
-                         
-        [choice, ok_pressed] = listdlg('PromptString', prompt_str, ...
-                                       'SelectionMode', 'single', ...
-                                       'ListString', vcp_modes, ...
-                                       'ListSize', [400, 300], ...
-                                       'Name', titleStr);
-
-        if ok_pressed
-            if strcmp(vcp_modes{choice}, NoDataOption{1})
-                % Skip stations with "No Data" selection
-                continue;
-            end
+    if ok_pressed
+        
+        % If no data found, no change
+        if strcmp(vcp_modes{choice}, NoDataOption{1})
+            logformat(sprintf('User found no data for %s', StationID), 'USER');
+            station_data = station_data;
+   
+        % otherwise, store selected mode
         else
-            logformat('User cancelled VCP mode selection', 'ERROR');
-            break; % end without
+            station_data(station_i).StationID = StationID;
+            
+            % Log selection
+            logformat(sprintf('User selected mode %s for %s', vcp_modes{choice}, StationID), 'USER');
+
+            % Populate timestamps with default values
+            station_data(station_i).Timestamps = [datetime_min:default_timestep:datetime_max]';
+            
+            % Store the selected mode
+            station_data(station_i).sensorMode = categorical(repmat(vcp_modes(choice),size(station_data(station_i).Timestamps)));           
         end
-
-        % Log selection
-        logformat(sprintf('User selected mode %s for %s', vcp_modes{choice}, station_id), 'USER');
-
-        % Store selected station and mode
-        station_IDs{end+1, 1} = station_id;
-        sensor_Modes{end+1, 1} = vcp_modes{choice};
+    else
+        logformat('User cancelled VCP mode selection', 'ERROR');        
     end
 
-    % Create table output
-    station_data = table(station_IDs, sensor_Modes, 'VariableNames', {'StationID', 'sensorMode'});
-end
+
+    
+    

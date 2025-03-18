@@ -97,8 +97,43 @@ end
 plotlevel = ground;  %generate strewn field at this level, useful for estimating radar
 %test = erfinv(confidence/100)*sqrt(2);  % experimental confidence interval
 
-% Stop logging duriong simulation
+% Stop logging during simulation
 diary off
+
+% Sensor recording and Doppler analysis feature
+recordsensors = true;
+if recordsensors
+    % Load database
+    if ~exist('sdb_Sensors','var')
+        load_database
+    end
+
+    % summarize Doppler stations
+    if ~exist('SensorSummary','var')
+        SensorSummary = nearbysensors(nom_lat,nom_long,darkflight_elevation,sdb_Sensors);
+
+        % Plot Doppler Stations
+        DopplerStations = SensorSummary(SensorSummary.Type=="Doppler",:);
+        plotsensors(DopplerStations)
+        title([SimulationName ' : ' strrep(SimEventID,'_','-')])
+        geoscatter(nom_lat,nom_long,'filled','b')
+
+        % Export Doppler Station Data
+        % (future release will include other stations as well)
+        DopplerStationIDs = DopplerStations.StationID;
+        
+        % Export plot to image file
+        saveas(gcf,[eventfolder '/' SimEventID '_DopplerStationMap.png']);
+        
+        % Get station metadata
+        station_data = getstation_metadata(DopplerStationIDs,entrytime);
+        
+    end
+    
+    if ~exist('station_data','var')
+        station_data = getstation_metadata(StationIDs,entrytime);
+    end
+end
 
 while (sim_scenario < 8000)
 clc % clear window
@@ -844,8 +879,8 @@ while inflightcount > 0
     end
     
     % Simulate sensor or observer data
-    recordsensors = true;
     if recordsensors && recordcounter > plotstep
+        
         recordcounter = 1;
         % Simulate data from observers/sensors
         [observations] = simsensor(entrytime, t(current), projectile, sdb_Sensors, station_data, observations);

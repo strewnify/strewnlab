@@ -50,6 +50,7 @@ for n = 1:size(projectile,2)
         clear P_detect
         clear signal_delay_s
         clear StationID
+        clear sensorMode
         clear numrows
                 
         % Get projectile data
@@ -67,25 +68,26 @@ for n = 1:size(projectile,2)
         vEast_mps = projectile(n).vEast_mps;
         vDown_mps = projectile(n).vDown_mps;
 
-        % Get sensor mode data
-        if ismember('sensorMode', station_data.Properties.VariableNames)
-            sensorMode = station_data.sensorMode;
-        else
-            sensorMode = repmat({['N/A']},size(station_data.StationID'));
-        end
-        
         % Loop through specified stations
-        for station_i = 1:size(station_data,1)
+        for station_i = 1:size(station_data,2)
             % Find the index of the station in the table
-            station_idx = find(strcmp(sensor_db.StationID, station_data.StationID{station_i}), 1);
+            station_idx = find(strcmp(sensor_db.StationID, station_data(station_i).StationID), 1);
 
             % Skip if station not found
             if isempty(station_idx)
                 continue;
             end
 
+            % Get the station operating mode for the time of the same
+            stationtime_i = max(1,find(station_data(station_i).Timestamps > obs_time,1)-1);
+            if isempty(stationtime_i)
+                stationtime_i = mode(station_data(station_i).sensorMode);
+                logformat('Observation time outside expected window', 'WARN')
+            end
+            
             % Record the stationID data
-            StationID(station_i) = station_data.StationID(station_i);
+            StationID(station_i) = {station_data(station_i).StationID};
+            sensorMode(station_i) = station_data(station_i).sensorMode(stationtime_i);
             
             % Convert geodetic coordinates to AER (Azimuth, Elevation, Range)
             [observed_AZ(station_i), observed_ELEV(station_i), slantRange_m(station_i)] = geodetic2aer(LAT, LONG, altitude_m, ...
@@ -198,7 +200,7 @@ for n = 1:size(projectile,2)
         new_rows = table( ...
             repmat(rockID, numrows,1), repmat(sim_scenario, numrows,1), repmat(obs_time, numrows,1), repmat(sim_time, numrows,1), repmat(LAT, numrows,1), ...
             repmat(LONG, numrows,1), repmat(altitude_km, numrows,1), repmat(mass_kg, numrows,1), repmat(diameter_m, numrows,1), ...
-            repmat(frontalarea_m2, numrows,1), repmat(ablation, numrows,1), StationID', sensorMode, ...
+            repmat(frontalarea_m2, numrows,1), repmat(ablation, numrows,1), StationID', sensorMode', ...
             observed_AZ', observed_ELEV', slantRange_m', signal_delay_s', magnitude_dB', P_detect', 'VariableNames', observations.Properties.VariableNames);
 
         % Append to the observations table

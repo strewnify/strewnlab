@@ -20,16 +20,14 @@ function [metadata, success] = getNEXRADmetadata(StationID, dateStr)
 
     % This NOAA site returns metadata for a station on a given day
     url = sprintf('https://www.ncdc.noaa.gov/nexradinv-ws/csv?siteid=%s&dsi=6500&product=LIST&dateRange=%s&attributes=mode', StationID, dateStr);
-    temp_file = tempname; % Generate a temporary filename
-    temp_file = [temp_file,'.csv'];
-
+    temp_fullpath = [tempname,'.csv'];
+    
     preventAbuse(4,500); % rate limit requests to every 4 seconds, max of 500 calls
     
     try
         csv_data = webread(url);
 
         % Write the CSV data to a temporary file
-        temp_fullpath = [tempname,'.csv'];
         fid = fopen(temp_fullpath, 'w');
         fprintf(fid, '%s', csv_data);
         fclose(fid);

@@ -37,33 +37,56 @@ function station_data = getstation_metadata(StationIDs,entrytime)
         
         % Get a table of times and modes for the station
         [metadata, api_success] = getNEXRADmetadata(StationIDs{station_i}, dateStr);
-                    
-        % Merge together day1 and day2, if needed
-        if day(entrytime) ~= day(max_endtime)
-            [metadata_day2, api_success] = getNEXRADmetadata(StationIDs{station_i}, dateStr_day2);
-            metadata = [metadata; metadata_day2]; % assuming tables or structs are similar
-        end
         
-        % Add 30 seconds to the Timestamp data to account for rounding from the source
-        if all(second(metadata.TimestampUTC)==0) % if all the second data is zero
-            metadata.TimestampUTC = metadata.TimestampUTC + seconds(30);
-        end
-        
-        % Find the begin and end indices        
-        start_idx = max(1, find(metadata.TimestampUTC > entrytime,1)-1); % prevent 0 index
-        end_idx = min(numel(metadata.TimestampUTC), find(metadata.TimestampUTC > max_endtime ,1));
-        
-        % Output struct data
-        station_data(station_i).StationID = StationIDs{station_i};
-%         station_data(station_i).Timestamps = metadata.TimestampUTC(start_idx:end_idx);
-        station_data(station_i).sensorMode = metadata.VCP_mode(start_idx:end_idx);
- 
-        % Temporary Code
-        station_data(station_i).sensorMode = mode(station_data(station_i).sensorMode);
-    end
-    
+        % If the data was retreived from online source, extract the timestamps of interest
+        if api_success
+            % Merge together day1 and day2, if needed
+            if day(entrytime) ~= day(max_endtime)
+                [metadata_day2, api_success] = getNEXRADmetadata(StationIDs{station_i}, dateStr_day2);
+                metadata = [metadata; metadata_day2]; % assuming tables or structs are similar
+            end
+
+            % Add 30 seconds to the Timestamp data to account for rounding from the source
+            if all(second(metadata.TimestampUTC)==0) % if all the second data is zero
+                metadata.TimestampUTC = metadata.TimestampUTC + seconds(30);
+            end
+
+            % Find the begin and end indices        
+            start_idx = max(1, find(metadata.TimestampUTC > entrytime,1)-1); % prevent 0 index
+            end_idx = min(numel(metadata.TimestampUTC), find(metadata.TimestampUTC > max_endtime ,1));
+
+            % Output struct data
+            station_data(station_i).StationID = StationIDs{station_i};
+            station_data(station_i).Timestamps = metadata.TimestampUTC(start_idx:end_idx);
+            station_data(station_i).sensorMode = metadata.VCP_mode(start_idx:end_idx);
             
-       % Temporary Code
-        station_data = struct2table(station_data);
-    
+        % Get station data from user
+        else
+            logformat
+            station_data = queryVCPMode(station_data, StationIDs{station_i}, entrytime, max_endtime);
+        end
+    end
+   
+   % Calculate bins
+   for station_i = 1:length(station_data)
+
+        % Calculate Time bin labels from timestamps
+        station_data(station_i).datetime_binLabels = categorical(cellstr(datestr(station_data(station_i).Timestamps, 'HH:MM')));
+        
+        % Calculate elevation bins
+        % If multiple VCP modes exist, get a superset of elevation bins
+        station_elevations = [];
+        for station_time_i = 1:length(station_data(station_i).sensorMode)
+            station_elevations = [station_elevations getNEXRAD('elevations',station_data(station_i).sensorMode(station_time_i))];
+        end
+        station_elevations = unique(station_elevations);
+        station_elevations = sort(station_elevations);
+        
+        % Save elevation bin labels
+        station_data(station_i).elev_binLabels = categorical(station_elevations);
+        
+        % Calculate bin edges
+        station_data(station_i).elev_binEdges = [-inf (station_elevations(1:end-1) + station_elevations(2:end)) / 2 inf];
+        
+   end
     

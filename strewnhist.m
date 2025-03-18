@@ -155,5 +155,5 @@ if exist('DataPermissionsTitle','var')
 end
 
 if exist('observations', 'var')
-    [fig_radarheatmap, station_summary] = binAndSummarize(observations(valid_observations,:));
+    [fig_radarheatmap, station_summary] = binAndSummarize(observations(valid_observations,:),station_data);
 end
