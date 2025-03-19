@@ -125,13 +125,10 @@ if recordsensors
         % Export plot to image file
         saveas(gcf,[eventfolder '/' SimEventID '_DopplerStationMap.png']);
         
-        % Get station metadata
-        station_data = getstation_metadata(DopplerStationIDs,entrytime);
-        
     end
     
     if ~exist('station_data','var')
-        station_data = getstation_metadata(StationIDs,entrytime);
+        station_data = getstation_metadata(DopplerStationIDs,entrytime);
     end
 end
 

@@ -20,6 +20,8 @@ function [metadata, success] = getNEXRADmetadata(StationID, dateStr)
 
     % This NOAA site returns metadata for a station on a given day
     url = sprintf('https://www.ncdc.noaa.gov/nexradinv-ws/csv?siteid=%s&dsi=6500&product=LIST&dateRange=%s&attributes=mode', StationID, dateStr);
+    logformat(sprintf('Attempting to pull metadata from NOAA server: <a href="%s">Metadata Link</a>',url),'DATA')
+    
     temp_fullpath = [tempname,'.csv'];
     
     preventAbuse(4,500); % rate limit requests to every 4 seconds, max of 500 calls
@@ -33,7 +35,7 @@ function [metadata, success] = getNEXRADmetadata(StationID, dateStr)
         fclose(fid);
 
         % Read the CSV data from the temporary file
-        metadata = readtable(temp_fullpath);
+        metadata = readtable(temp_fullpath, 'Delimiter',{','}, 'MissingRule', 'fill');
 
         % Delete the temporary file
         delete(temp_fullpath);
@@ -43,7 +45,7 @@ function [metadata, success] = getNEXRADmetadata(StationID, dateStr)
             metadata.Properties.VariableNames{'ZTIME'} = 'TimestampUTC';
             metadata.TimestampUTC = datetime(metadata.TimestampUTC, 'InputFormat', 'yyyyMMdd HH:mm', 'TimeZone','UTC');
         else
-            warning('ZTIME column not found in the table.');
+            logformat('ZTIME column not found in the table.','DATA');
         end
 
         % Convert OPMODE to categorical
