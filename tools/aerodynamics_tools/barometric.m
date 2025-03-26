@@ -24,8 +24,17 @@ altitude = min(altitude_in,max_alt); % effective alt for calc
 TrefK = TrefC + 273.15;
 
 % Constants
-g0 = 9.80665; % surface gravitational acceleration in m/s^2
-R = 8.3144598; % universal gas constant in J/(mol.K)
+persistant planet
+if isempty(planet)
+    planet = getPlanet();
+end
+
+persistant R
+if isempty(R)
+    R = getConstant('R_JmolK');
+end
+
+g0 = planet.g0_mps2; % surface gravitational acceleration in m/s^2
 Rspec = 287.058; % specific gas constant dry air J/(kg.K)
 M = 0.0289644; % molar mass of dry air in kg/mol
 

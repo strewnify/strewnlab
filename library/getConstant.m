@@ -20,6 +20,9 @@ function [constantValue] = getConstant(constantName)
         case 'Planck_Js'
             constantValue = 6.62607015e-34;  % Joule second
             
+        case 'R_JmolK'
+            constantValue = 8.3144598; % universal gas constant in J/(mol.K)
+            
         % Add other cases for additional constants
         otherwise
             error('Constant "%s" not found.', constantName);

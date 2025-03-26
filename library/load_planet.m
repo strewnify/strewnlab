@@ -24,7 +24,10 @@ ref_planet.loaded = false;
 switch lower(planet_name)
     case 'earth'
         ref_planet = load('earth_data.mat');
+        ref_planet.g0_mps2 = 9.80665;  % standard gravitational accelaration value
+        
     otherwise
+        ref_planet.g0_mps2 = getConstant('G_constant') .* ref_planet.mass_kg ./ (ref_planet.ellipsoid_m.MeanRadius).^2; % surface gravitational acceleration
         logformat(['Planet data not found for ''' planet_name ''''],'ERROR')
 end
 
