@@ -24,12 +24,12 @@ altitude = min(altitude_in,max_alt); % effective alt for calc
 TrefK = TrefC + 273.15;
 
 % Constants
-persistant planet
+persistent planet
 if isempty(planet)
     planet = getPlanet();
 end
 
-persistant R
+persistent R
 if isempty(R)
     R = getConstant('R_JmolK');
 end
