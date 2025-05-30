@@ -58,8 +58,14 @@ else
     end    
 end
 
+% Sensor recording and Doppler analysis feature
+% On by default
+if ~exist('recordsensors','var')
+    recordsensors = true;
+end
+
 % Create or update the simulation monitor
-if ~exist('observations','var')
+if recordsensors && ~exist('observations','var')
     observations = table;
 end
 
@@ -100,8 +106,6 @@ plotlevel = ground;  %generate strewn field at this level, useful for estimating
 % Stop logging during simulation
 diary off
 
-% Sensor recording and Doppler analysis feature
-recordsensors = true;
 if recordsensors
     % Load database
     if ~exist('sdb_Sensors','var')
@@ -112,22 +116,23 @@ if recordsensors
     if ~exist('SensorSummary','var')
         SensorSummary = nearbysensors(nom_lat,nom_long,darkflight_elevation,sdb_Sensors);
 
-        % Plot Doppler Stations
-        DopplerStations = SensorSummary(SensorSummary.Type=="Doppler",:);
-        plotsensors(DopplerStations)
-        title([SimulationName ' : ' strrep(SimEventID,'_','-')])
-        geoscatter(nom_lat,nom_long,'filled','b')
+        if numel(DopplerStations) > 0
+            % Plot Doppler Stations
+            DopplerStations = SensorSummary(SensorSummary.Type=="Doppler",:);
+            plotsensors(DopplerStations)
+            title([SimulationName ' : ' strrep(SimEventID,'_','-')])
+            geoscatter(nom_lat,nom_long,'filled','b')
 
-        % Export Doppler Station Data
-        % (future release will include other stations as well)
-        DopplerStationIDs = DopplerStations.StationID;
-        
-        % Export plot to image file
-        saveas(gcf,[eventfolder '/' SimEventID '_DopplerStationMap.png']);
-        
+            % Export Doppler Station Data
+            % (future release will include other stations as well)
+            DopplerStationIDs = DopplerStations.StationID;
+
+            % Export plot to image file
+            saveas(gcf,[eventfolder '/' SimEventID '_DopplerStationMap.png']);
+        end
     end
     
-    if ~exist('station_data','var')
+    if ~exist('station_data','var') && numel(DopplerStations) > 0
         station_data = getstation_metadata(DopplerStationIDs,entrytime);
     end
 end

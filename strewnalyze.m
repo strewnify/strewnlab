@@ -23,6 +23,47 @@ logformat('New database in development. Defaulted to old database.','DEBUG')
 % Arbitrate database
 switch analyze_answer
     case 'Old'
+        
+        % Query the user, ask if they would like to add an event manually
+        manual_import = input('Would you like to add an event manually? (y/n): ', 's');
+        
+        if strcmpi(lower(manual_import), 'y')
+            QuerySources = {'CNEOS', 'AMS', 'Goodall', 'MetBull', 'NEOB', 'ASGARD', 'GMN'};
+
+            % Query the user to select a source from the list
+            [user_source,usersuccess] = listdlg('ListString',QuerySources,'SelectionMode','multiple','Name','Select Sources', 'OKString','Load','PromptString','Select Sources for Import:','ListSize',[300,300]);
+            user_source = QuerySources{user_source};
+            
+            
+            % Query the user for date and time (UTC)
+            % Example input format: '2024-12-31 23:59:59'
+            DatetimeStr = input('Enter date and time (UTC) (YYYY-MM-DD HH:MM:SS): ', 's');
+            Datetime = datetime(DatetimeStr, 'InputFormat', 'yyyy-MM-dd HH:mm:ss');
+
+            switch user_source
+                case 'AMS' % Note: string literals in switch statements need single quotes
+                    % If the source is AMS, ask for event id
+                    % Example 'Event_2024_5537'
+                    AMS_event_id = input('Enter AMS event ID (e.g., ''Event_2024_5537''): ', 's');
+
+                    % Query the user locationa
+                    start_lat = input('Enter start latitude: ');
+                    start_long = input('Enter start longitude: ');
+                    end_lat = input('Enter end latitude: ');
+                    end_long = input('Enter end longitude: ');
+                    
+                    [sdb_Events] = manualload(user_source, sdb_Events, start_lat, start_long, end_lat, end_long, Datetime, AMS_event_id);
+
+                otherwise
+                    error('Not supported')
+                    
+                    [sdb_Events] = manualload(user_source, sdb_Events, 37.298, -98.868, end_lat, end_long, Datetime);
+            end
+            
+            % Save the database
+            save_database
+        end
+        
         Events_db = sdb_Events;
     case 'New'
         error('not supported')
@@ -47,7 +88,7 @@ if ~isempty(EventPicker_UI.SelectedEvent)
     WCT = EventPicker_UI.WCT;
     GE = EventPicker_UI.GE;
     VIDEO = EventPicker_UI.VIDEO;
-    
+
     % temp - old database - lookup index
     select_i = find(strcmp(sdb_Events.EventID,SelectedEvent),1,'first');
 else
@@ -58,14 +99,15 @@ end
 EventPicker_UI.delete
 
 if success
-    logformat(sprintf('User selected "%s"',SelectedEvent),'USER')
+logformat(sprintf('User selected "%s"',SelectedEvent),'USER')
 else
     logformat(sprintf('User failed to select an event.'),'ERROR')
 end
 
+
 % Lookup nearby localities and suggest event names
 CustomName = {'< Use a Custom Event Name >'};
-[suggestions, radii] = suggest_eventnames(sdb_Events.LAT(select_i),sdb_Events.LONG(select_i),9);
+[suggestions, radii] = suggest_eventnames(sdb_Events.end_lat(select_i),sdb_Events.end_long(select_i),9);
 if isempty(suggestions)
     suggestionsfound = false;    
 else
@@ -198,17 +240,21 @@ analyze_nearby
 
 % Plot Doppler Stations
 DopplerStations = SensorSummary(SensorSummary.Type=="Doppler",:);
-plotsensors(DopplerStations)
-title([SimulationName ' : ' strrep(SimEventID,'_','-')])
-geoscatter(sdb_Events.LAT(select_i),sdb_Events.LONG(select_i),'filled','b')
+if numel(DopplerStations) > 0
+    plotsensors(DopplerStations)
+    title([SimulationName ' : ' strrep(SimEventID,'_','-')])
+    geoscatter(sdb_Events.LAT(select_i),sdb_Events.LONG(select_i),'filled','b')
 
-% Export Doppler Station Data
-% (future release will include other stations as well)
-DopplerStationIDs = DopplerStations.StationID;
-station_data = getstation_metadata(DopplerStationIDs,entrytime);
+    % Export Doppler Station Data
+    % (future release will include other stations as well)
+    DopplerStationIDs = DopplerStations.StationID;
+    entrytime = sdb_Events.Datetime(select_i);
+    entrytime.TimeZone = 'UTC';
+    station_data = getstation_metadata(DopplerStationIDs,entrytime);
 
-% Export plot to image file
-saveas(gcf,[eventfolder '/' SimEventID '_DopplerStationMap.png']);
+    % Export plot to image file
+    saveas(gcf,[eventfolder '/' SimEventID '_DopplerStationMap.png']);
+end
 
 waitbar(0.75,handleStrewnalyze,'Opening Applications...');
 

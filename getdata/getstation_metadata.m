@@ -66,8 +66,8 @@ function station_data = getstation_metadata(StationIDs,entrytime)
         % Get a table of times and modes for the station
         [metadata, api_success] = getNEXRADmetadata(StationIDs{station_i}, dateStr);
         
-        % If the data was retreived from online source, extract the timestamps of interest
-        if api_success
+        % If the data was retreived from online source and at least one of the timestamps is after entry, extract the timestamps of interest
+        if api_success && any(metadata.TimestampUTC > entrytime)
             % Merge together day1 and day2, if needed
             if day(entrytime) ~= day(max_endtime)
                 [metadata_day2, api_success] = getNEXRADmetadata(StationIDs{station_i}, dateStr_day2);

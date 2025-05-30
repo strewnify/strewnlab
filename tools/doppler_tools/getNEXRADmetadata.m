@@ -61,7 +61,8 @@ function [metadata, success] = getNEXRADmetadata(StationID, dateStr)
             % Convert from double to char and add VCP before (example 'VCP31')
             metadata.VCP_mode = strcat('VCP', string(metadata.VCP_mode));
         else
-            logformat('Unexpected data format. VCP column not found in the table.','ERROR');
+            logformat('Unexpected data format. VCP column not found in the table.','WARN');
+            error('go to catch') % prevents logformat from closing the waitbar
         end
 
         % Get supported VCP modes (sorted cell array of strings)
