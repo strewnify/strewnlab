@@ -1,4 +1,4 @@
-function [observations] = simsensor(entry_time, sim_time, projectile, sensor_db, station_data, observations)
+function [observations] = simsensor(entry_time, sim_time, projectile, sensor_db, EventData_station_metadata, observations)
 % SIMULATE_SENSORS Simulates observations of an object from a list of sensor stations.
 %
 %   obs_table = simulate_sensors(entry_time, sim_time, lat, lon, alt_m, mass_kg, diameter_m, frontal_area_m2, ablation, sensor_db, station_list, obs_table)
@@ -69,9 +69,9 @@ for n = 1:size(projectile,2)
         vDown_mps = projectile(n).vDown_mps;
 
         % Loop through specified stations
-        for station_i = 1:size(station_data,2)
+        for station_i = 1:size(EventData_station_metadata,2)
             % Find the index of the station in the table
-            station_idx = find(strcmp(sensor_db.StationID, station_data(station_i).StationID), 1);
+            station_idx = find(strcmp(sensor_db.StationID, EventData_station_metadata(station_i).StationID), 1);
 
             % Skip if station not found
             if isempty(station_idx)
@@ -79,15 +79,15 @@ for n = 1:size(projectile,2)
             end
 
             % Get the station operating mode for the time of the same
-            stationtime_i = max(1,find(station_data(station_i).Timestamps > obs_time,1)-1);
+            stationtime_i = max(1,find(EventData_station_metadata(station_i).Timestamps > obs_time,1)-1);
             if isempty(stationtime_i)
-                stationtime_i = mode(station_data(station_i).sensorMode);
+                stationtime_i = mode(EventData_station_metadata(station_i).sensorMode);
                 logformat('Observation time outside expected window', 'WARN')
             end
             
             % Record the stationID data
-            StationID(station_i) = {station_data(station_i).StationID};
-            sensorMode(station_i) = station_data(station_i).sensorMode(stationtime_i);
+            StationID(station_i) = {EventData_station_metadata(station_i).StationID};
+            sensorMode(station_i) = EventData_station_metadata(station_i).sensorMode(stationtime_i);
             
             % Convert geodetic coordinates to AER (Azimuth, Elevation, Range)
             [observed_AZ(station_i), observed_ELEV(station_i), slantRange_m(station_i)] = geodetic2aer(LAT, LONG, altitude_m, ...

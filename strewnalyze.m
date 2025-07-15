@@ -250,7 +250,7 @@ if numel(DopplerStations) > 0
     DopplerStationIDs = DopplerStations.StationID;
     entrytime = sdb_Events.Datetime(select_i);
     entrytime.TimeZone = 'UTC';
-    station_data = getstation_metadata(DopplerStationIDs,entrytime);
+    EventData_station_metadata = getstation_metadata(DopplerStationIDs,entrytime);
 
     % Export plot to image file
     saveas(gcf,[eventfolder '/' SimEventID '_DopplerStationMap.png']);

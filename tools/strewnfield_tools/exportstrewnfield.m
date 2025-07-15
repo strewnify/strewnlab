@@ -78,6 +78,32 @@ export_rho
 % Generate strewn mass zones
 zoneplot
 
+% TBD
+% get mass zone centers
+bin = [0.000001 0.00001 0.0001 0.001 0.01 0.1 1 10 100 1000 10000 100000 1000000 10000000 100000000 1000000000 10000000000 ];
+numbins = numel(bin) - 2;
+temp_labels = cell(1, 1);
+temp_idx = 0;
+for idx = 1:numbins
+    
+    temp_lower = mean([bin(idx) bin(idx+1)]);
+    temp_upper = mean([bin(idx+1) bin(idx+2)]);
+    temp_filt = filter & (strewndata.mass >= temp_lower) & (strewndata.mass <= temp_upper);
+    if nnz(temp_filt) > 5
+        temp_idx = temp_idx + 1;
+        temp_lats(temp_idx) = mean(strewndata.Latitude(temp_filt));
+        temp_lons(temp_idx) = mean(strewndata.Longitude(temp_filt));
+        
+        if bin(idx+1) >= 1000
+            temp_labels{temp_idx} = [num2str(bin(idx+1)/1000) 'tonne'];
+        elseif bin(idx+1) >= 1
+            temp_labels{temp_idx} = [num2str(bin(idx+1)) 'kg'];
+        else
+            temp_labels{temp_idx} = [num2str(bin(idx+1)*1000) 'g'];
+        end          
+    end
+end
+
 % Export the 2D and 3D path to kml 
 exportpath(nom_startlocation(1), nom_startlocation(2), nom_startaltitude, nom_darklocation(1), nom_darklocation(2), darkflight_elevation, exportfolder, [SimulationName '_Path' SimVersionSfx])
 

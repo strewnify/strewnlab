@@ -5,6 +5,7 @@ clear longitudes
 clear binindices
 clear bin
 clear filtered_strewndata
+clear temp_*
 
 filtered_strewndata = strewndata(filter,:);
 
@@ -64,7 +65,7 @@ for i = 1:numbins
         
         % write zoneplot file
         kmlwritepolygon([zonename '.kml'],latitudes,longitudes,'Name',zonename,'FaceColor',color{i},'FaceAlpha',0.8)
-        
+                        
         % return to main folder
         cd(getSession('folders','mainfolder'))
         
@@ -97,3 +98,31 @@ end
 if exist('zonenames','var')
     legend(zonenames,'Location',ornt)
 end
+
+% Get mass zone centers for pin export
+temp_labels = cell(1, 1);
+temp_idx = 0;
+for idx = 1:(numbins-1)
+    
+    temp_lower = mean([bin(idx) bin(idx+1)]);
+    temp_upper = mean([bin(idx+1) bin(idx+2)]);
+    temp_filt = filter & (strewndata.mass >= temp_lower) & (strewndata.mass <= temp_upper);
+    if nnz(temp_filt) > 5
+        temp_idx = temp_idx + 1;
+        temp_lats(temp_idx) = mean(strewndata.Latitude(temp_filt));
+        temp_lons(temp_idx) = mean(strewndata.Longitude(temp_filt));
+        
+        if bin(idx+1) >= 1000
+            temp_labels{temp_idx} = [num2str(bin(idx+1)/1000) 'tonne'];
+        elseif bin(idx+1) >= 1
+            temp_labels{temp_idx} = [num2str(bin(idx+1)) 'kg'];
+        else
+            temp_labels{temp_idx} = [num2str(bin(idx+1)*1000) 'g'];
+        end          
+    end
+end
+
+% Export pins for zone centers
+exportpins(exportfolder,['ZonePins_' SimFilename SimVersionSfx],'ZonePins',temp_lats,temp_lons,0,temp_labels)
+
+clear temp_*

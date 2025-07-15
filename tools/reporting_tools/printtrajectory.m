@@ -54,6 +54,9 @@ end
 [vertices_lat, vertices_lon, strewn_area_km2] = polyarea(strewndata.Latitude(mass_filt),strewndata.Longitude(mass_filt));
 grams_per_km2 =  nominal_strewnmass_g / strewn_area_km2;
 
+% Report model calibration info
+
+
 % Summarize input data
 SimTrajectoryData = [SimTrajectoryData newline newline newline '*** Trajectory Data ***'];
 SimTrajectoryData = [SimTrajectoryData newline 'Input Parameters    Data     ± Error  Units'];

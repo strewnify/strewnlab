@@ -15,7 +15,7 @@ function [force_N] = fict_forces(object_mass_kg,  position_m, velocity_mps)
 % initialization by STREWNINITIALIZE
 
 % Check mass input
-if length(object_mass_kg) > 1 || object_mass_kg < 0
+if length(object_mass_kg) > 1 || object_mass_kg <= 0
     logformat('Mass input must be a positive scalar input.','ERROR')
     
 end

@@ -27,10 +27,11 @@ minlong = fix(mean([p1_long p2_long p3_long p4_long]));
 
 % Generate a path and filename
 filename = sprintf('TestQuadrangle_%.0f_%.0f', minlat, minlong);
-filepath = [eventfolder '\' filename '.kml'];
+filepath = [eventfolder '\' filename '.kml']
+sourcepath = [getSession('folders','mainfolder') '\templates\TestQuadrangle.kml']
 
 % Rename the file and copy to the event folder
-copyfile([getSession('folders','mainfolder') '\templates\TestQuadrangle.kml'],filepath)
+copyfile(sourcepath,filepath,'f')
 
 % open the file, with write access
 [FID, ~] = fopen(filepath);

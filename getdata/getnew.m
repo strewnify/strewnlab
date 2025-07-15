@@ -3,7 +3,7 @@ function [ NewEvents, output_filename, numnew ] = getnew( dayhistory )
 % online sources, from the last x days (specified by DAYHISTORY), compare 
 % to the database, and add new events.
 
-% dayhistory = 4; msgbox('GETNEW Test Mode')
+ dayhistory = 14; msgbox('GETNEW Test Mode')
 
 % Load config file
 if ~exist('check_configloaded','var') || ~check_configloaded
@@ -118,6 +118,12 @@ if numnew > 0
     % Records without a processing time are assigned current time
     NewEvents.ProcessDate(isnat(NewEvents.ProcessDate)) = ProcessDatetime;
 
+    % Temporary fix for merge issues, without AMS data
+    if ~ismember('NumReports', NewEvents.Properties.VariableNames)
+        NewEvents.NumReports(:) = NaN;
+    end
+    
+    
     % Append data to database and sort
     %sdb_Events = [sdb_Events; NewEvents];
     sdb_Events = outerjoin(sdb_Events,NewEvents,'MergeKeys',true);

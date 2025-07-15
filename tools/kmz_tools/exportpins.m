@@ -20,6 +20,18 @@ kmltxt_path = '<?xml version="1.0" encoding="UTF-8"?>';
 kmltxt_path = [kmltxt_path newline '<kml xmlns="http://www.opengis.net/kml/2.2">'];
 kmltxt_path = [kmltxt_path newline '<Document>'];
 kmltxt_path = [kmltxt_path newline '	<name>' filename '.kml</name>'];
+kmltxt_path = [kmltxt_path newline '		<StyleMap id="msn_placemark_circle">'];
+kmltxt_path = [kmltxt_path newline '			<Pair>'];
+kmltxt_path = [kmltxt_path newline '				<styleUrl>#sn_placemark_circle</styleUrl>'];
+kmltxt_path = [kmltxt_path newline '			</Pair>'];
+kmltxt_path = [kmltxt_path newline '		</StyleMap>'];
+kmltxt_path = [kmltxt_path newline '		<Style id="sn_placemark_circle">'];
+kmltxt_path = [kmltxt_path newline '			<IconStyle>'];
+kmltxt_path = [kmltxt_path newline '				<Icon>'];
+kmltxt_path = [kmltxt_path newline '					<href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href>'];
+kmltxt_path = [kmltxt_path newline '				</Icon>'];
+kmltxt_path = [kmltxt_path newline '			</IconStyle>'];
+kmltxt_path = [kmltxt_path newline '		</Style>'];
 kmltxt_path = [kmltxt_path newline '	<Folder>'];
 kmltxt_path = [kmltxt_path newline '		<name>' foldername '</name>'];
 kmltxt_path = [kmltxt_path newline '		<open>1</open>'];
@@ -27,17 +39,20 @@ kmltxt_path = [kmltxt_path newline '		<open>1</open>'];
 % write pin data
 for idx = 1:numel(LATS)
     kmltxt_path = [kmltxt_path newline '		<Placemark>'];
-    
+        
     % if label is not provided, use Pin 1, Pin 2,...
     if nargin == 6
         kmltxt_path = [kmltxt_path newline '			<name>Pin ' num2str(idx) '</name>'];
     else
         kmltxt_path = [kmltxt_path newline '			<name>' labels{idx} '</name>'];
     end
+    kmltxt_path = [kmltxt_path newline '            <styleUrl>#msn_placemark_circle</styleUrl>'];
     kmltxt_path = [kmltxt_path newline '			<Point>'];
+    kmltxt_path = [kmltxt_path newline '				<altitudeMode>absolute</altitudeMode>'];
     kmltxt_path = [kmltxt_path newline '				<coordinates>'];
     kmltxt_path = [kmltxt_path newline sprintf('					%.6f,%.6f,%.1f',LONS(idx),LATS(idx),Altitudes(idx))];
     kmltxt_path = [kmltxt_path newline '				</coordinates>'];
+    kmltxt_path = [kmltxt_path newline '                <styleUrl>#msn_placemark_circle</styleUrl>'];
     kmltxt_path = [kmltxt_path newline '			</Point>'];
     kmltxt_path = [kmltxt_path newline '		</Placemark>'];
 end

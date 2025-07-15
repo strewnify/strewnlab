@@ -23,19 +23,19 @@ if nargin == 2
                 usersuccess = false;
                 while ~usersuccess
                     user_ground = inputdlg('Elevation data not accessible. Please enter ground elevation in meters:','Google API Failure',1,{'0'});        
-                    ground = str2double(cell2mat(user_ground)); 
-                    if isnan(ground)
+                    elevation_in_m = str2double(cell2mat(user_ground)); 
+                    if isnan(elevation_in_m)
                         logformat('User entered invalid ground elevation.','ERROR')
                         usersuccess = false;
                     else
-                        logformat(sprintf('User entered %f for ground elevation.',ground),'USER')
+                        logformat(sprintf('User entered %f for ground elevation.',elevation_in_m),'USER')
                         usersuccess = true;
                     end
                 end
                 clear usersuccess
             else
                 logformat('Google Maps API failure.  Ground elevation defaulted to zero.','WARN')
-                ground = 0;
+                elevation_in_m = 0;
             end
         end
     end

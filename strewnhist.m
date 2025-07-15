@@ -7,41 +7,8 @@ syncevent
 % Plot margin, in percent
 plotmargin = [20 20 20 20];
 
-% mass filter, in kilograms
-plot_materials = {'all'};
-plot_minmass = 0.001; plot_maxmass = inf;
-
-% Filter masses that continued ablation in darkflight
-% Feature needs further testing, requires calibration and simulation using ablation_thresh
-filter_darkflight = darkflight_elevation - error_elevation;
-% filter_darkflight = -999;
-
-% Wind variation
-error_windmin = weather_minsigma; error_windmax = weather_maxsigma;
-
-% Bearing
-bearingmin = 0
-bearingmax = 360;
-
-% Lookup the mass filtered indices
-filter = (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= error_windmin) & (strewndata.error_wind <= error_windmax) & (strewndata.bearing >= bearingmin) & (strewndata.bearing <= bearingmax);
-
-% Compile valid rockID's for other functions, like SIMSENSOR
-% This has to compiled after running full scenarios, because data recorded
-% during the simulation will not have a priori knowledge of darkflight
-valid_rockIDs = strewndata.rockID(filter);
-if exist('observations','var')
-    valid_observations = ismember(observations.rockID,valid_rockIDs);
-end
-
-if ~strcmp(plot_materials{1},'all')
-    filter = filter & matches(strewndata.material,plot_materials);
-end
-
-% If density is measured, filter out-of-range density
-if meas_density ~= 0
-    filter = filter & strewndata.density > (meas_density * (1-meas_density_err)) & strewndata.density < (meas_density * (1+meas_density_err));
-end
+% Set overall filter for invalid data
+setfilter
 
 % Adjust for polygons
 if exist('EventData_Searched','var')
@@ -155,6 +122,6 @@ if exist('DataPermissionsTitle','var')
 end
 
 if exist('observations', 'var')
-    %[fig_radarheatmap, station_summary] = binAndSummarize(observations(valid_observations,:),station_data);
-    [fig_radarheatmap, station_summary] = binAndSummarize2(observations(valid_observations,:),station_data);
+    %[fig_radarheatmap, station_summary] = binAndSummarize(observations(valid_observations,:),EventData_station_metadata);
+    [fig_radarheatmap, station_summary] = binAndSummarize2(observations(valid_observations,:),EventData_station_metadata);
 end

@@ -61,7 +61,7 @@ end
 % Sensor recording and Doppler analysis feature
 % On by default
 if ~exist('recordsensors','var')
-    recordsensors = true;
+    recordsensors = false;
 end
 
 % Create or update the simulation monitor
@@ -115,6 +115,7 @@ if recordsensors
     % summarize Doppler stations
     if ~exist('SensorSummary','var')
         SensorSummary = nearbysensors(nom_lat,nom_long,darkflight_elevation,sdb_Sensors);
+        DopplerStations = SensorSummary(SensorSummary.Type=="Doppler",:);
 
         if numel(DopplerStations) > 0
             % Plot Doppler Stations
@@ -132,8 +133,8 @@ if recordsensors
         end
     end
     
-    if ~exist('station_data','var') && numel(DopplerStations) > 0
-        station_data = getstation_metadata(DopplerStationIDs,entrytime);
+    if ~exist('EventData_station_metadata','var') && numel(DopplerStations) > 0
+        EventData_station_metadata = getstation_metadata(DopplerStationIDs,entrytime);
     end
 end
 
@@ -215,7 +216,7 @@ end
 predefinedsplits = true;
 lognrndmultlow = 0.001; % typically 0.001
 lognrndmulthigh = 0.1; % typically 0.1
-count1 = randbetween(2,100); % number of fragments
+count1 = randbetween(20,200); % number of fragments
 
 for i = 1:count1
     splits(i,1) = 1;
@@ -885,7 +886,7 @@ while inflightcount > 0
         
         recordcounter = 1;
         % Simulate data from observers/sensors
-        [observations] = simsensor(entrytime, t(current), projectile, sdb_Sensors, station_data, observations);
+        [observations] = simsensor(entrytime, t(current), projectile, sdb_Sensors, EventData_station_metadata, observations);
     
     else
         recordcounter = recordcounter + 1;

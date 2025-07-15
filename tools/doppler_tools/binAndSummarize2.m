@@ -1,4 +1,4 @@
-function [fig_radarheatmap, station_summary] = binAndSummarize2(observations, station_data)
+function [fig_radarheatmap, station_summary] = binAndSummarize2(observations, EventData_station_metadata)
 
 
     % Remove low probability observations
@@ -11,7 +11,7 @@ function [fig_radarheatmap, station_summary] = binAndSummarize2(observations, st
     station_summary = groupsummary(observations, {'StationID'}, {'mean', 'max'}, 'P_detect');
     station_summary = sortrows(station_summary, 'mean_P_detect', 'descend');
 
-    numStations = length(station_data);
+    numStations = length(EventData_station_metadata);
     numCols = 4; % Number of columns in subplot grid
     numRows = ceil(numStations / numCols); % Rows needed
 
@@ -20,11 +20,11 @@ function [fig_radarheatmap, station_summary] = binAndSummarize2(observations, st
     % Calculate global min and max P_detect
     all_P_detect = [];
     for station_i = 1:numStations
-        stationID = station_data(station_i).StationID;
+        stationID = EventData_station_metadata(station_i).StationID;
         stationObservations = observations(strcmp(observations.StationID, stationID), :);
         if ~isempty(stationObservations)
-            datetime_binEdges = station_data(station_i).Timestamps;
-            elevBinEdges = station_data(station_i).elev_binEdges;
+            datetime_binEdges = EventData_station_metadata(station_i).Timestamps;
+            elevBinEdges = EventData_station_metadata(station_i).elev_binEdges;
             stationObservations.datetime_bin_idx = discretize(stationObservations.ObservationTime, datetime_binEdges);
             stationObservations.ELEV_bin_idx = discretize(stationObservations.observed_ELEV, elevBinEdges);
             aggregatedData = groupsummary(stationObservations, {'datetime_bin_idx', 'ELEV_bin_idx'}, 'mean', 'P_detect');
@@ -38,19 +38,19 @@ function [fig_radarheatmap, station_summary] = binAndSummarize2(observations, st
     % Heatmaps for each Station
     for station_i = 1:numStations
         subplot(numRows, numCols, station_i);
-        stationID = station_data(station_i).StationID;
+        stationID = EventData_station_metadata(station_i).StationID;
         stationObservations = observations(strcmp(observations.StationID, stationID), :);
 
         if ~isempty(stationObservations)
-            % Get bins from station_data
-            datetime_binLabels = station_data(station_i).datetime_binLabels;
-            datetime_binEdges = station_data(station_i).Timestamps;
+            % Get bins from EventData_station_metadata
+            datetime_binLabels = EventData_station_metadata(station_i).datetime_binLabels;
+            datetime_binEdges = EventData_station_metadata(station_i).Timestamps;
             stationObservations.datetime_bin_idx = discretize(stationObservations.ObservationTime, datetime_binEdges);
             stationObservations.datetime_bin = datetime_binLabels(stationObservations.datetime_bin_idx);
 
-            elevBinEdges = station_data(station_i).elev_binEdges;
+            elevBinEdges = EventData_station_metadata(station_i).elev_binEdges;
             stationObservations.ELEV_bin_idx = discretize(stationObservations.observed_ELEV, elevBinEdges);
-            stationObservations.ELEV_bin = station_data(station_i).elev_binLabels(stationObservations.ELEV_bin_idx)';
+            stationObservations.ELEV_bin = EventData_station_metadata(station_i).elev_binLabels(stationObservations.ELEV_bin_idx)';
 
             aggregatedData = groupsummary(stationObservations, {'datetime_bin', 'ELEV_bin'}, 'mean', 'P_detect');
 

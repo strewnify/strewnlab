@@ -7,21 +7,17 @@ querydatapermissions
 % Plot margin, in percent
 plotmargin = [5 5 5 5];
 
-% mass filter, in kilograms
-plot_material = 'all';
+% Set overall filter for invalid data
+setfilter
+
+% setup static axes for all the find data under analysis
+plot_limit_values = setplotlimits([strewndata.Longitude(filter);EventData_Finds.Longitude], [strewndata.Latitude(filter);EventData_Finds.Latitude], plotmargin);
 
 % Wind bins
-wnd_min = weather_minsigma;
-wnd_max = weather_maxsigma;
-wnd_step = (wnd_max - wnd_min)/3; 
-wnd_bins = wnd_min:wnd_step:wnd_max;
+wnd_step = (error_windmax - error_windmin)/3; 
+wnd_bins = error_windmin:wnd_step:error_windmax;
 wind_bins_lower_edges = wnd_bins(1:3);
 wind_bins_upper_edges = wnd_bins(2:4);
-
-% Filter masses that continued ablation in darkflight
-% Feature untested, requires calibration and simulation using ablation_thresh
-filter_darkflight = darkflight_elevation - error_elevation;
-%filter_darkflight = ground;
 
 % Bin data
 log_base = 2;
@@ -30,8 +26,8 @@ bin_idx = 1:numel(bin_edges);
 plot_idx = find(bin_counts > 0);
 lower_edges = log_base.^bin_edges(plot_idx);
 upper_edges = log_base.^bin_edges(plot_idx + 1);
- lower_edges = [0.0005 0.075 0.500];
- upper_edges = [0.005 0.250 0.900];
+%  lower_edges = [0.0005 0.075 0.500];
+%  upper_edges = [0.005 0.250 0.900];
 
 % Setup plot
 figure
@@ -39,19 +35,12 @@ hold on
 plot_idx = 0;
 numbins = numel(lower_edges);
 
-% setup static axes for all the find data under analysis
-filter = (strewndata.mass >= lower_edges(1)) & (strewndata.mass <= upper_edges(end)) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= wnd_min) & (strewndata.error_wind <= wnd_max);
-if ~strcmp(plot_material,'all')
-    filter = filter & strcmp(strewndata.material, plot_material);
-end
-plot_limit_values = setplotlimits([strewndata.Longitude(filter);EventData_Finds.Longitude], [strewndata.Latitude(filter);EventData_Finds.Latitude], plotmargin);
-
 % For each wind bin
 for wind_idx = 1:numel(wind_bins_lower_edges)
 
     % Wind variation bin
-    error_windmin = wind_bins_lower_edges(wind_idx);
-    error_windmax = wind_bins_upper_edges(wind_idx);
+    temp_windmin = wind_bins_lower_edges(wind_idx);
+    temp_windmax = wind_bins_upper_edges(wind_idx);
         
     % Plot each mass bin
     for idx = 1:numbins
@@ -59,12 +48,8 @@ for wind_idx = 1:numel(wind_bins_lower_edges)
         plot_minmass = lower_edges(idx);
         plot_maxmass = upper_edges(idx);
 
-
         % Lookup the mass filtered indices
-        filter = (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= error_windmin) & (strewndata.error_wind <= error_windmax);
-        if ~strcmp(plot_material,'all')
-            filter = filter & strcmp(strewndata.material, plot_material);
-        end
+        temp_filter = filter & (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) & (strewndata.error_wind >= temp_windmin) & (strewndata.error_wind <= temp_windmax);
 
         % Convert meters to degrees of latitude and longitude
         lat_gridsize = gridsize / lat_metersperdeg;
@@ -84,8 +69,8 @@ for wind_idx = 1:numel(wind_bins_lower_edges)
         hold on
         
         % Create Plot Title
-        strewndata_minmass = min(strewndata.mass(filter));
-        strewndata_maxmass = max(strewndata.mass(filter));
+        strewndata_minmass = min(strewndata.mass(temp_filter));
+        strewndata_maxmass = max(strewndata.mass(temp_filter));
         strewndata_rounded_minmass = round(strewndata_minmass,3,'significant');
         strewndata_rounded_maxmass = round(strewndata_maxmass,3,'significant');
 
@@ -132,7 +117,7 @@ for wind_idx = 1:numel(wind_bins_lower_edges)
         axis(plot_limit_values)
 
         % Plot a bivariate histogram of the Monte Carlo results
-        histogram2(strewndata.Longitude(filter),strewndata.Latitude(filter),Long_edges, Lat_edges,'DisplayStyle','tile','EdgeColor',edge_type,'Normalization','probability')
+        histogram2(strewndata.Longitude(temp_filter),strewndata.Latitude(temp_filter),Long_edges, Lat_edges,'DisplayStyle','tile','EdgeColor',edge_type,'Normalization','probability')
         % cb = colorbar();
         % cb.Label.String = 'Find Probability';
         % cb.Label.FontSize = 12;
@@ -146,13 +131,48 @@ for wind_idx = 1:numel(wind_bins_lower_edges)
     end
 end
 
+% Calculate an individual vector for each find, to calibrate the strewn field to finds
+cal_pct = 0.2; % percent error bin size for calibration
+temp_lower = EventData_Finds.mass_kg - EventData_Finds.mass_kg .* cal_pct;
+temp_upper = EventData_Finds.mass_kg + EventData_Finds.mass_kg .* cal_pct;
+
+% Calculate calibration vectors for each find    
+for idx = 1:size(EventData_Finds,1)
+
+    % Filter on the zone relevant to each find
+    temp_filt = filter & (strewndata.mass >= temp_lower(idx)) & (strewndata.mass <= temp_upper(idx));
+
+    % if there is enough simulation data in the mass range, calculate a vector to adjust the strewnfield
+    EventData_Finds.zone_lat(idx) = mean(strewndata.Latitude(temp_filt));
+    EventData_Finds.zone_long(idx) = mean(strewndata.Longitude(temp_filt));            
+end    
+
+
+% Calculate zone vectors for each find
+% These are the offsets for the strewnfield, to match the finds
+[EventData_Finds.zoneDist_m , EventData_Finds.zoneAZ] = distance(EventData_Finds.zone_lat,EventData_Finds.zone_long,EventData_Finds.Latitude,EventData_Finds.Longitude, getPlanet('ellipsoid_m'));
+
+% Calculate an overall correction vector for the strewnfield
+% This is the offset for the strewnfield, to match the finds
+[cal_dist_m , cal_AZ] = distance(mean(EventData_Finds.zone_lat),mean(EventData_Finds.zone_long), mean(EventData_Finds.Latitude),mean(EventData_Finds.Longitude),getPlanet('ellipsoid_m'));
+
+% Report Calibration Results
+temp_separator_width = 50;
+fprintf('\n');
+fprintf('%s\n', repmat('*', 1, temp_separator_width));  % 40 asterisks
+fprintf('Calibration Results:\n');
+fprintf('Offsets to the strewnfield, to match the finds\n\n');
+fprintf('Individual Find Vectors:\n') 
+fprintf('%5.0fg Sample: %.0f meters at %.2f degrees azimuth\n', EventData_Finds.mass_grams, EventData_Finds.zoneDist_m , EventData_Finds.zoneAZ)
+fprintf('\nOverall Vector:\n %.0f meters at %.2f degrees azimuth\n', cal_dist_m, cal_AZ)
+fprintf('%s\n', repmat('*', 1, temp_separator_width));  % 40 asterisks
+
 % Display stats in the console
 disp(['Grid size is ' num2str(gridsize) ' meters.'])
 if exist('DataPermissionsTitle','var')
     disp(DataPermissionsTitle)
 end
 
-function m = logb(x,b)
+clear temp_*
 
-m = log2(x)/log2(b);
-end
+
