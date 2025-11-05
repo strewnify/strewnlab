@@ -3,7 +3,7 @@ function [ LAT, LONG ] = getcoordinates(locality)
 % geocoding service to determine the coodinates of a locality.
 % Google charges $5 per 1000 requests, so please do not abuse this function.
 
-preventAbuse(0.5,200) % rate limit requests to every 5 seconds, max of max calls
+preventAbuse(0,1000); % Limit usage to 1000 calls
 
 % Default values
 LAT = NaN;

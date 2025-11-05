@@ -1,4 +1,4 @@
-function [ NewEvents, output_filename, numnew ] = getnew( dayhistory )
+%function [ NewEvents, output_filename, numnew ] = getnew( dayhistory )
 % [NEW_EVENTS] =  GETNEW (DAYHISTORY)   Download event data from
 % online sources, from the last x days (specified by DAYHISTORY), compare 
 % to the database, and add new events.
@@ -23,6 +23,7 @@ if ~exist('CNEOS_data','var')
     try
         CNEOS_data = getcneos();
         CNEOS_success = true;
+        CNEOS_data.DataSource(:) = {'CNEOS'};
     catch
         CNEOS_success = false;
         logformat('CNEOS data retrieval failed','DEBUG')
@@ -34,6 +35,7 @@ if ~getConfig('ams_disable') && ~exist('AMS_data','var')
     try
         AMS_data = getams(startyear,endyear,5, 2);
         AMS_success = true;
+        AMS_data.DataSource(:) = {'AMS'};
     catch
         AMS_success = false;
         logformat('AMS data retrieval failed','DEBUG')        
@@ -47,32 +49,25 @@ if ~exist('ASGARD_data','var')
     try
         ASGARD_data = getasgard(dayhistory);
         ASGARD_success = true;
+        ASGARD_data.DataSource(:) = {'ASGARD'};
     catch
         ASGARD_success = false;
         logformat('ASGARD data retrieval failed','DEBUG')
     end
 end
 
-% Add source identifiers
-CNEOS_data.DataSource(:) = {'CNEOS'};
-AMS_data.DataSource(:) = {'AMS'};
-ASGARD_data.DataSource(:) = {'ASGARD'};
+% Collect tables that exist into a cell array
+tables = {};
+if AMS_success,    tables{end+1} = AMS_data;    end
+if CNEOS_success,  tables{end+1} = CNEOS_data;  end
+if ASGARD_success, tables{end+1} = ASGARD_data; end
 
-% Merge the data from all sources
-if AMS_success
-    Merge_data = AMS_data;
-elseif CNEOS_success
-    Merge_data = CNEOS_data;
-elseif ASGARD_success
-    Merge_data = ASGARD_data;
-end
-   
-if CNEOS_success
-    Merge_data = outerjoin(Merge_data,CNEOS_data,'MergeKeys',true);
-end
+% Merge the first 2 tables
+Merge_data = outerjoin(tables{1}, tables{2}, 'MergeKeys', true);
 
-if ASGARD_success
-    Merge_data = outerjoin(Merge_data,ASGARD_data,'MergeKeys',true);
+% If you have more than 2 tables, loop:
+for k = 3:numel(tables)
+    Merge_data = outerjoin(Merge_data, tables{k}, 'Keys', keyVars, 'MergeKeys', true);
 end
 
 %new = find(Merge_data.Datetime > (datetime('now')-days(dayhistory)));
@@ -126,7 +121,10 @@ if numnew > 0
     
     % Append data to database and sort
     %sdb_Events = [sdb_Events; NewEvents];
+    % Append new events into the database
     sdb_Events = outerjoin(sdb_Events,NewEvents,'MergeKeys',true);
+
+    % Sort by EventID afterwards
     sdb_Events = sortrows(sdb_Events,'EventID','ascend');
     
     % Write data to Excel file

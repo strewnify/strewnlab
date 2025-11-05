@@ -2,7 +2,7 @@ function [data_table] = getsounding_uwyo()
 %GETSOUNDING_UWYO Download radiosonde data from the Univesity of Wyoming server
 % DRAFT TBD
 
-preventAbuse(5,50) % rate limit requests to every 5 seconds, max of max calls
+preventAbuse(5,50); % rate limit requests to every 5 seconds, max of max calls
 
 % Get a timestamp for the data
 nowtime = datetime('now','TimeZone','UTC');

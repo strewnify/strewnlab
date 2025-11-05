@@ -36,8 +36,6 @@ catch
     logformat(ErrorMsg,'ERROR');
 end
 
-
-
 if numevents > 0
     
     % TEMPORARY CODE

@@ -4,6 +4,8 @@ function [ location_string, locality, state, country, water_string, land_string 
 % coordinates.  Google charges $5 per 1000 requests, so please do not abuse
 % this function.
 
+preventAbuse(0,1000); % Limit usage to 1000 calls
+
 % load Google Maps API
 loadprivate
 

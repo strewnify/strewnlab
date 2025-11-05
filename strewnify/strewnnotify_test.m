@@ -28,16 +28,18 @@ switch devmode
 end
 
 % Attempt to retrieve meteor events and report any error to developer
-try
-    [NewEvents, attachment, numevents] = getnew_test(numdays);    
-catch
-    numevents = -1;
-    ErrorMsg = 'There was an error in GETNEW_TEST, check code.';
-    logformat(ErrorMsg,'ERROR');
-end
+% try
+%     [numnew, numupdated] = getnew_test(numdays);    
+% catch
+%     numnew = -1;
+%     numupdated = -1;
+%     ErrorMsg = 'There was an error in GETNEW_TEST, check code.';
+%     logformat(ErrorMsg,'ERROR');
+% end
 
 
 % Check for new events - TEMPORARY CODE
+load_database
 % added in the last hour
 mintime_utc = datetime('now','TimeZone','UTC') - hours(1);
 testlist = sdb_MeteorData.ChangeLog.EventID(sdb_MeteorData.ChangeLog.DatetimeUTC > mintime_utc);

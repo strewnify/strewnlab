@@ -12,7 +12,13 @@ function [fig_radarheatmap, station_summary] = binAndSummarize2(observations, Ev
     station_summary = sortrows(station_summary, 'mean_P_detect', 'descend');
 
     numStations = length(EventData_station_metadata);
-    numCols = 4; % Number of columns in subplot grid
+    if numStations <= 4
+        numCols = 2;
+    elseif numStations <= 6
+        numCols = 3;
+    else
+        numCols = 4; % Number of columns in subplot grid
+    end
     numRows = ceil(numStations / numCols); % Rows needed
 
     fig_radarheatmap = figure;

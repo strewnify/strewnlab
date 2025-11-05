@@ -79,11 +79,24 @@ for n = 1:size(projectile,2)
             end
 
             % Get the station operating mode for the time of the same
-            stationtime_i = max(1,find(EventData_station_metadata(station_i).Timestamps > obs_time,1)-1);
-            if isempty(stationtime_i)
-                stationtime_i = mode(EventData_station_metadata(station_i).sensorMode);
-                logformat('Observation time outside expected window', 'WARN')
-            end
+        stationtime_i = max(1,find(EventData_station_metadata(station_i).Timestamps > obs_time,1)-1);
+
+        if isempty(stationtime_i)
+            % This handles the case where obs_time is AFTER the last expected timestamp
+
+            % Fallback to the most frequent mode
+            stationtime_i = mode(EventData_station_metadata(station_i).sensorMode);
+
+            % Convert the datetime to a readable string format once for the log.
+            time_str = datestr(obs_time, 'yyyy-mm-dd HH:MM:SS'); 
+
+            % Use sprintf to construct a detailed log message, using the actual StationID.
+            log_message = sprintf('Station %s: Observation time (%s) is outside expected window. Using default mode.', ...
+                                   EventData_station_metadata(station_i).StationID, time_str);
+
+            % 4. Log the formatted message.
+            logformat(log_message, 'WARN');
+        end
             
             % Record the stationID data
             StationID(station_i) = {EventData_station_metadata(station_i).StationID};

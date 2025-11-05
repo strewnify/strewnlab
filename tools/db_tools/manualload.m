@@ -37,6 +37,10 @@ sdb_Events.HyperMap{idx} = ['https://maps.google.com/?q=' num2str(sdb_Events.end
 if strcmp(sdb_Events.DataSource{idx},'AMS')
     sdb_Events.AMS_event_id{idx} = AMS_event_id;
     sdb_Events.Hyperlink1(idx) = strcat('https://fireball.amsmeteors.org/members/imo_view/',{regexprep(sdb_Events.AMS_event_id{idx},'(?:_)','/')});
+    sdb_Events.Hyperlink2(idx) = {''};
+else
+    sdb_Events.Hyperlink1(idx) = {''};
+    sdb_Events.Hyperlink2(idx) = {''};
 end
 
 % Unknown data

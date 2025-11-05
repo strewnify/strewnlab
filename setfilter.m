@@ -19,7 +19,7 @@ error_windmax = weather_maxsigma;
 
 % Lookup the mass filtered indices
 filter = (strewndata.mass >= plot_minmass) & (strewndata.mass <= plot_maxmass) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= error_windmin) & (strewndata.error_wind <= error_windmax) & (strewndata.bearing >= bearingmin) & (strewndata.bearing <= bearingmax);
-filter = (strewndata.mass >= lower_edges(1)) & (strewndata.mass <= upper_edges(end)) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= wnd_min) & (strewndata.error_wind <= wnd_max);
+%filter = (strewndata.mass >= lower_edges(1)) & (strewndata.mass <= upper_edges(end)) & (strewndata.darkflight > filter_darkflight) & (strewndata.error_wind >= wnd_min) & (strewndata.error_wind <= wnd_max);
 
 if ~strcmp(plot_materials{1},'all')
     filter = filter & matches(strewndata.material,plot_materials);

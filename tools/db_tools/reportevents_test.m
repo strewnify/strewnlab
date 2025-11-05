@@ -15,7 +15,7 @@ if nargin == 1
     EventIDs = fieldnames(eventdatabase)';
 end
 Sources = [{'CNEOS'} {'AMS'} {'Goodall'} {'MetBull'} {'NEOB'} {'ASGARD'} {'GMN'}];
-Records = [1 2 3 4 5];
+Records = [1 2];
 
 % Edit this section to add or remove fields
 fields_formatted = [{'Location:'} {'eventdatabase.(EventIDs{event_i}).Trajectory.(Sources{source_i})(record_i).Location(max(1,end-column_width+3):end)'};...

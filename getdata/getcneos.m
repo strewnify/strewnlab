@@ -72,7 +72,7 @@ CNEOS_data.Mass = round(Ev2mass(CNEOS_data.ImpactEnergy,CNEOS_data.Speed.*1000),
 CNEOS_data.Bearing = round(wrapTo360(90 - atan2d(CNEOS_data.vNorth_kps,CNEOS_data.vEast_kps)),3); % bearing angle (heading azimuth)
 CNEOS_data.Incidence = round(atand(sqrt(CNEOS_data.vNorth_kps.^2+CNEOS_data.vEast_kps.^2)./CNEOS_data.vDown_kps),3);  % incidence angle from vertical
 CNEOS_data.Hyperlink1(:) = {'https://cneos.jpl.nasa.gov/fireballs/'};
-CNEOS_data.Hyperlink2(:) = {[]};
+CNEOS_data.Hyperlink2(:) = {''};
 CNEOS_data.ImpactEnergy_Est = CNEOS_data.ImpactEnergy;
 CNEOS_data.ProcessDate(:) = datetime('now');
 

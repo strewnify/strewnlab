@@ -1,4 +1,4 @@
-function [ NewEvents, output_filename, num_new, num_updated ] = getnew_test( dayhistory )
+function [ num_new, num_updated ] = getnew_test( dayhistory )
 % [NEW_EVENTS] =  GETNEW (DAYHISTORY)   Download event data from
 % online sources, from the last x days (specified by DAYHISTORY), compare 
 % to the database, and add new events.
