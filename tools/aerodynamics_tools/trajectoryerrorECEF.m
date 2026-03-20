@@ -40,7 +40,7 @@ handleTraj = waitbar(0,'Calculating trajectory error...');
 numrecords = length(LAT);
 err_AZ = nan(size(LAT));
 err_ZenithAngle = nan(size(LAT));
-
+err_Speed = nan(size(LAT));
 
 % Calculate nominal angles
 [vNorth_kps,vEast_kps,vDown_kps] = ecef2nedv(vx_ECEF_kps,vy_ECEF_kps,vz_ECEF_kps,LAT,LONG);
@@ -64,20 +64,18 @@ for record_i = 1:numrecords
     rng(50,'twister')
     vx_err = vx_ECEF_kps(record_i) .* randbetween(-vx_err_pct(record_i)/100,vx_err_pct(record_i)/100,samplesize);
     rng(51,'twister')
-    vy_err = vx_ECEF_kps(record_i) .* randbetween(-vy_err_pct(record_i)/100,vy_err_pct(record_i)/100,samplesize);
+    vy_err = vy_ECEF_kps(record_i) .* randbetween(-vy_err_pct(record_i)/100,vy_err_pct(record_i)/100,samplesize);
     rng(52,'twister')
-    vz_err = vx_ECEF_kps(record_i) .* randbetween(-vz_err_pct(record_i)/100,vz_err_pct(record_i)/100,samplesize);
+    vz_err = vz_ECEF_kps(record_i) .* randbetween(-vz_err_pct(record_i)/100,vz_err_pct(record_i)/100,samplesize);
         
     [vNorth_kps,vEast_kps,vDown_kps] = ecef2nedv(vx_ECEF_kps(record_i) + vx_err, vy_ECEF_kps(record_i) + vy_err, vz_ECEF_kps(record_i) + vz_err, LAT(record_i),LONG(record_i));
     AZ_data = wrapTo360(90 - atan2d(vNorth_kps,vEast_kps)); % bearing angle (heading azimuth)
     ZenithAngle_data = atand(sqrt((vNorth_kps).^2+(vEast_kps).^2)./vDown_kps);  % incidence angle from vertical
     
     % Calculate speed as the norm of the velocity vectors
-    if size(vx_ECEF_kps,2) == 1 % column vectors
-        Speed_data = vecnorm([(vx_ECEF_kps + vx_err) (vy_ECEF_kps + vy_err) (vz_ECEF_kps + vz_err)],2,2);
-    else % row vectors
-        Speed_data = vecnorm([(vx_ECEF_kps + vx_err); (vy_ECEF_kps + vy_err); (vz_ECEF_kps + vz_err)],2,1);
-    end
+    Speed_data = sqrt((vx_ECEF_kps(record_i) + vx_err(:)).^2 + ...
+                      (vy_ECEF_kps(record_i) + vy_err(:)).^2 + ...
+                      (vz_ECEF_kps(record_i) + vz_err(:)).^2);
 
     % error values are one standard deviation, rounded to 3 significant digits
     % rounding is necessary to prevent unnecessary import, due to random differences

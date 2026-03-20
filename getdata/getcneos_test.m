@@ -90,9 +90,13 @@ if nargin > 0
 end
 
 % Post processing - array functions
-[CNEOS_data.peak_vNorth_kps,CNEOS_data.peak_vEast_kps,CNEOS_data.peak_vDown_kps] = ecef2nedv(CNEOS_data.peak_vx_ECEF_kps,CNEOS_data.peak_vy_ECEF_kps,CNEOS_data.peak_vz_ECEF_kps,CNEOS_data.peak_Lat,CNEOS_data.peak_Long);
-CNEOS_data.Bearing_deg = wrapTo360(90 - atan2d(CNEOS_data.peak_vNorth_kps,CNEOS_data.peak_vEast_kps)); % bearing angle (heading azimuth)
-CNEOS_data.ZenithAngle_deg = atand(sqrt(CNEOS_data.peak_vNorth_kps.^2+CNEOS_data.peak_vEast_kps.^2)./CNEOS_data.peak_vDown_kps);  % incidence angle from vertical
+% [CNEOS_data.peak_vNorth_kps,CNEOS_data.peak_vEast_kps,CNEOS_data.peak_vDown_kps] = ecef2nedv(CNEOS_data.peak_vx_ECEF_kps,CNEOS_data.peak_vy_ECEF_kps,CNEOS_data.peak_vz_ECEF_kps,CNEOS_data.peak_Lat,CNEOS_data.peak_Long);
+% CNEOS_data.Bearing_deg = wrapTo360(90 - atan2d(CNEOS_data.peak_vNorth_kps,CNEOS_data.peak_vEast_kps)); % bearing angle (heading azimuth)
+% CNEOS_data.ZenithAngle_deg = atand(sqrt(CNEOS_data.peak_vNorth_kps.^2+CNEOS_data.peak_vEast_kps.^2)./CNEOS_data.peak_vDown_kps);  % incidence angle from vertical
+
+CNEOS_data.errpct_v = 72; 
+[CNEOS_data.Bearing_deg,CNEOS_data.ZenithAngle_deg, CNEOS_data.Speed_kps, CNEOS_data.err_AZ, CNEOS_data.err_ZenithAngle, CNEOS_data.err_Speed] = trajectoryerrorECEF(CNEOS_data.peak_Lat,CNEOS_data.peak_Long,CNEOS_data.peak_vx_ECEF_kps,CNEOS_data.peak_vy_ECEF_kps,CNEOS_data.peak_vz_ECEF_kps, errpct_v, errpct_v, errpct_v, 10000)
+
 
 % Delete intermediate data
 CNEOS_data.peak_vNorth_kps = [];

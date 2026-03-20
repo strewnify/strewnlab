@@ -94,6 +94,10 @@ while weatherdatamissing
         warning('Hamburg weather data analysis')
         StartDate = datetime(year(effective_entrytime),month(effective_entrytime),day(effective_entrytime),0,0,0,'TimeZone','UTC');
         EndDate = datetime(year(effective_entrytime),month(effective_entrytime),day(effective_entrytime),12,0,0,'TimeZone','UTC');
+    elseif strcmp(SimulationName,'Windfall')
+        warning('Windfall weather data analysis')
+        StartDate = datetime(year(effective_entrytime),month(effective_entrytime),day(effective_entrytime),12,0,0,'TimeZone','UTC');
+        EndDate = datetime(year(effective_entrytime),month(effective_entrytime),day(effective_entrytime),0,0,0,'TimeZone','UTC') + days(1);
     elseif entryhour <= 1
         StartDate = datetime(year(effective_entrytime),month(effective_entrytime),day(effective_entrytime),12,0,0,'TimeZone','UTC') - days(1);
         EndDate = datetime(year(effective_entrytime),month(effective_entrytime),day(effective_entrytime),12,0,0,'TimeZone','UTC');

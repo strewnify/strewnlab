@@ -110,6 +110,14 @@ if nnz(calcAng) > 0
     trajectoryerror(std_tb.entry_Lat(calcAng), std_tb.entry_Long(calcAng), std_tb.entry_Height_km(calcAng).*1000, std_tb.end_Lat(calcAng), std_tb.end_Long(calcAng), std_tb.end_Height_km(calcAng).*1000,std_tb.err_entry_Lat(calcAng), std_tb.err_entry_Long(calcAng), std_tb.err_entry_Height_km(calcAng).*1000, std_tb.err_end_Lat(calcAng), std_tb.err_end_Long(calcAng), std_tb.err_end_Height_km(calcAng).*1000, samplesize);
 end
 
+
+calcAng = ~datapresent(std_tb,{'Bearing_deg' 'ZenithAngle_deg'}) & datapresent(std_tb,{'entry_Lat' 'entry_Long' 'entry_Height_km' 'end_Lat' 'end_Long' 'end_Height_km' 'err_entry_Lat' 'err_entry_Long' 'err_entry_Height_km' 'err_end_Lat' 'err_end_Long' 'err_end_Height_km'});
+if nnz(calcAng) > 0
+[std_tb.Bearing_deg(calcAng),std_tb.ZenithAngle_deg(calcAng), std_tb.PathLength_km(calcAng), std_tb.err_Bearing_deg(calcAng), std_tb.err_ZenithAngle_deg(calcAng), std_tb.err_PathLength_km(calcAng)] =...
+     trajectoryerrorECEF(CNEOS_data.peak_Lat,CNEOS_data.peak_Long,CNEOS_data.peak_vx_ECEF_kps,CNEOS_data.peak_vy_ECEF_kps,CNEOS_data.peak_vz_ECEF_kps, errpct_v, errpct_v, errpct_v, 10000)
+
+end
+
 % % Calculate speed from reference point speed
 calcSpeed = ~datapresent(std_tb,{'entry_Speed_kps'}) & datapresent(std_tb,{'ref_Speed_kps' 'err_ref_Speed_kps' 'ref_Height_km'});
 if nnz(calcSpeed) > 0 

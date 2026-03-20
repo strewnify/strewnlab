@@ -99,8 +99,11 @@ if timeplot
     ylabel('Altitude, km');
 end
 
-% start
-plotlevel = ground;  %generate strewn field at this level, useful for estimating radar
+%generate strewn field at this level, useful for estimating radar
+if ~exist('plotlevel','var')
+    plotlevel = ground;  
+end
+
 %test = erfinv(confidence/100)*sqrt(2);  % experimental confidence interval
 
 % Stop logging during simulation
@@ -214,14 +217,12 @@ end
 % [n1 n2 n3...; z1 z2 z3...; m1 m2 m3]
 % Example: [ 1 1 1 2; 24344 24344 21000 21000; 0.103 0.050 0.010 0.0003];
 predefinedsplits = true;
-lognrndmultlow = 0.001; % typically 0.001
-lognrndmulthigh = 0.1; % typically 0.1
-count1 = randbetween(20,200); % number of fragments
+count1 = randbetween(200,200); % number of fragments
 
 for i = 1:count1
     splits(i,1) = 1;
     splits(i,2) = randbetween(darkflight_elevation,fragaltitude);
-    splits(i,3) = lognrnd(2.52,1.41,1,1)*randbetween(lognrndmultlow,lognrndmulthigh);
+    splits(i,3) = lognrnd(-1.205,2.5179,1,1);
 end
 %     % chelyabinsk
 %     

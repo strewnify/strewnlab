@@ -1,0 +1,73 @@
+function [points] = exporttimepins(exportfolder, filename, foldername, LATS, LONS, Altitudes, timestamps, labels)
+% EXPORTTIMEPINS Exports trajectory path to KML with Time Slider and Styles
+
+% Handle altitude scaling
+if numel(Altitudes) ~= numel(LATS) 
+    Altitudes = Altitudes .* ones(1, numel(LATS));
+end
+
+% Header with Style Definitions
+kml = {'<?xml version="1.0" encoding="UTF-8"?>'; ...
+       '<kml xmlns="http://www.opengis.net/kml/2.2">'; ...
+       '<Document>'; ...
+       ['<name>' filename '.kml</name>']; ...
+       '  <StyleMap id="msn_placemark_circle">'; ...
+       '    <Pair><key>normal</key><styleUrl>#sn_placemark_circle</styleUrl></Pair>'; ...
+       '    <Pair><key>highlight</key><styleUrl>#sh_placemark_circle</styleUrl></Pair>'; ...
+       '  </StyleMap>'; ...
+       '  <Style id="sn_placemark_circle">'; ...
+       '    <IconStyle>'; ...
+       '      <scale>1.2</scale>'; ...
+       '      <Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon>'; ...
+       '    </IconStyle>'; ...
+       '  </Style>'; ...
+       '  <Style id="sh_placemark_circle">'; ...
+       '    <IconStyle>'; ...
+       '      <scale>1.4</scale>'; ...
+       '      <Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon>'; ...
+       '    </IconStyle>'; ...
+       '  </Style>'; ...
+       '  <Folder>'; ...
+       ['    <name>' foldername '</name>']; ...
+       '    <open>1</open>'};
+
+% Write pin data
+for idx = 1:numel(LATS)
+    kml{end+1} = '    <Placemark>';
+    
+    if nargin < 8
+        kml{end+1} = ['      <name>Pin ' num2str(idx) '</name>'];
+    else
+        kml{end+1} = ['      <name>' labels{idx} '</name>'];
+    end
+    
+    % Link the StyleMap
+    kml{end+1} = '      <styleUrl>#msn_placemark_circle</styleUrl>';
+    
+    % Time Slider Logic
+    isoTime = datestr(timestamps(idx), 'yyyy-mm-ddTHH:MM:SSZ');
+    kml{end+1} = '      <TimeStamp>';
+    kml{end+1} = ['        <when>' isoTime '</when>'];
+    kml{end+1} = '      </TimeStamp>';
+    
+    % Geometry
+    kml{end+1} = '      <Point>';
+    kml{end+1} = '        <altitudeMode>absolute</altitudeMode>';
+    kml{end+1} = ['        <coordinates>' sprintf('%.6f,%.6f,%.1f', LONS(idx), LATS(idx), Altitudes(idx)) '</coordinates>'];
+    kml{end+1} = '      </Point>';
+    kml{end+1} = '    </Placemark>';
+end
+
+% Close Tags
+kml{end+1} = '  </Folder></Document></kml>';
+
+% Save the File
+homefolder = pwd;
+cd(exportfolder);
+fid = fopen([filename '.kml'], 'wt');
+fprintf(fid, '%s\n', kml{:});
+fclose(fid);
+cd(homefolder);
+
+points = [(1:numel(LATS))', LATS(:), LONS(:)];
+end

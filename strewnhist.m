@@ -124,4 +124,5 @@ end
 if exist('observations', 'var')
     %[fig_radarheatmap, station_summary] = binAndSummarize(observations(valid_observations,:),EventData_station_metadata);
     [fig_radarheatmap, station_summary] = binAndSummarize2(observations(valid_observations,:),EventData_station_metadata);
+    NEXRAD_probability_report = generateSweepReport(observations(valid_observations,:),EventData_station_metadata);
 end

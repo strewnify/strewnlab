@@ -32,9 +32,10 @@ handleTraj = waitbar(0,'Calculating trajectory error...');
 
 % preallocate arrays
 numrecords = length(startLAT);
-err_AZ = nan(size(startLAT));
-err_ZenithAngle = nan(size(startLAT));
-
+empty_array = nan(size(startLAT));
+err_AZ = empty_array;
+err_ZenithAngle = empty_array;
+err_PathLength_km = empty_array;
 
 % Calculate nominal angles
 [AZ_raw,ELEV_nom,slantrange_nom_m] = geodetic2aer(startLAT, startLON, startH_m, endLAT, endLON, endH_m,getPlanet('ellipsoid_m'));

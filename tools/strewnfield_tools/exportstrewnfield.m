@@ -121,6 +121,9 @@ if exist('fig_radarheatmap','var')
         % Save the current image to file
         saveas(fig_radarheatmap,[export_filename '.png']);
 
+        % Export a CSV report of the sweeps with possible meteorites
+        writetable(NEXRAD_probability_report, [exportfolder '\' SimFilename '_NEXRAD_ProbabilityReport' SimVersionSfx '.csv']);
+                
         % return to main folder
         cd(getSession('folders','mainfolder'))
     catch

@@ -26,8 +26,8 @@ bin_idx = 1:numel(bin_edges);
 plot_idx = find(bin_counts > 0);
 lower_edges = log_base.^bin_edges(plot_idx);
 upper_edges = log_base.^bin_edges(plot_idx + 1);
-%  lower_edges = [0.0005 0.075 0.500];
-%  upper_edges = [0.005 0.250 0.900];
+  lower_edges = [0.8 2.5 7.5 15];
+  upper_edges = [2.5 7.5 15 20];
 
 % Setup plot
 figure
@@ -99,13 +99,14 @@ for wind_idx = 1:numel(wind_bins_lower_edges)
 
         if strcmp(temp_unit1,temp_unit2)
             % Display title contains capitalized material label and mass filters
-            strewnhist_title = [plot_material ' masses between ' temp_bin1 ' and ' temp_bin2 temp_unit2];
+            strewnhist_title = [plot_materials ' masses between ' temp_bin1 ' and ' temp_bin2 temp_unit2];
         else
-            strewnhist_title = [plot_material ' masses between ' temp_bin1 temp_unit1 ' and ' temp_bin2 temp_unit2];
+            strewnhist_title = [plot_materials ' masses between ' temp_bin1 temp_unit1 ' and ' temp_bin2 temp_unit2];
         end
         strewnhist_title = [strewnhist_title newline 'Wind sigma = ' num2str(wind_bins_lower_edges(wind_idx)) ' to ' num2str(wind_bins_upper_edges(wind_idx))];
 
         % Capitalize the title
+        strewnhist_title = strjoin(strewnhist_title, '');
         strewnhist_title = TitleCase(strewnhist_title);
         
         title(strewnhist_title);
